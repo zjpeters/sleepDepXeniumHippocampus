@@ -63,6 +63,17 @@ for i in range(len(processedSamples)):
     plt.title(processedSamples[i]['sampleID'])
     plt.show()
     
+#%% test some ants functions
+plt.close('all')
+ccMetric = ['CC', ants.from_numpy(processedSamples[0]['tissueImageProcessed']), ants.from_numpy(processedSamples[1]['tissueImageProcessed']), 2, 1 ]
+secondMetric = ['CC', ants.from_numpy(processedSamples[0]['placeHolder']), ants.from_numpy(processedSamples[1]['placeHolder']), 2, 1 ]
+metrics = list()
+metrics.append(ccMetric)
+metrics.append(secondMetric)
+reg = ants.registration(ants.from_numpy(processedSamples[0]['geneImage']), ants.from_numpy(processedSamples[1]['geneImage']), multivariate_extras = metrics)
+plt.imshow(processedSamples[0]['geneImage'])
+plt.imshow(reg['warpedmovout'].numpy(), alpha=0.5, cmap='gray_r')
+#print(ants.image_mutual_information(ants.from_numpy(processedSamples[0]['geneImage']), reg['warpedmovout']))
 #%% test registration with gene image
 experimentalResults = {}
 for actSample in range(len(processedSamples)):

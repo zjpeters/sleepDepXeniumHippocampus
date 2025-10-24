@@ -19,6 +19,7 @@ from sklearn.metrics import silhouette_samples
 import scipy.sparse as sp_sparse
 import json 
 import ants
+import scipy.stats as scipy_stats
 
 rawdata=os.path.join('/','media','zjpeters','Expansion','sleepDepXenium','rawdata')
 derivatives=os.path.join('/','media','zjpeters','Expansion','sleepDepXeniumHippocampus','derivatives')
@@ -47,8 +48,16 @@ After looking at images, the following genes are most instructive for Hippocampu
 """
 
 #%% display genes from hippocapal gene list
+"""
+After examining the gene patterns collected above, found the following four:
+    'Jdp2' : Expressed throughout entirety of hippocampal pyramidal cells
+    'Nwd2' : Strongly expressed in CA2/3
+    'Npnt' : Strongly expressed in DG
+    'Gpr161' : Strongly expresed in CA1
+"""
+
 plt.close('all')
-hippocampalGeneList = ['Jdp2','Nwd2','Npnt','Gpr161']
+hippocampalGeneList = ['Jdp2', 'Nwd2','Npnt','Gpr161']
 for i in hippocampalGeneList:
     stanly.viewGeneInProcessedSample(processedSamples[0], i)
 
@@ -64,15 +73,15 @@ for i in range(len(processedSamples)):
     plt.show()
     
 #%% test some ants functions
-plt.close('all')
-ccMetric = ['CC', ants.from_numpy(processedSamples[0]['tissueImageProcessed']), ants.from_numpy(processedSamples[1]['tissueImageProcessed']), 2, 1 ]
-secondMetric = ['CC', ants.from_numpy(processedSamples[0]['placeHolder']), ants.from_numpy(processedSamples[1]['placeHolder']), 2, 1 ]
-metrics = list()
-metrics.append(ccMetric)
-metrics.append(secondMetric)
-reg = ants.registration(ants.from_numpy(processedSamples[0]['geneImage']), ants.from_numpy(processedSamples[1]['geneImage']), multivariate_extras = metrics)
-plt.imshow(processedSamples[0]['geneImage'])
-plt.imshow(reg['warpedmovout'].numpy(), alpha=0.5, cmap='gray_r')
+# plt.close('all')
+# ccMetric = ['CC', ants.from_numpy(processedSamples[0]['tissueImageProcessed']), ants.from_numpy(processedSamples[1]['tissueImageProcessed']), 2, 1 ]
+# secondMetric = ['CC', ants.from_numpy(processedSamples[0]['placeHolder']), ants.from_numpy(processedSamples[1]['placeHolder']), 2, 1 ]
+# metrics = list()
+# metrics.append(ccMetric)
+# metrics.append(secondMetric)
+# reg = ants.registration(ants.from_numpy(processedSamples[0]['geneImage']), ants.from_numpy(processedSamples[1]['geneImage']), multivariate_extras = metrics)
+# plt.imshow(processedSamples[0]['geneImage'])
+# plt.imshow(reg['warpedmovout'].numpy(), alpha=0.5, cmap='gray_r')
 #print(ants.image_mutual_information(ants.from_numpy(processedSamples[0]['geneImage']), reg['warpedmovout']))
 #%% test registration with gene image
 experimentalResults = {}
@@ -91,7 +100,7 @@ for i in range(len(experimentalResults)):
 
 #%%
 
-stanly.viewGeneInProcessedSample(experimentalResults[11], 'Upf2')
+stanly.viewGeneInProcessedSample(experimentalResults[11], 'Homer1')
 #%% split groups into male and female
 # samples 3 and 9 are not registering well, so left out
 femaleSamples = []
@@ -112,7 +121,7 @@ nFOVs = 5000
 fovLists = []
 fovCentroids = []
 for i in range(len(maleSamples)):
-    fovList, fovCentroid = stanly.createFOVsForMerscope(maleSamples[i], nFOVs, displayImage=False)
+    fovList, fovCentroid, _ = stanly.createFOVsForMerscope(maleSamples[i], nFOVs, displayImage=False)
     fovLists.append(fovList)
     fovCentroids.append(fovCentroid)
     
@@ -127,6 +136,30 @@ sharedFOVsCoor = []
 for fov in sharedFOVs:
     sharedFOVsCoor.append(fovCentroid[fovList.index(fov),:])
 sharedFOVsCoor = np.array(sharedFOVsCoor)
+
+#%% testing bootstrapping/permutation testing of data
+def ttest(control, experimental):
+    actTStats, actPvals = scipy.stats.ttest_ind(control, experimental, axis=1, nan_policy='omit')
+    return actTStats
+
+designMatrix = [0,1,0,0,1]
+nOfGenes = len(maleSamples[0]['geneListMasked'])
+fovPValMatrix = np.empty([len(sharedFOVs), nOfGenes])
+fovPValMatrix[:] = np.nan
+fovTStatMatrix = np.empty([len(sharedFOVs), nOfGenes])
+fovTStatMatrix[:] = np.nan
+for actFov in enumerate(sharedFOVs):
+    digitalSamplesControl = np.empty((nOfGenes, 0))
+    digitalSamplesExperimental = np.empty((nOfGenes, 0))
+    for actSample in enumerate(maleSamples):
+        fovIdxs = np.where(np.array(np.array(fovLists[actSample[0]]) == actFov[1]))[0]
+        if designMatrix[actSample[0]] == 1:
+            digitalSamplesControl = np.append(digitalSamplesControl, np.array(maleSamples[actSample[0]]['geneMatrixLog2'][:,fovIdxs].todense()), axis=1)
+        else:
+            digitalSamplesExperimental = np.append(digitalSamplesExperimental, np.array(maleSamples[actSample[0]]['geneMatrixLog2'][:,fovIdxs].todense()), axis=1)
+    actTStats, actPvals = scipy_stats.permutation_test((digitalSamplesControl, digitalSamplesExperimental), ttest, n_resamples=10000, random_state=12345)
+    fovPValMatrix[actFov[0],:] = actPvals
+    fovTStatMatrix[actFov[0],:] = actTStats
 #%% remove the loop over genes and instead calculat t-test for all genes simultaneously
 
 designMatrix = [0,1,0,0,1]
@@ -163,6 +196,17 @@ for actP in enumerate(checkForSig):
         plt.imshow(maleSamples[0]['tissueImageRegistered'], cmap='gray_r')
         plt.scatter(sharedFOVsCoor[:,0], sharedFOVsCoor[:,1], c=fovTStatMatrix[:,actP[0]], cmap='seismic',alpha=0.7,vmin=-4,vmax=4,plotnonfinite=False, s=10)
         plt.show()
+        plt.title(f"T-statistic for {actGene}, p-value={actP[1]}**")
+        plt.savefig(os.path.join(derivatives,f'xeniumTStat_male_SDvsNSD_{actGene}_nFOVs{nFOVs}_uncorrPVal{desiredPval}.png'), bbox_inches='tight', dpi=300)
+        plt.close()
+    else:
+        actGene = maleSamples[0]['geneListMasked'][actP[0]]
+        print(actP)
+        nSigGenes += 1
+        plt.figure()
+        plt.imshow(maleSamples[0]['tissueImageRegistered'], cmap='gray_r')
+        plt.scatter(sharedFOVsCoor[:,0], sharedFOVsCoor[:,1], c=fovTStatMatrix[:,actP[0]], cmap='seismic',alpha=0.7,vmin=-4,vmax=4,plotnonfinite=False, s=10)
+        plt.show()
         plt.title(f"T-statistic for {actGene}, p-value={actP[1]}")
         plt.savefig(os.path.join(derivatives,f'xeniumTStat_male_SDvsNSD_{actGene}_nFOVs{nFOVs}_uncorrPVal{desiredPval}.png'), bbox_inches='tight', dpi=300)
         plt.close()
@@ -175,7 +219,7 @@ nFOVs = 5000
 fovLists = []
 fovCentroids = []
 for i in range(len(femaleSamples)):
-    fovList, fovCentroid = stanly.createFOVsForMerscope(femaleSamples[i], nFOVs, displayImage=False)
+    fovList, fovCentroid, _ = stanly.createFOVsForMerscope(femaleSamples[i], nFOVs, displayImage=False)
     fovLists.append(fovList)
     fovCentroids.append(fovCentroid)
     
@@ -245,7 +289,7 @@ nFOVs = 5000
 fovLists = []
 fovCentroids = []
 for i in range(len(allSamples)):
-    fovList, fovCentroid = stanly.createFOVsForMerscope(allSamples[i], nFOVs, displayImage=False)
+    fovList, fovCentroid, _ = stanly.createFOVsForMerscope(allSamples[i], nFOVs, displayImage=False)
     fovLists.append(fovList)
     fovCentroids.append(fovCentroid)
     

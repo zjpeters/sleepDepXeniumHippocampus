@@ -19,20 +19,28 @@ import scipy.sparse as sp_sparse
 import time
 import matplotlib.cm as cm
 import seaborn as sns
+import scipy.spatial as sp_spatial
+import pandas as pd
 
-rawdata=os.path.join('/','media','zjpeters','Expansion','sleepDepXenium','rawdata')
-derivatives=os.path.join('/','media','zjpeters','Expansion','sleepDepXeniumHippocampus','derivatives')
+rawdata=os.path.join('/','home','zjpeters','Documents','sleepDepXenium','rawdata')
+derivatives=os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus','derivatives')
 
 #%% load newly processed samples and check selection
 
-experiment = stanly.loadParticipantsTsv(os.path.join(rawdata, 'participants.tsv'))
+participant_list = ['YW-1_ROI_A1_hippocampus', 'YW-1_ROI_C1_hippocampus', 
+                    'YW-2_ROI_B1_hippocampus', 'YW-1_ROI_A2_hippocampus', 
+                    'YW-1_ROI_C2_hippocampus', 'YW-2_ROI_B2_hippocampus',
+                    'YW-1_ROI_B1_hippocampus', 'YW-2_ROI_A1_hippocampus', 
+                    'YW-2_ROI_C1_hippocampus', 'YW-1_ROI_B2_hippocampus', 
+                    'YW-2_ROI_A2_hippocampus', 'YW-2_ROI_C2_hippocampus']
+
 processedSamples = {}
-for sampleIdx in range(len(experiment['sample-id'])):
-    processedSamples[sampleIdx] = stanly.loadProcessedXeniumSample(os.path.join(derivatives, f"{experiment['sample-id'][sampleIdx]}_hippocampus"))
+for sampleIdx in range(len(participant_list)):
+    processedSamples[sampleIdx] = stanly.loadProcessedXeniumSample(os.path.join(derivatives, f"{participant_list[sampleIdx]}"))
 
 #%% run clustering on all samples at a given resolution
 
-actK = 20
+actK = 15
 for actSample in range(0, 12):
     sampleToCluster = processedSamples[actSample]
     nDigitalSpots = sampleToCluster['geneMatrixLog2'].shape[1]
@@ -146,9 +154,12 @@ for actSample in range(0, 12):
     )
     plt.savefig(os.path.join(derivatives, f'clusteringAndSilhouetteSleepDepControlK{actK}_hippocampus_{sampleToCluster["sampleID"]}.png'), bbox_inches='tight', dpi=300)
     plt.show()
+    clusterDF = {'barcodes': sampleToCluster['barcodeList'], 'cluster_labels': cluster_labels, 'silhouette_values': sample_silhouette_values, 'color_r': colors[:,0], 'color_g': colors[:,1], 'color_b': colors[:,2], 'color_alpha': colors[:,3]}
+    clusterDF = pd.DataFrame(clusterDF)
+    clusterDF.to_csv(os.path.join(derivatives, f'{sampleToCluster["sampleID"]}_cluster_information.csv'), index=False)
 
 #%% extract top genes from clustering
-
+actK = 15
 sampleToCluster = processedSamples[0]
 nDigitalSpots = sampleToCluster['geneMatrixLog2'].shape[1]
 
@@ -261,6 +272,17 @@ plt.suptitle(
 )
 plt.show()
 
+clusterDF = {'barcodes': sampleToCluster['barcodeList'], 'cluster_labels': cluster_labels, 'silhouette_values': sample_silhouette_values, 'color_r': colors[:,0], 'color_g': colors[:,1], 'color_b': colors[:,2], 'color_alpha': colors[:,3]}
+clusterDF = pd.DataFrame(clusterDF)
+clusterDF.to_csv(os.path.join(derivatives, f'{sampleToCluster["sampleID"]}_cluster_information.csv'), index=False)
+#%% save clustering data and input information
+"""
+Need to save certain data in order to be able to re-run clustering:
+    eigenvectors/eigenvalues
+    cluster_labels
+    cluster colors
+"""
+
 #%% plot each cluster individually
 plt.close('all')
 plt.figure()
@@ -302,9 +324,78 @@ for i in range(actK):
     ax[1].scatter(sampleToCluster['processedTissuePositionList'][:,0], sampleToCluster['processedTissuePositionList'][:,1],c=np.squeeze(np.array(gene_matrix[sorted_cluster_matrix_mean[-1], :])), s=5, cmap='Reds')
     ax[1].axis('off')
     ax[1].set_title(f'{sampleToCluster["geneList"][sorted_cluster_matrix_mean[-1]]}')
+    fig.set_size_inches(10,14)
     plt.show()
+    plt.savefig(os.path.join(derivatives, f'{sampleToCluster["sampleID"]}_cluster{i}_hippocampus_top_gene_{sampleToCluster["geneList"][sorted_cluster_matrix_mean[-1]]}.png'), bbox_inches='tight', dpi=300)
+    plt.close()
     # plt.title(f"The visualization of the clustered control data for cluster {i}.")
     # stanly.viewGeneInProcessedSample(sampleToCluster, sampleToCluster['geneList'][sorted_cluster_matrix_mean[-2]])
+
+#%% calculate nearest neighbor cells to sparsify matrix
+# to be incorporated into measureTranscriptomicSimilarity function
+geneMatrix = processedSamples[0]['geneMatrixLog2']
+# number of nearest neighbors to calculate
+# kNN will only work along the cell axis, 
+kNN = 50
+axis = 1
+spotCdist = sp_spatial.distance.cdist(processedSamples[0]['processedTissuePositionList'], processedSamples[0]['processedTissuePositionList'], 'euclidean')
+sortedCdist = np.argsort(spotCdist, axis=1)
+# create list of indices of nearest neighbors
+kNNIdx = sortedCdist[:, 1:kNN+1]
+def findKNearestNeighbors(tissuePositionList, kNN=50):
+    spotCdist = sp_spatial.distance.cdist(tissuePositionList, tissuePositionList, 'euclidean')    
+    sortedCdist = np.argsort(spotCdist, axis=1)
+    kNNIdx = sortedCdist[:, 1:kNN+1]
+    edgeList = []
+    for i in range(len(tissuePositionList)):
+        for j in range(kNN):
+            edgeList.append([i, kNNIdx[i,j]])
+    return np.array(edgeList, dtype='int32')
+
+x = findKNearestNeighbors(processedSamples[0]['processedTissuePositionList'])
+#%% update measureTranscriptomicSimilarity
+def measureTranscriptomicSimilarity(geneMatrix, edgeList='FullyConnected', measurement='cosine', axis=1):
+    """
+    measure the transcriptomic similarity/distance between two spots
+    ----------
+    Parameters
+    ----------
+    geneMatrix: float array
+        2D matrix of genetic or transcriptomic data, organized [gene,spot]
+    edgeList: Nx2 int list
+        List of edges to be measured for distance, [[spot1,spot2],[spot1,spot3],...]
+    measurement: str
+        Choice of measurement metric, default='cosine'
+        'cosine' - cosine similarity
+        'pearson' - Pearson's R correlation (**not yet implemented**)
+    axis: int
+        Which axis to run the similarity metric on, default=1, for cells/spots
+    """
+    
+    # dataSimMatrix = []   
+    n = geneMatrix.shape[axis]
+    nInc = n/20
+    percentLocations = np.arange(0, n, nInc, dtype='int32')
+    percents = np.arange(5,101, 5)
+    if axis == 0:
+        geneMatrix = geneMatrix.tocsr()
+    if edgeList == 'FullyConnected':
+        dataSimMatrix = sp_sparse.lil_matrix((geneMatrix.shape[axis],geneMatrix.shape[axis]))
+        for i in range(geneMatrix.shape[axis]):
+            for j in range(i, geneMatrix.shape[axis]):
+                if axis==1:
+                    I = np.ravel(geneMatrix[:,i].todense())
+                    J = np.ravel(geneMatrix[:,j].todense())
+                elif axis==0:
+                    I = np.ravel(geneMatrix[i,:].todense())
+                    J = np.ravel(geneMatrix[j,:].todense())
+                cs = sp_spatial.distance.cosine(I,J)
+                dataSimMatrix[i,j] = float(cs)
+                dataSimMatrix[j,i] = float(cs)
+            if i in percentLocations:
+                print(f"Calculation {percents[list(percentLocations).index(i)]}% completed")
+        dataSimMatrix = dataSimMatrix.tocsc()
+    return dataSimMatrix
 #%% try clustering with reduced gene set, first remove genes with mean expression < 1
 expression_mask = np.squeeze(np.array(np.mean(gene_matrix, axis=1) > 1))
 high_expression_matrix = sp_sparse.csc_matrix(gene_matrix[np.array(clusterSpecificGeneIdx), :])

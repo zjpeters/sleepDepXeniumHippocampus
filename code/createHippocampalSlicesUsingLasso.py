@@ -27,6 +27,7 @@ for actSample in range(len(experiment['sample-id'])):
 sampleIdx = 0
 lasso = stanly.SelectUsingLasso(processedSamples[sampleIdx], f"{processedSamples[sampleIdx]['sampleID']}_hippocampus", derivatives)
 lasso.applyLasso()
+lasso.rotate(90, flip=True)
 hippSample = lasso.outputMaskedSample(processedSamples[sampleIdx])
 
 sampleIdx = 1

@@ -158,6 +158,8 @@ plt.close('all')
 # ttestAxs = sfigs[1].subplots(2, 1)
 
 #%%
+plt.rcParams['font.family'] = 'serif'
+plt.rcParams['font.serif'] = 'Arial'
 plt.close('all')
 fig = plt.figure(figsize=(14,7))
 clustAxs = plt.subplot2grid((4,7), (1,0), rowspan=2, colspan=2)
@@ -263,6 +265,136 @@ ttestAxs2.axis('off')
 ttestAxs2.set_title(f'Gpr161{geneSig}, t-statistic SD > NSD\n CA1{ca1Sig}, CA3{ca3Sig}')
 plt.colorbar(axScatter,fraction=0.02, pad=0.04)
 plt.show()
-plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.svg'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.png'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.pdf'), bbox_inches='tight', dpi=300)
+
+##### uncomment 3 lines below to recreate figures
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.png'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.pdf'), bbox_inches='tight', dpi=300)
+
+#%% replace titles with A, B, C
+plt.close('all')
+fig = plt.figure(figsize=(14,7))
+clustAxs = plt.subplot2grid((4,7), (1,0), rowspan=2, colspan=2)
+umapAxs = plt.subplot2grid((4,7), (0,2), colspan=3, rowspan=4)
+ttestAxs1 = plt.subplot2grid((4,7), (0,5), rowspan=2, colspan=2)
+ttestAxs2 = plt.subplot2grid((4,7), (2,5), rowspan=2, colspan=2)
+plt.show()
+
+clustAxs.imshow(sampleToCluster['tissueImageProcessed'],cmap='gray_r')
+clustAxs.scatter(sampleToCluster['processedTissuePositionList'][:,0], sampleToCluster['processedTissuePositionList'][:,1],c=sampleToCluster['cluster_colors'], s=3)
+clustAxs.axis('off')
+clustAxs.set_title('Clustering, k=15')
+clustAxs.annotate('A', xy=(0,1), xycoords='axes fraction',
+        xytext=(+0.5, -0.5), textcoords='offset fontsize',
+        fontsize='medium', verticalalignment='top', fontfamily='serif',
+        fontweight='bold')
+# create handles and patches to generate labeled legend
+handles, labels = clustAxs.get_legend_handles_labels()
+patch = mpatches.Patch(color=ca1Color, label='CA1')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca2Color, label='CA2')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca3Color, label='CA3')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca4dgColor, label='CA4/DG')
+handles.append(patch) 
+patch = mpatches.Patch(color=dgColor, label='DG')
+handles.append(patch) 
+patch = mpatches.Patch(color=sparseColor, label='nonspecific cells')
+handles.append(patch) 
+# plot the legend
+clustAxs.legend(handles=handles, loc='lower right',bbox_to_anchor=(1.1, 1.2))
+umapAxs.scatter(embedding[:,0], embedding[:,1], c=colorsAllCells, s=3)
+umapAxs.set_title("UMAP of all samples")
+umapAxs.set_xticks([])
+umapAxs.set_yticks([])
+umapAxs.annotate('B', xy=(0,1), xycoords='axes fraction',
+        xytext=(+0.5, -0.5), textcoords='offset fontsize',
+        fontsize='medium', verticalalignment='top', fontfamily='serif',
+        fontweight='bold')
+# plt.tight_layout()
+# calculate t-statistics for Rbm3 and Gpr161
+rbm3Idx = maleSamples[0]["geneList"].index('Rbm3')
+conCA1Rbm3 = np.squeeze(np.array(controlCA1Cells[rbm3Idx,:]))
+expCA1Rbm3 = np.squeeze(np.array(experimentalCA1Cells[rbm3Idx,:]))
+conCA3Rbm3 = np.squeeze(np.array(controlCA3Cells[rbm3Idx,:]))
+expCA3Rbm3 = np.squeeze(np.array(experimentalCA3Cells[rbm3Idx,:]))
+tStatCA1Rbm3, pValCA1Rbm3 = scipy_stats.ttest_ind(expCA1Rbm3, conCA1Rbm3)
+tStatCA3Rbm3, pValCA3Rbm3 = scipy_stats.ttest_ind(expCA3Rbm3, conCA3Rbm3)
+# use the maximum value from both regions as the max for scatter plot
+displayMax = np.max(np.array([np.max(conCA1Rbm3), np.max(expCA1Rbm3),np.max(conCA3Rbm3), np.max(expCA3Rbm3)]))
+tStatMax = np.max(np.array([tStatCA1Rbm3, tStatCA3Rbm3]))
+# output image for each gene, with significance marked by asterisk next to gene name
+if pValCA1Rbm3 < alphaFdr or pValCA3Rbm3 < alphaFdr:
+    geneSig = '*'
+else:
+    geneSig = ''
+if pValCA1Rbm3 < alphaFdr:
+    ca1Sig = '*'
+else:
+    ca1Sig = ''
+if pValCA3Rbm3 < alphaFdr:
+    ca3Sig = '*'
+else:
+    ca3Sig = ''
+ca1Rbm3TstatColors = np.empty_like(ca1Idx)
+ca1Rbm3TstatColors[:] = tStatCA1Rbm3
+ca3Rbm3TstatColors = np.empty_like(ca3Idx)
+ca3Rbm3TstatColors[:] = tStatCA3Rbm3
+# display t-statistic between data for CA1 and CA3 overlaid on first sample
+ttestAxs1.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ttestAxs1.scatter(sampleForDisplay['processedTissuePositionList'][ca1Idx,0],sampleForDisplay['processedTissuePositionList'][ca1Idx,1], cmap='seismic', c=ca1Rbm3TstatColors, vmax=4, vmin=-4, s=3)
+axScatter = ttestAxs1.scatter(sampleForDisplay['processedTissuePositionList'][ca3Idx,0],sampleForDisplay['processedTissuePositionList'][ca3Idx,1], cmap='seismic', c=ca3Rbm3TstatColors, vmax=4, vmin=-4, s=3)
+ttestAxs1.axis('off')
+#bar([f'NSD, mean={np.mean(conGroup)}', f'SD, mean={np.mean(expGroup)}'], [np.mean(conGroup), np.mean(expGroup)], yerr=[scipy_stats.sem(conGroup), scipy_stats.sem(expGroup)], capsize=3, width=w, label=f'p={pVal}', color=[colorHCHex,colorMDDHex])
+ttestAxs1.set_title(f'Rbm3{geneSig}, t-statistic SD > NSD\n CA1{ca1Sig}, CA3{ca3Sig}')
+ttestAxs1.annotate('C', xy=(0,1), xycoords='axes fraction',
+        xytext=(+0.5, -0.5), textcoords='offset fontsize',
+        fontsize='medium', verticalalignment='top', fontfamily='serif',
+        fontweight='bold')
+plt.colorbar(axScatter,fraction=0.02, pad=0.04)
+# do the same for Gpr161
+gpr161Idx = maleSamples[0]["geneList"].index('Gpr161')
+conCA1Gpr161 = np.squeeze(np.array(controlCA1Cells[gpr161Idx,:]))
+expCA1Gpr161 = np.squeeze(np.array(experimentalCA1Cells[gpr161Idx,:]))
+conCA3Gpr161 = np.squeeze(np.array(controlCA3Cells[gpr161Idx,:]))
+expCA3Gpr161 = np.squeeze(np.array(experimentalCA3Cells[gpr161Idx,:]))
+tStatCA1Gpr161, pValCA1Gpr161 = scipy_stats.ttest_ind(expCA1Gpr161, conCA1Gpr161)
+tStatCA3Gpr161, pValCA3Gpr161 = scipy_stats.ttest_ind(expCA3Gpr161, conCA3Gpr161)
+
+# output image for each gene, with significance marked by asterisk next to gene name
+if pValCA1Gpr161 < alphaFdr or pValCA3Gpr161 < alphaFdr:
+    geneSig = '*'
+else:
+    geneSig = ''
+if pValCA1Gpr161 < alphaFdr:
+    ca1Sig = '*'
+else:
+    ca1Sig = ''
+if pValCA3Gpr161 < alphaFdr:
+    ca3Sig = '*'
+else:
+    ca3Sig = ''
+
+ca1Gpr161TstatColors = np.empty_like(ca1Idx)
+ca1Gpr161TstatColors[:] = tStatCA1Gpr161
+ca3Gpr161TstatColors = np.empty_like(ca3Idx)
+ca3Gpr161TstatColors[:] = tStatCA3Gpr161
+# display t-statistic between data for CA1 and CA3 overlaid on first sample
+ttestAxs2.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ttestAxs2.scatter(sampleForDisplay['processedTissuePositionList'][ca1Idx,0],sampleForDisplay['processedTissuePositionList'][ca1Idx,1], cmap='seismic', c=ca1Gpr161TstatColors, vmax=4, vmin=-4, s=3)
+axScatter = ttestAxs2.scatter(sampleForDisplay['processedTissuePositionList'][ca3Idx,0],sampleForDisplay['processedTissuePositionList'][ca3Idx,1], cmap='seismic', c=ca3Gpr161TstatColors, vmax=4, vmin=-4, s=3)
+ttestAxs2.axis('off')
+#bar([f'NSD, mean={np.mean(conGroup)}', f'SD, mean={np.mean(expGroup)}'], [np.mean(conGroup), np.mean(expGroup)], yerr=[scipy_stats.sem(conGroup), scipy_stats.sem(expGroup)], capsize=3, width=w, label=f'p={pVal}', color=[colorHCHex,colorMDDHex])
+ttestAxs2.set_title(f'Gpr161{geneSig}, t-statistic SD > NSD\n CA1{ca1Sig}, CA3{ca3Sig}')
+ttestAxs2.annotate('D', xy=(0,1), xycoords='axes fraction',
+        xytext=(+0.5, -0.5), textcoords='offset fontsize',
+        fontsize='medium', verticalalignment='top', fontfamily='serif',
+        fontweight='bold')
+plt.colorbar(axScatter,fraction=0.02, pad=0.04)
+plt.show()
+
+##### uncomment 3 lines below to recreate figures
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.png'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(derivatives, 'xenium_figure_k15cluster_umap_rbm3ttest_gpr161ttest.pdf'), bbox_inches='tight', dpi=300)

@@ -120,8 +120,8 @@ for r in range(nRepeats):
         fontweight="bold",
     )
     plt.show()
-    
-    
+
+
     print("--- %s seconds ---" % (time.time() - start_time))
     
     for i in range(actK):
@@ -129,7 +129,7 @@ for r in range(nRepeats):
         for j in clusterIdx:
             for k in clusterIdx:
                 probMatrix[j,k] += 1
-                
+
 probMatrix = probMatrix/nRepeats - np.eye(nDigitalSpots)
 #%% testing creating clusters from repeated clusterings
 for cell in range(nDigitalSpots):

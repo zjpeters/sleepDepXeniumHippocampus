@@ -495,6 +495,8 @@ identify genes present in allen data that are also present in:
 """
 cellTypeSpreadsheetLocation = os.path.join('/','home','zjpeters','Documents','stanly','code','data','cellTypeMarkerGeneInfo','Brain Cell Type Specific Gene Expression and Co-expression Network Architectures_41598_2018_27293_MOESM2_ESM_mouse_specificity.csv')
 cellTypeGeneExpressionList = pd.read_csv(cellTypeSpreadsheetLocation)
+
+
 """
 need to use inclusion exclusion criteria that checks for multiple genes expressed
 within cell
@@ -540,6 +542,8 @@ for gene in sampleToCluster['geneList']:
 cellTypeGeneIdx = [x in sampleCasefoldList for x in cellTypeCasefoldList]
 
 cellTypeGenesInSample = cellTypeGeneExpressionList[cellTypeGeneIdx]
+
+cellTypeGenesInSample.to_csv(os.path.join(derivatives,'cell_type_genes_in_xenium.csv'), index=False)
 #%% create lists of cell type genes
 cellTypes = np.unique(cellTypeGenesInSample['Celltype'])
 cellTypeGeneLists = {}

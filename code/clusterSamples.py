@@ -27,17 +27,19 @@ derivatives=os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippoc
 
 #%% load newly processed samples and check selection
 
-participant_list = ['YW-1_ROI_A1_hippocampus', 'YW-1_ROI_C1_hippocampus', 
-                    'YW-2_ROI_B1_hippocampus', 'YW-1_ROI_A2_hippocampus', 
-                    'YW-1_ROI_C2_hippocampus', 'YW-2_ROI_B2_hippocampus',
-                    'YW-1_ROI_B1_hippocampus', 'YW-2_ROI_A1_hippocampus', 
-                    'YW-2_ROI_C1_hippocampus', 'YW-1_ROI_B2_hippocampus', 
-                    'YW-2_ROI_A2_hippocampus', 'YW-2_ROI_C2_hippocampus']
+locOfTsvFile = os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus', 'participants.tsv')
+participants = pd.read_csv(locOfTsvFile, delimiter='\t')
+
+experiment = {'sample-id': participants['participant_id'].to_numpy(),
+                    'rotation': participants['deg_rot'].to_numpy(),
+                    'experimental-group': participants['sleep_dep'].to_numpy(),
+                    'flip': participants['flip'].to_numpy(),
+                    'sex': participants['sex'].to_numpy()}
 
 processedSamples = {}
-for sampleIdx in range(len(participant_list)):
-    processedSamples[sampleIdx] = stanly.loadProcessedXeniumSample(os.path.join(derivatives, f"{participant_list[sampleIdx]}"))
 
+for sampleIdx in range(len(experiment['sample-id'] )):
+    processedSamples[sampleIdx] = stanly.loadProcessedXeniumSample(os.path.join(derivatives, f"{experiment['sample-id'][sampleIdx]}_hippocampus"))
 #%% run clustering on all samples at a given resolution
 
 actK = 15

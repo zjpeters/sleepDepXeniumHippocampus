@@ -180,66 +180,66 @@ sparseColor = np.squeeze(np.array([0.7,0.7,0.7,1]))
 # controlAllCellsMale = np.empty([len(maleSamples[0]['geneList']),0])
 colorsAllCellsMale = np.empty([0,4])
 for actSample in range(len(maleSamples)):
-        # controlAllCellsMale = np.append(controlAllCellsMale, maleSamples[actSample]['geneMatrixLog2'].todense(), axis=1)
-        sampleColors = maleSamples[actSample]['cluster_colors']
-        ca1Idx = findRelevantClusters(maleSamples[actSample], 'CA1')
-        sampleColors[ca1Idx,:] = ca1Color
-        ca2Idx = findRelevantClusters(maleSamples[actSample], 'CA2')
-        sampleColors[ca2Idx,:] = ca2Color
-        ca3Idx = findRelevantClusters(maleSamples[actSample], 'CA3')
-        sampleColors[ca3Idx,:] = ca3Color
-        ca4dgIdx = findRelevantClusters(maleSamples[actSample], 'DG/CA4')
-        sampleColors[ca4dgIdx,:] = ca4dgColor
-        dgIdx = findRelevantClusters(maleSamples[actSample], 'DG')
-        sampleColors[dgIdx,:] = dgColor
-        astIdx = findRelevantClusters(maleSamples[actSample], 'astrocytes')
-        sampleColors[astIdx,:] = astColor
-        endIdx = findRelevantClusters(maleSamples[actSample], 'endothelial')
-        sampleColors[endIdx,:] = endColor
-        micIdx = findRelevantClusters(maleSamples[actSample], 'microglia')
-        sampleColors[micIdx,:] = micColor
-        neuIdx = findRelevantClusters(maleSamples[actSample], 'neurons')
-        sampleColors[neuIdx,:] = sparseColor
-        # sampleColors[neuIdx,:] = neuColor
-        oliIdx = findRelevantClusters(maleSamples[actSample], 'oligodendrocytes')
-        sampleColors[oliIdx,:] = oliColor
-        sparseIdx = findRelevantClusters(maleSamples[actSample], 'sparse')
-        sampleColors[sparseIdx,:] = sparseColor
-        intIdx = np.where(maleSamples[actSample]['cluster_labels'] == 15)[0]
-        sampleColors[intIdx, :] = neuColor
-        colorsAllCellsMale = np.append(colorsAllCellsMale, sampleColors, axis=0)
+    # controlAllCellsMale = np.append(controlAllCellsMale, maleSamples[actSample]['geneMatrixLog2'].todense(), axis=1)
+    sampleColors = maleSamples[actSample]['cluster_colors']
+    ca1Idx = findRelevantClusters(maleSamples[actSample], 'CA1')
+    sampleColors[ca1Idx,:] = ca1Color
+    ca2Idx = findRelevantClusters(maleSamples[actSample], 'CA2')
+    sampleColors[ca2Idx,:] = ca2Color
+    ca3Idx = findRelevantClusters(maleSamples[actSample], 'CA3')
+    sampleColors[ca3Idx,:] = ca3Color
+    ca4dgIdx = findRelevantClusters(maleSamples[actSample], 'DG/CA4')
+    sampleColors[ca4dgIdx,:] = ca4dgColor
+    dgIdx = findRelevantClusters(maleSamples[actSample], 'DG')
+    sampleColors[dgIdx,:] = dgColor
+    astIdx = findRelevantClusters(maleSamples[actSample], 'astrocytes')
+    sampleColors[astIdx,:] = astColor
+    endIdx = findRelevantClusters(maleSamples[actSample], 'endothelial')
+    sampleColors[endIdx,:] = endColor
+    micIdx = findRelevantClusters(maleSamples[actSample], 'microglia')
+    sampleColors[micIdx,:] = micColor
+    neuIdx = findRelevantClusters(maleSamples[actSample], 'neurons')
+    sampleColors[neuIdx,:] = sparseColor
+    # sampleColors[neuIdx,:] = neuColor
+    oliIdx = findRelevantClusters(maleSamples[actSample], 'oligodendrocytes')
+    sampleColors[oliIdx,:] = oliColor
+    sparseIdx = findRelevantClusters(maleSamples[actSample], 'sparse')
+    sampleColors[sparseIdx,:] = sparseColor
+    intIdx = np.where(maleSamples[actSample]['cluster_labels'] == 15)[0]
+    sampleColors[intIdx, :] = neuColor
+    colorsAllCellsMale = np.append(colorsAllCellsMale, sampleColors, axis=0)
         
 # controlAllCellsFemale = np.empty([len(femaleSamples[0]['geneList']),0])
 colorsAllCellsFemale = np.empty([0,4])
 for actSample in range(len(femaleSamples)):
-        # controlAllCellsFemale = np.append(controlAllCellsFemale, femaleSamples[actSample]['geneMatrixLog2'].todense(), axis=1)
-        sampleColors = femaleSamples[actSample]['cluster_colors']
-        ca1Idx = findRelevantClusters(femaleSamples[actSample], 'CA1')
-        sampleColors[ca1Idx,:] = ca1Color
-        ca2Idx = findRelevantClusters(femaleSamples[actSample], 'CA2')
-        sampleColors[ca2Idx,:] = ca2Color
-        ca3Idx = findRelevantClusters(femaleSamples[actSample], 'CA3')
-        sampleColors[ca3Idx,:] = ca3Color
-        ca4dgIdx = findRelevantClusters(femaleSamples[actSample], 'DG/CA4')
-        sampleColors[ca4dgIdx,:] = ca4dgColor
-        dgIdx = findRelevantClusters(femaleSamples[actSample], 'DG')
-        sampleColors[dgIdx,:] = dgColor
-        astIdx = findRelevantClusters(femaleSamples[actSample], 'astrocytes')
-        sampleColors[astIdx,:] = astColor
-        endIdx = findRelevantClusters(femaleSamples[actSample], 'endothelial')
-        sampleColors[endIdx,:] = endColor
-        micIdx = findRelevantClusters(femaleSamples[actSample], 'microglia')
-        sampleColors[micIdx,:] = micColor
-        neuIdx = findRelevantClusters(femaleSamples[actSample], 'neurons')
-        sampleColors[neuIdx,:] = sparseColor
-        # sampleColors[neuIdx,:] = neuColor
-        oliIdx = findRelevantClusters(femaleSamples[actSample], 'oligodendrocytes')
-        sampleColors[oliIdx,:] = oliColor
-        sparseIdx = findRelevantClusters(femaleSamples[actSample], 'sparse')
-        sampleColors[sparseIdx,:] = sparseColor
-        intIdx = np.where(femaleSamples[actSample]['cluster_labels'] == 15)[0]
-        sampleColors[intIdx, :] = neuColor
-        colorsAllCellsFemale = np.append(colorsAllCellsFemale, sampleColors, axis=0)
+    # controlAllCellsFemale = np.append(controlAllCellsFemale, femaleSamples[actSample]['geneMatrixLog2'].todense(), axis=1)
+    sampleColors = femaleSamples[actSample]['cluster_colors']
+    ca1Idx = findRelevantClusters(femaleSamples[actSample], 'CA1')
+    sampleColors[ca1Idx,:] = ca1Color
+    ca2Idx = findRelevantClusters(femaleSamples[actSample], 'CA2')
+    sampleColors[ca2Idx,:] = ca2Color
+    ca3Idx = findRelevantClusters(femaleSamples[actSample], 'CA3')
+    sampleColors[ca3Idx,:] = ca3Color
+    ca4dgIdx = findRelevantClusters(femaleSamples[actSample], 'DG/CA4')
+    sampleColors[ca4dgIdx,:] = ca4dgColor
+    dgIdx = findRelevantClusters(femaleSamples[actSample], 'DG')
+    sampleColors[dgIdx,:] = dgColor
+    astIdx = findRelevantClusters(femaleSamples[actSample], 'astrocytes')
+    sampleColors[astIdx,:] = astColor
+    endIdx = findRelevantClusters(femaleSamples[actSample], 'endothelial')
+    sampleColors[endIdx,:] = endColor
+    micIdx = findRelevantClusters(femaleSamples[actSample], 'microglia')
+    sampleColors[micIdx,:] = micColor
+    neuIdx = findRelevantClusters(femaleSamples[actSample], 'neurons')
+    sampleColors[neuIdx,:] = sparseColor
+    # sampleColors[neuIdx,:] = neuColor
+    oliIdx = findRelevantClusters(femaleSamples[actSample], 'oligodendrocytes')
+    sampleColors[oliIdx,:] = oliColor
+    sparseIdx = findRelevantClusters(femaleSamples[actSample], 'sparse')
+    sampleColors[sparseIdx,:] = sparseColor
+    intIdx = np.where(femaleSamples[actSample]['cluster_labels'] == 15)[0]
+    sampleColors[intIdx, :] = neuColor
+    colorsAllCellsFemale = np.append(colorsAllCellsFemale, sampleColors, axis=0)
 #%% perform umap plot on combined cells
 
 reducer = umap.UMAP()
@@ -492,8 +492,13 @@ desiredPval = 0.05
 alphaFdr = 1 - np.power((1 - desiredPval),(1/(len(maleSamples[0]["geneList"])*len(cellsOfInterest))))
 plt.close('all')
 sigGenesPerCells = {}
+
+# prepare lists for BH fdr
+tStatList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
+pValList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
+
 # loop over each of the regions/cell types and perform a t-test and plot results
-for region in cellsOfInterest:
+for regionN, region in enumerate(cellsOfInterest):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -503,6 +508,8 @@ for region in cellsOfInterest:
     sigGenesPerCells[region] = []
     for gene in range(len(sampleToCluster['geneList'])):
         tStat, pVal = scipy_stats.ttest_ind(np.squeeze(np.array(sdCells[gene,:])), np.squeeze(np.array(nsdCells[gene,:])))
+        tStatList[gene, regionN] = tStat
+        pValList[gene, regionN] = pVal
         if pVal < alphaFdr:
             nsdColor = np.empty([len(regionCellsToPlot)])
             nsdColor[:] = np.mean(nsdCells[gene,:]) 
@@ -532,8 +539,37 @@ for region in cellsOfInterest:
             plt.close()
             sigGenesPerCells[region].append(sampleForDisplay["geneList"][gene])
 
+#%% perform BH fdr correction
+q = 0.05
+writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
+for cellTypeIdx, cellType in enumerate(cellsOfInterest):
+    regionIdx = np.where(allClustersMale == cellType)[0]
+    regionCells = allCellsMale[:, regionIdx]
+    sortedPvals = np.sort(pValList[:,cellTypeIdx])
+    sortedIdx = np.array(np.argsort(pValList[:,cellTypeIdx]))
+    sigGenesPerCells[cellType] = []
+    for i, pVal in enumerate(sortedPvals):
+        p_i = ((i+1)/(pValList.shape[0]*pValList.shape[1]))*q
+        # p_i = ((i+1)/allCellsMale.shape[1])*q
+        if pVal <= p_i:
+            p_idx = i
+    print(f"{cellType}:\n  Number of Cells: {regionCells.shape[1]}\n  Number of DEGs: {p_idx}")
+    GeneID = []
+    BH_FDR = []
+    for geneIdx in sortedIdx[0:p_idx]:
+        GeneID.append(sampleForDisplay['geneList'][geneIdx])
+        BH_FDR.append(pValList[geneIdx,cellTypeIdx])
+    GeneID = np.array(GeneID).T
+    BH_FDR = np.array(BH_FDR).T
+    cellTypeDF = pd.DataFrame({"Gene_ID": GeneID, "BH_FDR": BH_FDR})
+    if cellType == 'DG/CA4':
+        cellTypeDF.to_excel(writer, sheet_name='DG-CA4', index=False)
+    else:
+        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+# writer.save()
+writer.close()
 #%% write sig genes to excel file
-writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions.xlsx'))
+writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_sidak.xlsx'))
 for i in sigGenesPerCells.keys():
     cellTypeDF = pd.DataFrame(sigGenesPerCells[i])
     if i == 'DG/CA4':
@@ -545,8 +581,10 @@ writer.close()
 #%% perform t-test on each region/cell type same as above, but try plotting all regions together
 plt.close('all')
 sigGenesPerCells = {}
+# prepare lists for BH fdr
+tStatList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
+pValList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
 # loop over each of the regions/cell types and perform a t-test and plot results
-
 for gene in range(len(sampleToCluster['geneList'])):
     fig = plt.figure(figsize=(16,6))
     nsdMean = plt.subplot2grid((4,9), (0,0), colspan=3, rowspan=4)
@@ -562,7 +600,7 @@ for gene in range(len(sampleToCluster['geneList'])):
     sdNSDTstat.set_title('T-statistic for SD > NSD')
     sdNSDTstat.axis('off')
     sigAst = ""
-    for region in cellsOfInterest:
+    for regionN, region in enumerate(cellsOfInterest):
         regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
         regionIdx = np.where(allClustersMale == region)[0]
         sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -571,6 +609,8 @@ for gene in range(len(sampleToCluster['geneList'])):
         sdCells = regionCells[:, sdNSDRegionIdx == 1]
         sigGenesPerCells[region] = []
         tStat, pVal = scipy_stats.ttest_ind(np.squeeze(np.array(sdCells[gene,:])), np.squeeze(np.array(nsdCells[gene,:])))
+        tStatList[gene, regionN] = tStat
+        pValList[gene, regionN] = pVal
         if pVal < alphaFdr:
             sigAst = sigAst + "*"
         nsdColor = np.empty([len(regionCellsToPlot)])

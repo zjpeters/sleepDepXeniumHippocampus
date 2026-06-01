@@ -578,6 +578,103 @@ for i in sigGenesPerCells.keys():
         cellTypeDF.to_excel(writer, sheet_name=i, index=False)
 # writer.save()
 writer.close()
+
+#%% perform t-test on each region/cell type female
+cellsOfInterest = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4', 'astrocytes', 'endothelial', 'microglia', 'neurons', 'oligodendrocytes', 'sparse']
+# use the first sample as the one to plot to
+sampleForDisplay = femaleSamples[0]
+desiredPval = 0.05
+alphaFdr = 1 - np.power((1 - desiredPval),(1/(len(femaleSamples[0]["geneList"])*len(cellsOfInterest))))
+plt.close('all')
+sigGenesPerCells = {}
+
+# prepare lists for BH fdr
+tStatList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
+pValList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
+
+# loop over each of the regions/cell types and perform a t-test and plot results
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersFemale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxFemale[regionIdx]
+    regionCells = allCellsFemale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    sigGenesPerCells[region] = []
+    for gene in range(len(sampleForDisplay['geneList'])):
+        tStat, pVal = scipy_stats.ttest_ind(np.squeeze(np.array(sdCells[gene,:])), np.squeeze(np.array(nsdCells[gene,:])))
+        tStatList[gene, regionN] = tStat
+        pValList[gene, regionN] = pVal
+        if pVal < alphaFdr:
+            nsdColor = np.empty([len(regionCellsToPlot)])
+            nsdColor[:] = np.mean(nsdCells[gene,:]) 
+            sdColor = np.empty([len(regionCellsToPlot)])
+            sdColor[:] = np.mean(sdCells[gene,:]) 
+            tStatColor = np.empty([len(regionCellsToPlot)])
+            tStatColor[:] = tStat
+            fig, ax = plt.subplots(1,3)
+            ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+            ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=4)
+            ax[0].set_title(f'Mean of NSD \n mean={np.mean(nsdCells[gene,:])}')
+            ax[0].axis('off')
+            ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+            ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=4)
+            ax[1].set_title(f'Mean of SD \n mean={np.mean(sdCells[gene,:])}')
+            ax[1].axis('off')
+            ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+            ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
+            ax[2].set_title(f'T-statistic for SD > NSD \n p-value={pVal}')
+            ax[2].axis('off')
+            plt.suptitle(f'T-statistic for gene: {sampleForDisplay["geneList"][gene]} \n in {region}')
+            plt.show()
+            if region == "DG/CA4":
+                plt.savefig(os.path.join(derivatives, 'clusterDEGsFemales', f'ttest_nsd_sd_females_{sampleForDisplay["geneList"][gene]}_in_DG-CA4.png'), bbox_inches='tight', dpi=300)
+            else:
+                plt.savefig(os.path.join(derivatives, 'clusterDEGsFemales', f'ttest_nsd_sd_females_{sampleForDisplay["geneList"][gene]}_in_{region}.png'), bbox_inches='tight', dpi=300)
+            plt.close()
+            sigGenesPerCells[region].append(sampleForDisplay["geneList"][gene])
+
+
+#%% perform BH fdr correction
+q = 0.05
+writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_female_SD_BH.xlsx'))
+for cellTypeIdx, cellType in enumerate(cellsOfInterest):
+    regionIdx = np.where(allClustersFemale == cellType)[0]
+    regionCells = allCellsFemale[:, regionIdx]
+    sortedPvals = np.sort(pValList[:,cellTypeIdx])
+    sortedIdx = np.array(np.argsort(pValList[:,cellTypeIdx]))
+    sigGenesPerCells[cellType] = []
+    for i, pVal in enumerate(sortedPvals):
+        p_i = ((i+1)/(pValList.shape[0]*pValList.shape[1]))*q
+        # p_i = ((i+1)/allCellsMale.shape[1])*q
+        if pVal <= p_i:
+            p_idx = i
+    print(f"{cellType}:\n  Number of Cells: {regionCells.shape[1]}\n  Number of DEGs: {p_idx}")
+    GeneID = []
+    BH_FDR = []
+    for geneIdx in sortedIdx[0:p_idx]:
+        GeneID.append(sampleForDisplay['geneList'][geneIdx])
+        BH_FDR.append(pValList[geneIdx,cellTypeIdx])
+    GeneID = np.array(GeneID).T
+    BH_FDR = np.array(BH_FDR).T
+    cellTypeDF = pd.DataFrame({"Gene_ID": GeneID, "BH_FDR": BH_FDR})
+    if cellType == 'DG/CA4':
+        cellTypeDF.to_excel(writer, sheet_name='DG-CA4', index=False)
+    else:
+        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+# writer.save()
+writer.close()
+#%% write sig genes to excel file
+writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_sidak.xlsx'))
+for i in sigGenesPerCells.keys():
+    cellTypeDF = pd.DataFrame(sigGenesPerCells[i])
+    if i == 'DG/CA4':
+        cellTypeDF.to_excel(writer, sheet_name='DG-CA4', index=False)
+    else:
+        cellTypeDF.to_excel(writer, sheet_name=i, index=False)
+# writer.save()
+writer.close()
+
 #%% perform t-test on each region/cell type same as above, but try plotting all regions together
 plt.close('all')
 sigGenesPerCells = {}

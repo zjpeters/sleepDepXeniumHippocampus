@@ -1,0 +1,112 @@
+\glsdefs@newdocentry{ca1}%
+{%
+name={CA1},%
+sort={CA1},%
+type={acronym},%
+first={Cornu ammonis subfield 1\glsspace (CA1)},%
+firstplural={Cornu ammonis subfield 1\acrpluralsuffix \glsspace (CA1\acrpluralsuffix )},%
+text={CA1},%
+plural={CA1\acrpluralsuffix },%
+description={Cornu ammonis subfield 1},%
+descriptionplural={Cornu ammonis subfield 1\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Cornu ammonis subfield 1},%
+longplural={Cornu ammonis subfield 1s},%
+short={CA1},%
+shortplural={CA1s},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{ca2}%
+{%
+name={CA2},%
+sort={CA2},%
+type={acronym},%
+first={Cornu ammonis subfield 2\glsspace (CA2)},%
+firstplural={Cornu ammonis subfield 2\acrpluralsuffix \glsspace (CA2\acrpluralsuffix )},%
+text={CA2},%
+plural={CA2\acrpluralsuffix },%
+description={Cornu ammonis subfield 2},%
+descriptionplural={Cornu ammonis subfield 2\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Cornu ammonis subfield 2},%
+longplural={Cornu ammonis subfield 2s},%
+short={CA2},%
+shortplural={CA2s},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{ca3}%
+{%
+name={CA3},%
+sort={CA3},%
+type={acronym},%
+first={Cornu ammonis subfield 3\glsspace (CA3)},%
+firstplural={Cornu ammonis subfield 3\acrpluralsuffix \glsspace (CA3\acrpluralsuffix )},%
+text={CA3},%
+plural={CA3\acrpluralsuffix },%
+description={Cornu ammonis subfield 3},%
+descriptionplural={Cornu ammonis subfield 3\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Cornu ammonis subfield 3},%
+longplural={Cornu ammonis subfield 3s},%
+short={CA3},%
+shortplural={CA3s},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{dg}%
+{%
+name={DG},%
+sort={DG},%
+type={acronym},%
+first={Dentage gyrus\glsspace (DG)},%
+firstplural={Dentage gyrus\acrpluralsuffix \glsspace (DG\acrpluralsuffix )},%
+text={DG},%
+plural={DG\acrpluralsuffix },%
+description={Dentage gyrus},%
+descriptionplural={Dentage gyrus\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Dentage gyrus},%
+longplural={Dentage gyruss},%
+short={DG},%
+shortplural={DGs},%
+counter={page},%
+parent={},%
+%
+}%
+

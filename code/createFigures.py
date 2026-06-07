@@ -46,6 +46,7 @@ def findRelevantClusters(processedSample, cluster_region):
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Arial'
 plt.rcParams['font.weight'] = 'bold'
+plt.rcParams['axes.labelweight'] = 'bold'
 plt.rcParams['text.usetex'] = False
 plt.rcParams['svg.fonttype'] = 'none'
 
@@ -409,7 +410,7 @@ patch = mpatches.Patch(color=endColor, label='endothelial cells')
 handles.append(patch) 
 patch = mpatches.Patch(color=micColor, label='microglia')
 handles.append(patch) 
-patch = mpatches.Patch(color=neuColor, label='neurons')
+patch = mpatches.Patch(color=neuColor, label='interneurons')
 handles.append(patch) 
 patch = mpatches.Patch(color=oliColor, label='oligodendrocytes')
 handles.append(patch) 
@@ -428,9 +429,76 @@ plt.show()
 plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males.svg'), bbox_inches='tight', dpi=300)
 
+#%% create figure 1 image for all samples with schematic image
+# figure 01, showing clustering and tissue image of a single slice along with umap of all samples
+schematic_img = plt.imread(os.path.join(figureFolder, 'biorender_schematic.png'))
+sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0]))
+rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
+
+plt.close('all')
+fig = plt.figure(figsize=(11,12))
+schematicImage = plt.subplot2grid((6,7), (0,0), colspan=7, rowspan=2)
+tissueImage = plt.subplot2grid((6,7), (2,0), colspan=3, rowspan=2)
+clusterImage = plt.subplot2grid((6,7), (4,0), colspan=3, rowspan=2)
+umapAxsAllCells = plt.subplot2grid((6,7), (2,3), colspan=4, rowspan=4)
+
+# plot schematic image from biorender
+schematicImage.imshow(schematic_img)
+schematicImage.set_xticks([])
+schematicImage.set_yticks([])
+schematicImage.spines['top'].set_visible(False)
+schematicImage.spines['bottom'].set_visible(False)
+schematicImage.spines['left'].set_visible(False)
+schematicImage.spines['right'].set_visible(False)
+# plot the tissue image from sample
+tissueImage.imshow(rotationInfo[1], cmap='gray_r')
+tissueImage.set_xticks([])
+tissueImage.set_yticks([])
+
+# plot the clustering results on top of the image
+clusterImage.imshow(rotationInfo[1], cmap='gray_r')
+clusterImage.scatter(rotationInfo[0][maleSamples[0]['hippMask'],0], rotationInfo[0][maleSamples[0]['hippMask'],1], c=maleSamples[0]['cluster_colors'], alpha=1, s=marker_size, linewidth=0)
+clusterImage.set_xticks([])
+clusterImage.set_yticks([])
+
+# plot all cells
+umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=3, linewidth=0)
+umapAxsAllCells.set_xticks([])
+umapAxsAllCells.set_yticks([])
+
+# plot the legend
+# create handles and patches to generate labeled legend
+handles, labels = umapAxsAllCells.get_legend_handles_labels()
+patch = mpatches.Patch(color=ca1Color, label='CA1')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca2Color, label='CA2')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca3Color, label='CA3')
+handles.append(patch) 
+patch = mpatches.Patch(color=dgColor, label='DG')
+handles.append(patch) 
+patch = mpatches.Patch(color=ca4dgColor, label='DG hilus')
+handles.append(patch) 
+patch = mpatches.Patch(color=astColor, label='astrocytes')
+handles.append(patch) 
+patch = mpatches.Patch(color=endColor, label='endothelial cells')
+handles.append(patch) 
+patch = mpatches.Patch(color=micColor, label='microglia')
+handles.append(patch) 
+patch = mpatches.Patch(color=neuColor, label='interneurons')
+handles.append(patch) 
+patch = mpatches.Patch(color=oliColor, label='oligodendrocytes')
+handles.append(patch) 
+
+umapAxsAllCells.legend(handles=handles, ncols=2)
+
+plt.show()
+# output pdf and svg
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic.svg'), bbox_inches='tight', dpi=300)
+
 #%% create figure 1 image for all samples
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
-
 plt.close('all')
 sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0]))
 rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
@@ -474,7 +542,7 @@ patch = mpatches.Patch(color=endColor, label='endothelial cells')
 handles.append(patch) 
 patch = mpatches.Patch(color=micColor, label='microglia')
 handles.append(patch) 
-patch = mpatches.Patch(color=neuColor, label='neurons')
+patch = mpatches.Patch(color=neuColor, label='interneurons')
 handles.append(patch) 
 patch = mpatches.Patch(color=oliColor, label='oligodendrocytes')
 handles.append(patch) 
@@ -879,7 +947,8 @@ for j in enumerate(sortedPval[:10]):
 if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
     neuPlot.set_title('DG hilus')
 else:
-    neuPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
+    # neuPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
+    neuPlot.set_title('interneurons')
 
 # DG hilus
 cellTypeIdx = 4

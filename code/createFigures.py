@@ -1237,7 +1237,7 @@ plt.show()
 # create volcano plots of regions with bar plot of degs per region at top
 
 volcanoMarkerSize = 15
-volcanoGeneFontSize = 14
+volcanoGeneFontSize = 12
 volcanoTitleFontSize = 16
 
 plt.close('all')
@@ -1736,3 +1736,82 @@ for regionN, region in enumerate(cellsOfInterest):
 plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
 plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
 plt.show()
+
+#%% look for overlapping genes
+sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
+degDict = {}
+for cellType in sheetNames.sheet_names:
+    degDict[cellType] = pd.read_excel(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'), sheet_name=cellType)
+# remove unlabeled cells from data
+del degDict['sparse']
+
+allDegs = np.empty(0)
+for cellType in degDict.keys():
+    allDegs = np.append(allDegs, np.array(degDict[cellType]['Gene_ID']))
+    
+allDegs = np.unique(allDegs)
+
+overlappingBool = np.full([len(allDegs), len(degDict)], False)
+for cellType in enumerate(degDict):
+    for deg in enumerate(allDegs):
+        if deg[1] in np.array(degDict[cellType[1]]['Gene_ID']):
+            overlappingBool[deg[0], cellType[0]] = True
+regionsPerGene = np.sum(overlappingBool, axis=1)
+uniqueDegMask = np.where(regionsPerGene == 1)[0]
+uniqueDegs = {}
+for cellType in enumerate(degDict):
+    uniqueDegs[cellType[1]] = []
+
+for cellType in enumerate(degDict):
+    for deg in enumerate(allDegs[uniqueDegMask]):   
+        if deg[1] in np.array(degDict[cellType[1]]['Gene_ID']):
+            uniqueDegs[cellType[1]].append(deg[1])
+            
+plt.close('all')
+for cellType in enumerate(uniqueDegs):
+    uniqueGeneList = uniqueDegs[cellType[1]]
+    print(len(uniqueGeneList))
+    if len(uniqueGeneList) < 1:
+        continue
+    if not os.path.exists(os.path.join(derivatives, cellType[1])):
+        os.makedirs(os.path.join(derivatives, cellType[1]))
+    for gene in uniqueGeneList:
+        fig, ax = plt.subplots(1,3)
+        ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+        geneIdx = sampleForDisplay['geneList'].index(gene)
+        maxExp = np.max(allCellsMale[geneIdx, :])
+        geneSig = ''
+        for regionN, region in enumerate(cellsOfInterest):
+            regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+            regionIdx = np.where(allClustersMale == region)[0]
+            sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+            regionCells = allCellsMale[:, regionIdx]
+            nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+            sdCells = regionCells[:, sdNSDRegionIdx == 1]
+            tStat = tStatList[geneIdx, regionN]
+            pVal = pValList[geneIdx, regionN]
+            if pVal < alphaFdr:
+                geneSig += '*'
+            nsdColor = np.empty([len(regionCellsToPlot)])
+            nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+            sdColor = np.empty([len(regionCellsToPlot)])
+            sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+            tStatColor = np.empty([len(regionCellsToPlot)])
+            tStatColor[:] = tStat
+            ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
+            ax[0].set_title(f'Mean of NSD \n mean={np.mean(allCellsMale[geneIdx,:])}')
+            ax[0].axis('off')
+            ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+            meanScatter = ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
+            ax[1].set_title(f'Mean of SD \n mean={np.mean(allCellsMale[geneIdx,:])}')
+            ax[1].axis('off')
+            ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+            tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
+            ax[2].set_title(f'T-statistic for SD > NSD \n p-value={pVal}')
+            ax[2].axis('off')
+        plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
+        plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
+        plt.suptitle(f'{gene} in {cellType[1]}')
+        plt.show()
+        plt.savefig(os.path.join(derivatives, cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
+        plt.close('all')

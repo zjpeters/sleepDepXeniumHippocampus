@@ -10,7 +10,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
 import upsetplot
-
+import sys
+if os.path.exists(os.path.join("/", "home", "zjpeters", "Documents", "stanly", "code")):
+    sys.path.insert(0, "/home/zjpeters/Documents/stanly/code")
+else:
+    sys.path.insert(0, os.path.join('C:',os.sep, 'Users','onyh19ug', 'Documents', 'STANLY','code'))
+import stanly
 # setting runtime parameters for pyplot plotting    
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Arial'
@@ -118,8 +123,8 @@ plt.show()
 #%% create dataframe of overlapping degs
 plt.close('all')
 
-overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=columnNames)
-overlappingDF = overlappingDF.set_index(columnNames)
+# overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=columnNames)
+# overlappingDF = overlappingDF.set_index(columnNames)
 
 upset = upsetplot.UpSet(overlappingDF, show_counts='%d')
 # , absent=['CA1', 'CA2', 'CA3', 'DG hilus', 'astrocytes', 'endothelial', 'microglia', 'interneurons', 'oligodendrocytes']
@@ -145,15 +150,15 @@ fig['totals'].set_title('Number of DEGs', fontweight='bold')
 
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 
 #%% create dataframe of overlapping degs 
 plt.close('all')
 
-overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=columnNames)
-overlappingDF = overlappingDF.set_index(columnNames)
+# overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=columnNames)
+# overlappingDF = overlappingDF.set_index(columnNames)
 
 upset = upsetplot.UpSet(overlappingDF, show_counts='%d')
 # , absent=['CA1', 'CA2', 'CA3', 'DG hilus', 'astrocytes', 'endothelial', 'microglia', 'interneurons', 'oligodendrocytes']
@@ -180,6 +185,19 @@ fig['totals'].set_title('Number of DEGs', fontweight='bold')
 plt.show()
 
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
+
+#%% create list of genes unique to regions
+regionsPerGene = np.sum(overlappingBool, axis=1)
+uniqueDegMask = np.where(regionsPerGene == 1)[0]
+uniqueDegs = {}
+for cellType in enumerate(degDict):
+    uniqueDegs[cellType[1]] = []
+
+for cellType in enumerate(degDict):
+    for deg in enumerate(allDegs[uniqueDegMask]):   
+        if deg[1] in np.array(degDict[cellType[1]]['Gene_ID']):
+            uniqueDegs[cellType[1]].append(deg[1])
+            

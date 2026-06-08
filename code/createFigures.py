@@ -1807,7 +1807,7 @@ for cellType in enumerate(uniqueDegs):
             ax[1].axis('off')
             ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
             tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
-            ax[2].set_title(f'T-statistic for SD > NSD \n p-value={pVal}')
+            ax[2].set_title('T-statistic for SD > NSD')
             ax[2].axis('off')
         plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
         plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)

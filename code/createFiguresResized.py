@@ -50,6 +50,7 @@ plt.rcParams['font.weight'] = 'bold'
 plt.rcParams['axes.labelweight'] = 'bold'
 plt.rcParams['text.usetex'] = False
 plt.rcParams['svg.fonttype'] = 'none'
+plt.rcParams['font.size'] = 6
 
 rawdata = os.path.join(externalDrivePath,'sleepDepXenium','rawdata')
 derivatives = os.path.join(externalDrivePath,'sleepDepXeniumHippocampus','derivatives')
@@ -290,10 +291,10 @@ for actSample in range(len(maleSamples)):
 #%% plot all samples with whole images but only the hippocampal cells along with just tissue
 # supplemental figure to show the clustering of all samples
 
-marker_size = 2
+marker_size = 0.1
 plt.close('all')
 # rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
-fig, ax = plt.subplots(4,3, figsize=(12,8))
+fig, ax = plt.subplots(4,3, figsize=(7.2,4.8))
 
 # plot NSD first
 for i in [0,2,4]:
@@ -339,16 +340,16 @@ for i in enumerate([1,3,5]):
     
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}.svg'), bbox_inches='tight', dpi=300)
-
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 #%% plot all samples with whole images but only the hippocampal cells
 # alternate form of supplemental figure showing clustering on samples
 
-marker_size = 2
+marker_size = 0.1
 plt.close('all')
 # rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
-fig, ax = plt.subplots(2,3, figsize=(12,6))
+fig, ax = plt.subplots(2,3, figsize=(7.2,3.6))
 nR = 0
 nC = 0
 for i in range(len(maleSamples)):
@@ -372,9 +373,9 @@ for i in range(len(maleSamples)):
         nC = 0
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}.svg'), bbox_inches='tight', dpi=300)
-
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 #%% perform umap plot on combined cells
 
 reducer = umap.UMAP(random_state=42)
@@ -385,20 +386,20 @@ embeddingMale = reducer.fit_transform(np.array(allCellsMale).T)
 # supplemental figure showing that there is no obvious difference between sd and nsd in clustering
 plt.close('all')
 
-fig = plt.figure(figsize=(16,9))
+fig = plt.figure(figsize=(7.2,4))
 umapAxsNSD = plt.subplot2grid((4,9), (0,0), colspan=3, rowspan=4)
 umapAxsSD = plt.subplot2grid((4,9), (0,3), colspan=3, rowspan=4)
 umapAxsAllCells = plt.subplot2grid((4,9), (0,6), colspan=3, rowspan=4)
 # plot the NSD samples
 nsdIdx = np.where(sdNSDIdxMale == 0)[0]
-umapAxsNSD.scatter(embeddingMale[nsdIdx,0], embeddingMale[nsdIdx,1], c=colorsAllCellsMale[nsdIdx,:], s=3)
+umapAxsNSD.scatter(embeddingMale[nsdIdx,0], embeddingMale[nsdIdx,1], c=colorsAllCellsMale[nsdIdx,:], s=marker_size, linewidth=0)
 umapAxsNSD.set_title("UMAP of male NSD samples")
 umapAxsNSD.set_xticks([])
 umapAxsNSD.set_yticks([])
 
 # plot the SD samples
 sdIdx = np.where(sdNSDIdxMale == 1)[0]
-umapAxsSD.scatter(embeddingMale[sdIdx,0], embeddingMale[sdIdx,1], c=colorsAllCellsMale[sdIdx,:], s=3)
+umapAxsSD.scatter(embeddingMale[sdIdx,0], embeddingMale[sdIdx,1], c=colorsAllCellsMale[sdIdx,:], s=marker_size, linewidth=0)
 umapAxsSD.set_title("UMAP of male SD samples")
 umapAxsSD.set_xticks([])
 umapAxsSD.set_yticks([])
@@ -427,10 +428,10 @@ handles.append(patch)
 patch = mpatches.Patch(color=oliColor, label='oligodendrocytes')
 handles.append(patch) 
 
-umapAxsSD.legend(handles=handles, ncols=2)
+umapAxsSD.legend(handles=handles, ncols=2, fontsize=5)
 
 # plot all cells
-umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=3)
+umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=marker_size, linewidth=0)
 umapAxsAllCells.set_title("UMAP of all male samples")
 umapAxsAllCells.set_xticks([])
 umapAxsAllCells.set_yticks([])
@@ -438,9 +439,9 @@ umapAxsAllCells.set_yticks([])
 plt.show()
 
 ### uncomment below to save new figure pdf and svg
-# plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males.svg'), bbox_inches='tight', dpi=300)
-
+plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
 schematic_img = plt.imread(os.path.join(figureFolder, 'biorender_schematic.png'))
@@ -448,7 +449,7 @@ sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0
 rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
 
 plt.close('all')
-fig = plt.figure(figsize=(11,12))
+fig = plt.figure(figsize=(6.14,6.69))
 schematicImage = plt.subplot2grid((6,7), (0,0), colspan=7, rowspan=2)
 tissueImage = plt.subplot2grid((6,7), (2,0), colspan=3, rowspan=2)
 clusterImage = plt.subplot2grid((6,7), (4,0), colspan=3, rowspan=2)

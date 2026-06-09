@@ -201,3 +201,7 @@ for cellType in enumerate(degDict):
         if deg[1] in np.array(degDict[cellType[1]]['Gene_ID']):
             uniqueDegs[cellType[1]].append(deg[1])
             
+#%% find genes that are expressed in more than X regions
+
+sharedDEGMask = np.where(regionsPerGene > 5)[0]
+

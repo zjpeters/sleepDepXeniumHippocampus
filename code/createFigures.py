@@ -23,6 +23,7 @@ import pandas as pd
 import scipy.stats as scipy_stats
 import umap
 import matplotlib.patches as mpatches
+import upsetplot
 if os.path.exists(os.path.join('/', 'home', 'zjpeters', 'Documents', 'stanly', 'code')):
     stanlyLoc = os.path.join('/', 'home', 'zjpeters', 'Documents', 'stanly', 'code')
 else:
@@ -70,6 +71,17 @@ oliColor = np.squeeze(np.array([0, 198, 248, 255]))/255
 extraColor1 = np.squeeze(np.array([135, 133, 0, 255]))/255
 extraColor2 = np.squeeze(np.array([0, 167, 108, 255]))/255
 sparseColor = np.squeeze(np.array([189, 189, 189, 255]))/255
+
+ca1ColorOp = np.squeeze(np.array([0, 187, 173, 40]))/255
+ca2ColorOp = np.squeeze(np.array([184, 0, 88, 40]))/255
+ca3ColorOp = np.squeeze(np.array([0, 140, 249, 40]))/255
+dgColorOp = np.squeeze(np.array([235, 172, 35, 40]))/255
+ca4dgColorOp = np.squeeze(np.array([0, 110, 0, 40]))/255
+astColorOp = np.squeeze(np.array([209, 99, 230, 40]))/255
+endColorOp = np.squeeze(np.array([178, 69, 2, 40]))/255
+micColorOp = np.squeeze(np.array([255, 146, 135, 40]))/255
+neuColorOp = np.squeeze(np.array([89, 84, 214, 40]))/255
+oliColorOp = np.squeeze(np.array([0, 198, 248, 40]))/255
 
 cellsOfInterestColorList = [ca1Color, ca2Color, ca3Color, dgColor, ca4dgColor, astColor, endColor, micColor, neuColor, oliColor, sparseColor]
 
@@ -634,7 +646,7 @@ sigColorList = np.array(sigColorList)
 
 #%% perform BH fdr correction
 q = 0.05
-writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
+# writer = pd.ExcelWriter(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
 bhCorrList = np.empty([len(sampleForDisplay['geneList']), len(cellsOfInterest)])
 for cellTypeIdx, cellType in enumerate(cellsOfInterest):
     regionIdx = np.where(allClustersMale == cellType)[0]
@@ -825,9 +837,9 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
 if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-    dgPlot.set_title('DG hilus', fontsize=volcanoTitleFontSize)
+    dgPlot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
-    dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize)
+    dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
 
 fig.text(0.55, 0.04, 'logFC', ha='center', fontsize=volcanoTitleFontSize, fontweight='bold')
 fig.text(0.04, 0.37, '-log10(p-value)', va='center', rotation='vertical', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -838,201 +850,6 @@ plt.show()
 # output pdf and svg
 # plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
 # plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
-#%% volcano plot for all cell types in one plot
-
-# plt.close('all')
-# # uses -log10(pValue) as y axis, logFC as x axis
-
-# fig = plt.figure(figsize=(9,10))
-# # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
-# barPlot = plt.subplot2grid((14,7), (0,1), colspan=5, rowspan=2)
-# neuPlot = plt.subplot2grid((14,7), (3,0), colspan=3, rowspan=3)
-# dgIntPlot = plt.subplot2grid((14,7), (3,4), colspan=3, rowspan=3)
-# astPlot = plt.subplot2grid((14,7), (7,0), colspan=3, rowspan=3)
-# micPlot = plt.subplot2grid((14,7), (7,4), colspan=3, rowspan=3)
-# oliPlot = plt.subplot2grid((14,7), (11,0), colspan=3, rowspan=3)
-# endPlot = plt.subplot2grid((14,7), (11,4), colspan=3, rowspan=3)
-
-# cellsOfInterestNoSparse[4] = 'DG hilus'
-# barPlot.bar(cellsOfInterestNoSparse[4:], degPerRegionNoSparse[4:], color=cellsOfInterestColorListNoSparse[4:])
-# barPlot.set_ylabel('Number of DEGs')
-# barPlot.set_xlabel('Region/cell type')
-# barPlot.set_xticks(np.arange(0,6), cellsOfInterestNoSparse[4:], rotation=15)
-# # neurons
-# cellTypeIdx = 8
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# neuPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(neuPlot.get_xlim(), key=abs))
-# neuPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         a = neuPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-#         a.draggable()
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     neuPlot.set_title('DG hilus')
-# else:
-#     # neuPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-#     neuPlot.set_title('interneurons')
-
-# # DG hilus
-# cellTypeIdx = 4
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# dgIntPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(dgIntPlot.get_xlim(), key=abs))
-# dgIntPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         a = dgIntPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-#         a.draggable()
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[0,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     dgIntPlot.set_title('DG hilus')
-# else:
-#     dgIntPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-
-# # Astrocytes
-# cellTypeIdx = 5
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# astPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(astPlot.get_xlim(), key=abs))
-# astPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         astPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     astPlot.set_title('DG hilus')
-# else:
-#     astPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-
-# # microglia
-# cellTypeIdx = 7
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# micPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(micPlot.get_xlim(), key=abs))
-# micPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         micPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[1,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     micPlot.set_title('DG hilus')
-# else:
-#     micPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-
-# # oligodendrocytes
-# cellTypeIdx = 9
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# oliPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(oliPlot.get_xlim(), key=abs))
-# oliPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         oliPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     oliPlot.set_title('DG hilus')
-# else:
-#     oliPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-
-# # endothelial
-# cellTypeIdx = 6
-
-# colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
-# greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
-# blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
-# redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
-# colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
-# colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
-# colorArray[redIdx, :] = np.array([1, 0, 0])
-
-# endPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
-# xabs_max = abs(max(endPlot.get_xlim(), key=abs))
-# endPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-# sortedPval = np.argsort(pValList[:,cellTypeIdx])
-# # plot only the names of the top ten genes
-# for j in enumerate(sortedPval[:10]):
-#     if bhCorrList[j[1],cellTypeIdx] == 1:
-#         endPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])))
-# # for j in enumerate(sigColorList[:,cellTypeIdx]):
-# #     if j[1] != 0:
-# #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-# if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
-#     endPlot.set_title('DG hilus')
-# else:
-#     endPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}')
-
-# fig.text(0.5, 0.04, 'logFC', ha='center')
-# fig.text(0.04, 0.42, '-log10(p-value)', va='center', rotation='vertical')
-
-# plt.show()
-
-# ### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
-# # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'figure02_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure02_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
 # plt.close('all')
 
 #%% volcano plot for all cell types in one plot, reorganized
@@ -1650,93 +1467,6 @@ plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
 plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
 plt.show()
 
-#%% create t-statistic plots for Cirbp and Rbm3 in one figure
-# plot Cirbp t-statistics
-plt.close('all')
-fig = plt.figure(figsize=(10,10))
-# for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
-cirbpNSDMean = plt.subplot2grid((9,9), (0,0), colspan=3, rowspan=2)
-cirbpSDMean = plt.subplot2grid((9,9), (0,3), colspan=3, rowspan=2)
-cirbpTstat = plt.subplot2grid((9,9), (0,6), colspan=3, rowspan=2)
-# fig, ax = plt.subplots(1,3)
-cirbpNSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-cirbpSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-cirbpTstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-gene = 'Sema3a'
-geneIdx = sampleForDisplay['geneList'].index(gene)
-maxExp = np.max(regionCells[geneIdx, :])
-geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
-    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
-    regionIdx = np.where(allClustersMale == region)[0]
-    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
-    regionCells = allCellsMale[:, regionIdx]
-    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
-    sdCells = regionCells[:, sdNSDRegionIdx == 1]
-    tStat = tStatList[geneIdx, regionN]
-    pVal = pValList[geneIdx, regionN]
-    if pVal < alphaFdr:
-        geneSig += '*'
-    nsdColor = np.empty([len(regionCellsToPlot)])
-    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
-    sdColor = np.empty([len(regionCellsToPlot)])
-    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
-    tStatColor = np.empty([len(regionCellsToPlot)])
-    tStatColor[:] = tStat
-    cirbpNSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-    cirbpNSDMean.set_title(f'Mean of NSD \n mean={np.mean(nsdCells[geneIdx,:])}')
-    cirbpNSDMean.axis('off')
-    
-    meanScatter = cirbpSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-    cirbpSDMean.set_title(f'Mean of SD \n mean={np.mean(sdCells[geneIdx,:])}')
-    cirbpSDMean.axis('off')
-    
-    tstatScatter = cirbpTstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
-    cirbpTstat.set_title(f'T-statistic for SD > NSD \n p-value={pVal}')
-    cirbpTstat.axis('off')
-plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
-plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
-plt.show()
-
-plt.close('all')
-fig, ax = plt.subplots(1,3)
-ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-gene = 'Rbm3'
-geneIdx = sampleForDisplay['geneList'].index(gene)
-maxExp = np.max(regionCells[geneIdx, :])
-geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
-    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
-    regionIdx = np.where(allClustersMale == region)[0]
-    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
-    regionCells = allCellsMale[:, regionIdx]
-    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
-    sdCells = regionCells[:, sdNSDRegionIdx == 1]
-    tStat = tStatList[geneIdx, regionN]
-    pVal = pValList[geneIdx, regionN]
-    if pVal < alphaFdr:
-        geneSig += '*'
-    nsdColor = np.empty([len(regionCellsToPlot)])
-    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
-    sdColor = np.empty([len(regionCellsToPlot)])
-    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
-    tStatColor = np.empty([len(regionCellsToPlot)])
-    tStatColor[:] = tStat
-    ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-    ax[0].set_title(f'Mean of NSD \n mean={np.mean(nsdCells[geneIdx,:])}')
-    ax[0].axis('off')
-    ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-    meanScatter = ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-    ax[1].set_title(f'Mean of SD \n mean={np.mean(sdCells[geneIdx,:])}')
-    ax[1].axis('off')
-    ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-    tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
-    ax[2].set_title(f'T-statistic for SD > NSD \n p-value={pVal}')
-    ax[2].axis('off')
-plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
-plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
-plt.show()
-
 #%% look for overlapping genes
 sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
 degDict = {}
@@ -1768,13 +1498,15 @@ for cellType in enumerate(degDict):
             uniqueDegs[cellType[1]].append(deg[1])
             
 plt.close('all')
+if not os.path.exists(os.path.join(derivatives, 'uniqueDEGsPerRegion')):
+    os.makedirs(os.path.join(derivatives, 'uniqueDEGsPerRegion'))
 for cellType in enumerate(uniqueDegs):
     uniqueGeneList = uniqueDegs[cellType[1]]
     print(len(uniqueGeneList))
     if len(uniqueGeneList) < 1:
         continue
-    if not os.path.exists(os.path.join(derivatives, cellType[1])):
-        os.makedirs(os.path.join(derivatives, cellType[1]))
+    if not os.path.exists(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1])):
+        os.makedirs(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1]))
     for gene in uniqueGeneList:
         fig, ax = plt.subplots(1,3)
         ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1790,28 +1522,381 @@ for cellType in enumerate(uniqueDegs):
             sdCells = regionCells[:, sdNSDRegionIdx == 1]
             tStat = tStatList[geneIdx, regionN]
             pVal = pValList[geneIdx, regionN]
-            if pVal < alphaFdr:
-                geneSig += '*'
             nsdColor = np.empty([len(regionCellsToPlot)])
             nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
             sdColor = np.empty([len(regionCellsToPlot)])
             sdColor[:] = np.mean(sdCells[geneIdx,:]) 
             tStatColor = np.empty([len(regionCellsToPlot)])
             tStatColor[:] = tStat
-            ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-            ax[0].set_title(f'Mean of NSD \n mean={np.mean(allCellsMale[geneIdx,:])}')
+            ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp, linewidth=0)
+            ax[0].set_title('Mean of NSD')
             ax[0].axis('off')
             ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-            meanScatter = ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp)
-            ax[1].set_title(f'Mean of SD \n mean={np.mean(allCellsMale[geneIdx,:])}')
+            meanScatter = ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp, linewidth=0)
+            ax[1].set_title('Mean of SD')
             ax[1].axis('off')
             ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
-            tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
+            tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4, linewidth=0)
             ax[2].set_title('T-statistic for SD > NSD')
             ax[2].axis('off')
         plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
         plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
         plt.suptitle(f'{gene} in {cellType[1]}')
         plt.show()
-        plt.savefig(os.path.join(derivatives, cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
+        plt.savefig(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
         plt.close('all')
+        
+#%% look for shared DEGs
+
+regionsPerGene = np.sum(overlappingBool, axis=1)
+sharedDEGMask = np.where(regionsPerGene > 5)[0]
+sharedGeneList = allDegs[sharedDEGMask]
+            
+plt.close('all')
+if not os.path.exists(os.path.join(derivatives, 'sharedDEGsPerRegion')):
+    os.makedirs(os.path.join(derivatives, 'sharedDEGsPerRegion'))
+
+for gene in sharedGeneList:
+    fig, ax = plt.subplots(1,3)
+    ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+    geneIdx = sampleForDisplay['geneList'].index(gene)
+    maxExp = np.max(allCellsMale[geneIdx, :])
+    for regionN, region in enumerate(cellsOfInterest):
+        regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+        regionIdx = np.where(allClustersMale == region)[0]
+        sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+        regionCells = allCellsMale[:, regionIdx]
+        nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+        sdCells = regionCells[:, sdNSDRegionIdx == 1]
+        tStat = tStatList[geneIdx, regionN]
+        pVal = pValList[geneIdx, regionN]
+        nsdColor = np.empty([len(regionCellsToPlot)])
+        nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+        sdColor = np.empty([len(regionCellsToPlot)])
+        sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+        tStatColor = np.empty([len(regionCellsToPlot)])
+        tStatColor[:] = tStat
+        ax[0].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp, linewidth=0)
+        ax[0].set_title('Mean of NSD')
+        ax[0].axis('off')
+        ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+        meanScatter = ax[1].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, vmin=0, vmax=maxExp, linewidth=0)
+        ax[1].set_title('Mean of SD')
+        ax[1].axis('off')
+        ax[2].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+        tstatScatter = ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4, linewidth=0)
+        ax[2].set_title('T-statistic for SD > NSD')
+        ax[2].axis('off')
+    plt.colorbar(meanScatter,fraction=0.02, pad=0.04)
+    plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
+    plt.suptitle(f'{gene}')
+    plt.show()
+    plt.savefig(os.path.join(derivatives, 'sharedDEGsPerRegion', f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
+    plt.close('all')
+#%% create t-statistic plots for Cirbp and Rbm3 in one figure
+# broad changes
+gene01 = 'Cirbp'
+gene02 = 'Rbm3'
+# ast
+gene03 = 'Dcn'
+# ca1
+gene04 = 'Gpr161'
+# ca3
+gene05 = 'Jdp2'
+# DG
+gene06 = 'Egr3'
+# plot Cirbp t-statistics
+plt.close('all')
+
+fig = plt.figure(figsize=(16,8))
+# for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
+gene01NSDMean = plt.subplot2grid((10,19), (0,0), colspan=3, rowspan=2)
+gene01SDMean = plt.subplot2grid((10,19), (0,3), colspan=3, rowspan=2)
+gene01Tstat = plt.subplot2grid((10,19), (0,6), colspan=3, rowspan=2)
+
+gene02NSDMean = plt.subplot2grid((10,19), (0,10), colspan=3, rowspan=2)
+gene02SDMean = plt.subplot2grid((10,19), (0,13), colspan=3, rowspan=2)
+gene02Tstat = plt.subplot2grid((10,19), (0,16), colspan=3, rowspan=2)
+
+gene03NSDMean = plt.subplot2grid((10,19), (3,0), colspan=3, rowspan=2)
+gene03SDMean = plt.subplot2grid((10,19), (3,3), colspan=3, rowspan=2)
+gene03Tstat = plt.subplot2grid((10,19), (3,6), colspan=3, rowspan=2)
+
+gene04NSDMean = plt.subplot2grid((10,19), (3,10), colspan=3, rowspan=2)
+gene04SDMean = plt.subplot2grid((10,19), (3,13), colspan=3, rowspan=2)
+gene04Tstat = plt.subplot2grid((10,19), (3,16), colspan=3, rowspan=2)
+
+gene05NSDMean = plt.subplot2grid((10,19), (6,0), colspan=3, rowspan=2)
+gene05SDMean = plt.subplot2grid((10,19), (6,3), colspan=3, rowspan=2)
+gene05Tstat = plt.subplot2grid((10,19), (6,6), colspan=3, rowspan=2)
+
+gene06NSDMean = plt.subplot2grid((10,19), (6,10), colspan=3, rowspan=2)
+gene06SDMean = plt.subplot2grid((10,19), (6,13), colspan=3, rowspan=2)
+gene06Tstat = plt.subplot2grid((10,19), (6,16), colspan=3, rowspan=2)
+
+# gene 1, top left
+gene01NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene01SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene01Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene01)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene01NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene01NSDMean.set_title('Mean of NSD', fontweight='bold')
+    gene01NSDMean.set_xticks([])
+    gene01NSDMean.set_yticks([])
+    # gene01NSDMean.axis('off')
+    
+    meanScatter = gene01SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene01SDMean.set_title('Mean of SD', fontweight='bold')
+    gene01SDMean.set_xticks([])
+    gene01SDMean.set_yticks([])
+    
+    tstatScatter = gene01Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene01Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene01Tstat.set_xticks([])
+    gene01Tstat.set_yticks([])
+gene01NSDMean.set_ylabel(gene01)
+plt.colorbar(meanScatter, ax=[gene01NSDMean, gene01SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+# gene 2, top right
+gene02NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene02SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene02Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene02)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene02NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene02NSDMean.set_title('Mean of NSD', fontweight='bold')
+    gene02NSDMean.set_xticks([])
+    gene02NSDMean.set_yticks([])
+    
+    meanScatter = gene02SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene02SDMean.set_title('Mean of SD', fontweight='bold')
+    gene02SDMean.set_xticks([])
+    gene02SDMean.set_yticks([])
+    
+    tstatScatter = gene02Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene02Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene02Tstat.set_xticks([])
+    gene02Tstat.set_yticks([])
+gene02NSDMean.set_ylabel(gene02)
+plt.colorbar(meanScatter, ax=[gene02NSDMean, gene02SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+# gene 3, middle left
+gene03NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene03SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene03Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene03)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene03NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene03NSDMean.set_title('Mean of NSD', fontweight='bold')
+    gene03NSDMean.set_xticks([])
+    gene03NSDMean.set_yticks([])
+    
+    meanScatter = gene03SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene03SDMean.set_title('Mean of SD', fontweight='bold')
+    gene03SDMean.set_xticks([])
+    gene03SDMean.set_yticks([])
+    
+    tstatScatter = gene03Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene03Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene03Tstat.set_xticks([])
+    gene03Tstat.set_yticks([])
+gene03NSDMean.set_ylabel(gene03)
+plt.colorbar(meanScatter, ax=[gene03NSDMean, gene03SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+# gene 4, middle right
+gene04NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene04SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene04Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene04)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene04NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene04NSDMean.set_title('Mean of NSD', fontweight='bold')
+    gene04NSDMean.set_xticks([])
+    gene04NSDMean.set_yticks([])
+    
+    meanScatter = gene04SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene04SDMean.set_title('Mean of SD', fontweight='bold')
+    gene04SDMean.set_xticks([])
+    gene04SDMean.set_yticks([])
+    
+    tstatScatter = gene04Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene04Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene04Tstat.set_xticks([])
+    gene04Tstat.set_yticks([])
+gene04NSDMean.set_ylabel(gene04)
+plt.colorbar(meanScatter, ax=[gene04NSDMean, gene04SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+# gene 5, bottom left
+gene05NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene05SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene05Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene05)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene05NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene05NSDMean.set_title('Mean of NSD')
+    gene05NSDMean.set_xticks([])
+    gene05NSDMean.set_yticks([])
+    
+    meanScatter = gene05SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene05SDMean.set_title('Mean of SD', fontweight='bold')
+    gene05SDMean.set_xticks([])
+    gene05SDMean.set_yticks([])
+    
+    tstatScatter = gene05Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene05Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene05Tstat.set_xticks([])
+    gene05Tstat.set_yticks([])
+gene05NSDMean.set_ylabel(gene05)
+plt.colorbar(meanScatter, ax=[gene05NSDMean, gene05SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+# gene 6, bottom right
+gene06NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene06SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+gene06Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+geneIdx = sampleForDisplay['geneList'].index(gene06)
+maxExp = np.max(regionCells[geneIdx, :])
+geneSig = ''
+for regionN, region in enumerate(cellsOfInterest):
+    regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
+    regionIdx = np.where(allClustersMale == region)[0]
+    sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
+    regionCells = allCellsMale[:, regionIdx]
+    nsdCells = regionCells[:, sdNSDRegionIdx == 0]
+    sdCells = regionCells[:, sdNSDRegionIdx == 1]
+    tStat = tStatList[geneIdx, regionN]
+    pVal = pValList[geneIdx, regionN]
+    if pVal < alphaFdr:
+        geneSig += '*'
+    nsdColor = np.empty([len(regionCellsToPlot)])
+    nsdColor[:] = np.mean(nsdCells[geneIdx,:]) 
+    sdColor = np.empty([len(regionCellsToPlot)])
+    sdColor[:] = np.mean(sdCells[geneIdx,:]) 
+    tStatColor = np.empty([len(regionCellsToPlot)])
+    tStatColor[:] = tStat
+    gene06NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene06NSDMean.set_title('Mean of NSD', fontweight='bold')
+    gene06NSDMean.set_xticks([])
+    gene06NSDMean.set_yticks([])
+    
+    meanScatter = gene06SDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=sdColor, cmap='Reds', s=2, linewidth=0, vmin=0, vmax=maxExp)
+    gene06SDMean.set_title('Mean of SD', fontweight='bold')
+    gene06SDMean.set_xticks([])
+    gene06SDMean.set_yticks([])
+    
+    tstatScatter = gene06Tstat.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, linewidth=0, vmin=-4, vmax=4)
+    gene06Tstat.set_title('T-statistic for SD > NSD', fontweight='bold')
+    gene06Tstat.set_xticks([])
+    gene06Tstat.set_yticks([])
+gene06NSDMean.set_ylabel(gene06)
+plt.colorbar(meanScatter, ax=[gene06NSDMean, gene06SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+
+plt.show()
+
+# output pdf and svg
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
+

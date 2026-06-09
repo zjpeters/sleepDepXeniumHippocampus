@@ -373,9 +373,9 @@ for i in range(len(maleSamples)):
         nC = 0
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 #%% perform umap plot on combined cells
 
 reducer = umap.UMAP(random_state=42)
@@ -444,6 +444,8 @@ plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_
 plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
+marker_size = 0.3
+
 schematic_img = plt.imread(os.path.join(figureFolder, 'biorender_schematic.png'))
 sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0]))
 rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
@@ -475,7 +477,7 @@ clusterImage.set_xticks([])
 clusterImage.set_yticks([])
 
 # plot all cells
-umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=3, linewidth=0)
+umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=marker_size, linewidth=0)
 umapAxsAllCells.set_xticks([])
 umapAxsAllCells.set_yticks([])
 
@@ -564,8 +566,8 @@ umapAxsAllCells.legend(handles=handles, ncols=2)
 
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
 
 #%% perform t-test on each region/cell type
 # use the first sample as the one to plot to
@@ -705,7 +707,7 @@ sigColorList = np.array(sigColorList)
 
 #%% create volcano plot of regions with bar plot of degs per region at top
 
-volcanoMarkerSize = 0.7
+volcanoMarkerSize = 2
 volcanoGeneFontSize = 5
 volcanoTitleFontSize = 7
 
@@ -849,9 +851,9 @@ plt.show()
 
 ### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
+plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 
 #%% volcano plot for all cell types in one plot, reorganized
 
@@ -1047,9 +1049,9 @@ plt.show()
 
 ### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'figure02_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure02_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
+plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 
 #%% combine two portions of figure 2 into single figure
 # create volcano plots of regions with bar plot of degs per region at top
@@ -1482,7 +1484,7 @@ for gene in sharedGeneList:
     ax[0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
     geneIdx = sampleForDisplay['geneList'].index(gene)
     maxExp = np.max(allCellsMale[geneIdx, :])
-    for regionN, region in enumerate(cellsOfInterest):
+    for regionN, region in enumerate(cellsOfInterest[0:10]):
         regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
         regionIdx = np.where(allClustersMale == region)[0]
         sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1561,9 +1563,9 @@ gene01SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene01Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene01)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1596,8 +1598,10 @@ for regionN, region in enumerate(cellsOfInterest):
     gene01Tstat.set_xticks([])
     gene01Tstat.set_yticks([])
 gene01NSDMean.set_ylabel(gene01)
-plt.colorbar(meanScatter, ax=[gene01NSDMean, gene01SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar = plt.colorbar(meanScatter, ax=[gene01NSDMean, gene01SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 
 # gene 2, top right
 gene02NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1605,9 +1609,9 @@ gene02SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene02Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene02)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1639,8 +1643,10 @@ for regionN, region in enumerate(cellsOfInterest):
     gene02Tstat.set_xticks([])
     gene02Tstat.set_yticks([])
 gene02NSDMean.set_ylabel(gene02)
-plt.colorbar(meanScatter, ax=[gene02NSDMean, gene02SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar = plt.colorbar(meanScatter, ax=[gene02NSDMean, gene02SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 
 # gene 3, middle left
 gene03NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1648,9 +1654,9 @@ gene03SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene03Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene03)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1682,8 +1688,10 @@ for regionN, region in enumerate(cellsOfInterest):
     gene03Tstat.set_xticks([])
     gene03Tstat.set_yticks([])
 gene03NSDMean.set_ylabel(gene03)
-plt.colorbar(meanScatter, ax=[gene03NSDMean, gene03SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar = plt.colorbar(meanScatter, ax=[gene03NSDMean, gene03SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 
 # gene 4, middle right
 gene04NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1691,9 +1699,9 @@ gene04SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene04Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene04)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1725,8 +1733,10 @@ for regionN, region in enumerate(cellsOfInterest):
     gene04Tstat.set_xticks([])
     gene04Tstat.set_yticks([])
 gene04NSDMean.set_ylabel(gene04)
-plt.colorbar(meanScatter, ax=[gene04NSDMean, gene04SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar = plt.colorbar(meanScatter, ax=[gene04NSDMean, gene04SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 
 # gene 5, bottom left
 gene05NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1734,9 +1744,9 @@ gene05SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene05Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene05)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1754,7 +1764,7 @@ for regionN, region in enumerate(cellsOfInterest):
     tStatColor = np.empty([len(regionCellsToPlot)])
     tStatColor[:] = tStat
     gene05NSDMean.scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=nsdColor, cmap='Reds', s=marker_size, linewidth=0, vmin=0, vmax=maxExp)
-    gene05NSDMean.set_title('Mean of NSD')
+    gene05NSDMean.set_title('Mean of NSD', fontweight='bold')
     gene05NSDMean.set_xticks([])
     gene05NSDMean.set_yticks([])
     
@@ -1768,8 +1778,10 @@ for regionN, region in enumerate(cellsOfInterest):
     gene05Tstat.set_xticks([])
     gene05Tstat.set_yticks([])
 gene05NSDMean.set_ylabel(gene05)
-plt.colorbar(meanScatter, ax=[gene05NSDMean, gene05SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar = plt.colorbar(meanScatter, ax=[gene05NSDMean, gene05SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 
 # gene 6, bottom right
 gene06NSDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
@@ -1777,9 +1789,9 @@ gene06SDMean.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 gene06Tstat.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
 
 geneIdx = sampleForDisplay['geneList'].index(gene06)
-maxExp = np.max(regionCells[geneIdx, :])
+maxExp = np.max(allCellsMale[geneIdx, :])
 geneSig = ''
-for regionN, region in enumerate(cellsOfInterest):
+for regionN, region in enumerate(cellsOfInterest[0:10]):
     regionCellsToPlot = findRelevantClusters(sampleForDisplay, region)
     regionIdx = np.where(allClustersMale == region)[0]
     sdNSDRegionIdx = sdNSDIdxMale[regionIdx]
@@ -1811,13 +1823,14 @@ for regionN, region in enumerate(cellsOfInterest):
     gene06Tstat.set_xticks([])
     gene06Tstat.set_yticks([])
 gene06NSDMean.set_ylabel(gene06)
-plt.colorbar(meanScatter, ax=[gene06NSDMean, gene06SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
-plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
-
+mCbar = plt.colorbar(meanScatter, ax=[gene06NSDMean, gene06SDMean], orientation='horizontal', fraction=0.05, pad=0.04)
+tCbar = plt.colorbar(tstatScatter, orientation='horizontal',fraction=0.05, pad=0.04)
+mCbar.outline.set_visible(False)
+tCbar.outline.set_visible(False)
 plt.show()
 
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
+plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  1 JUN 2026 08:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  10 JUN 2026 07:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -307,7 +307,8 @@ File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count304
 \l__pdf_internal_box=\box60
-) (./methodsForClusteringAndAnalysis260506.aux)
+)
+No file methodsForClusteringAndAnalysis260506.aux.
 \openout1 = `methodsForClusteringAndAnalysis260506.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
@@ -324,7 +325,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
-
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -400,65 +400,119 @@ LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <14.4> not available
 (Font)              Font shape `OT1/phv/m/sl' tried instead on input line 36.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures//Signet_FNW_2.png>] (./methodsForClusteringAndAnalysis260506.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures//Signet_FNW_2.png>]
+No file methodsForClusteringAndAnalysis260506.toc.
 \tf@toc=\write3
 \openout3 = `methodsForClusteringAndAnalysis260506.toc'.
 
- (./methodsForClusteringAndAnalysis260506.lof)
+(./methodsForClusteringAndAnalysis260506.lof)
 \tf@lof=\write4
 \openout4 = `methodsForClusteringAndAnalysis260506.lof'.
 
 
 
-Package glossaries Warning: Empty glossary for \printnoidxglossary[type={main}]. Rerun may be required (or you may have forgotten to use commands like \gls) on input line 55.
+Package glossaries Warning: Empty glossary for \printnoidxglossary[type={main}]. Rerun may be required (or you may have forgotten to use commands like \gls) on input line 56.
 
-Using TeX to sort glossary entries---this may take a while
+
+Package glossaries Warning: Empty glossary for \printnoidxglossary[type={acronym}]. Rerun may be required (or you may have forgotten to use commands like \gls) on input line 56.
+
 No file methodsForClusteringAndAnalysis260506.acr.
-[1] [2]
-<./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2.pdf, id=22, 630.55576pt x 515.28508pt>
-File: ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2.pdf Graphic file (type pdf)
-<use ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2.pdf>
-Package pdftex.def Info: ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2.pdf  used on input line 88.
-(pdftex.def)             Requested size: 452.9679pt x 370.17154pt.
-<./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_downsampled.pdf, id=23, 661.96307pt x 474.44252pt>
-File: ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_downsampled.pdf Graphic file (type pdf)
-<use ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_downsampled.pdf>
-Package pdftex.def Info: ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_downsampled.pdf  used on input line 99.
-(pdftex.def)             Requested size: 452.9679pt x 324.65816pt.
- [3 <./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2.pdf>] [4 <./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_downsampled.pdf>]
-<./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus.pdf, id=94, 1517.67pt x 794.97pt>
-File: ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus.pdf Graphic file (type pdf)
-<use ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus.pdf>
-Package pdftex.def Info: ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus.pdf  used on input line 114.
+[1]
+
+LaTeX Warning: Citation `choosingST' on page 2 undefined on input line 65.
+
+
+LaTeX Warning: Citation `visiumSD' on page 2 undefined on input line 67.
+
+<./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf, id=15, 630.55576pt x 670.23146pt>
+File: ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf Graphic file (type pdf)
+<use ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf>
+Package pdftex.def Info: ./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf  used on input line 71.
+(pdftex.def)             Requested size: 452.9679pt x 481.48224pt.
+[2] [3 <./figures//figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf>]
+
+LaTeX Warning: Reference `fig:clusterUmap' on page 4 undefined on input line 90.
+
+
+LaTeX Warning: Reference `fig:clusterUmap' on page 4 undefined on input line 98.
+
+<./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf, id=59, 402.95741pt x 296.36923pt>
+File: ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf Graphic file (type pdf)
+<use ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf>
+Package pdftex.def Info: ./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf  used on input line 104.
+(pdftex.def)             Requested size: 452.9679pt x 333.16583pt.
+
+LaTeX Warning: Citation `cellTypeGenetics' on page 4 undefined on input line 113.
+
+
+LaTeX Warning: Reference `fig:cellTypeID' on page 4 undefined on input line 113.
+
+[4] [5 <./figures//supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf>]
+<./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf, id=117, 1517.67pt x 794.97pt>
+File: ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf Graphic file (type pdf)
+<use ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf>
+Package pdftex.def Info: ./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf  used on input line 119.
 (pdftex.def)             Requested size: 452.9679pt x 237.26768pt.
- [5 <./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus.pdf>]
-<./figures//figure02_regional_volcano_plots_volcano_marker_15.pdf, id=598, 573.82379pt x 624.90213pt>
-File: ./figures//figure02_regional_volcano_plots_volcano_marker_15.pdf Graphic file (type pdf)
-<use ./figures//figure02_regional_volcano_plots_volcano_marker_15.pdf>
-Package pdftex.def Info: ./figures//figure02_regional_volcano_plots_volcano_marker_15.pdf  used on input line 140.
-(pdftex.def)             Requested size: 452.9679pt x 493.2954pt.
-<./figures//figure02_cell_type_volcano_plots_volcano_marker_15.pdf, id=599, 573.82379pt x 623.6393pt>
-File: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15.pdf Graphic file (type pdf)
-<use ./figures//figure02_cell_type_volcano_plots_volcano_marker_15.pdf>
-Package pdftex.def Info: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15.pdf  used on input line 148.
-(pdftex.def)             Requested size: 452.9679pt x 492.29852pt.
- [6] [7 <./figures//figure02_regional_volcano_plots_volcano_marker_15.pdf>] [8 <./figures//figure02_cell_type_volcano_plots_volcano_marker_15.pdf>] (./methodsForClusteringAndAnalysis260506.bbl
-LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 7.
-) [9] (./methodsForClusteringAndAnalysis260506.aux) ) 
+ [6 <./figures//xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf>]
+
+LaTeX Warning: Reference `fig:cellTypeID' on page 7 undefined on input line 141.
+
+
+LaTeX Warning: Reference `table:degsPerRegion' on page 7 undefined on input line 143.
+
+[7]
+<./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf, id=579, 1259.08797pt x 430.15105pt>
+File: ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf Graphic file (type pdf)
+<use ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>
+Package pdftex.def Info: ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf  used on input line 149.
+(pdftex.def)             Requested size: 452.9679pt x 154.74924pt.
+
+
+LaTeX Warning: File `figure02_regional_volcano_plots_volcano_marker_15_fixed_text.pdf' not found on input line 160.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:160: Package pdftex.def Error: File `figure02_regional_volcano_plots_volcano_marker_15_fixed_text.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.160 ...o_plots_volcano_marker_15_fixed_text.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+<./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf, id=580, 573.82379pt x 623.63458pt>
+File: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf Graphic file (type pdf)
+<use ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf>
+Package pdftex.def Info: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf  used on input line 168.
+(pdftex.def)             Requested size: 452.9679pt x 492.2948pt.
+
+LaTeX Warning: Citation `diffOfCAandDG' on page 8 undefined on input line 197.
+
+[8 <./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>] [9] [10 <./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf>]
+No file methodsForClusteringAndAnalysis260506.bbl.
+[11] (./methodsForClusteringAndAnalysis260506.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 8435 strings out of 478287
- 144902 string characters out of 5849289
- 491169 words of memory out of 5000000
- 26470 multiletter control sequences out of 15000+600000
- 491951 words of font info for 56 fonts, out of 8000000 for 9000
+ 8469 strings out of 478287
+ 147113 string characters out of 5849289
+ 488977 words of memory out of 5000000
+ 26493 multiletter control sequences out of 15000+600000
+ 490233 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 91i,8n,91p,2135b,288s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on methodsForClusteringAndAnalysis260506.pdf (10 pages, 9409658 bytes).
+ 91i,8n,91p,2258b,326s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on methodsForClusteringAndAnalysis260506.pdf (12 pages, 7026924 bytes).
 PDF statistics:
- 4253 PDF objects out of 4296 (max. 8388607)
- 2574 compressed objects within 26 object streams
+ 5929 PDF objects out of 6186 (max. 8388607)
+ 3730 compressed objects within 38 object streams
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

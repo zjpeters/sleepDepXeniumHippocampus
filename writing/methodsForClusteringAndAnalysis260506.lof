@@ -1,5 +1,6 @@
 \contentsline {figure}{\numberline {1}{\ignorespaces Spectral clustering of a single NSD sample along with UMAP of cells.}}{3}{}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Spectral clustering of all samples along with visualization of original tissue images.}}{4}{}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Mean z-score per cell for cell-type gene markers}}{5}{}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Differentially expressed genes within regionally defined clusters.}}{7}{}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Differentially expressed genes within cell type defined clusters.}}{8}{}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Spectral clustering of all samples along with visualization of original tissue images.}}{5}{}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Mean z-score per cell for cell-type gene markers}}{6}{}%
+\contentsline {figure}{\numberline {4}{\ignorespaces UpSet plot of DEGs based on clusters and intersection}}{8}{}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Differentially expressed genes within regionally defined clusters.}}{9}{}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Differentially expressed genes within cell type defined clusters.}}{10}{}%

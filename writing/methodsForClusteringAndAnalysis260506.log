@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  10 JUN 2026 07:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  11 JUN 2026 02:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -468,29 +468,39 @@ Package pdftex.def Info: ./figures//upset_plot_of_DEGS_color_underlay_black_line
 (pdftex.def)             Requested size: 452.9679pt x 154.74924pt.
 
 
-LaTeX Warning: File `figure02_regional_volcano_plots_volcano_marker_15_fixed_text.pdf' not found on input line 160.
+LaTeX Warning: File `figure02_regional_volcano_plots_volcano_marker_2_text_fixed.pdf' not found on input line 160.
 
 
-/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:160: Package pdftex.def Error: File `figure02_regional_volcano_plots_volcano_marker_15_fixed_text.pdf' not found: using draft setting.
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:160: Package pdftex.def Error: File `figure02_regional_volcano_plots_volcano_marker_2_text_fixed.pdf' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.160 ...o_plots_volcano_marker_15_fixed_text.pdf}
+l.160 ...no_plots_volcano_marker_2_text_fixed.pdf}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-<./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf, id=580, 573.82379pt x 623.63458pt>
-File: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf Graphic file (type pdf)
-<use ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf>
-Package pdftex.def Info: ./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf  used on input line 168.
-(pdftex.def)             Requested size: 452.9679pt x 492.2948pt.
+
+LaTeX Warning: File `figure03_cell_type_volcano_plots_volcano_marker_2_text_fixed.pdf' not found on input line 168.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:168: Package pdftex.def Error: File `figure03_cell_type_volcano_plots_volcano_marker_2_text_fixed.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.168 ...no_plots_volcano_marker_2_text_fixed.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 LaTeX Warning: Citation `diffOfCAandDG' on page 8 undefined on input line 197.
 
-[8 <./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>] [9] [10 <./figures//figure02_cell_type_volcano_plots_volcano_marker_15_fixed_text.pdf>]
+[8 <./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>] [9] [10]
 No file methodsForClusteringAndAnalysis260506.bbl.
 [11] (./methodsForClusteringAndAnalysis260506.aux)
 
@@ -501,18 +511,18 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 8469 strings out of 478287
- 147113 string characters out of 5849289
+ 8492 strings out of 478287
+ 148713 string characters out of 5849289
  488977 words of memory out of 5000000
- 26493 multiletter control sequences out of 15000+600000
+ 26516 multiletter control sequences out of 15000+600000
  490233 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  91i,8n,91p,2258b,326s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on methodsForClusteringAndAnalysis260506.pdf (12 pages, 7026924 bytes).
+Output written on methodsForClusteringAndAnalysis260506.pdf (12 pages, 6332674 bytes).
 PDF statistics:
- 5929 PDF objects out of 6186 (max. 8388607)
- 3730 compressed objects within 38 object streams
+ 643 PDF objects out of 1000 (max. 8388607)
+ 229 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

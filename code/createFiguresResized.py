@@ -874,6 +874,7 @@ neuPlot = plt.subplot2grid((14,7), (11,4), colspan=3, rowspan=3)
 reorderMask = np.array([5, 9, 7, 6, 4, 8], dtype='int32')
 
 cellsOfInterestNoSparse[4] = 'DG hilus'
+cellsOfInterestNoSparse[8] = 'interneurons'
 barPlot.bar(cellsOfInterestNoSparse[reorderMask], degPerRegionNoSparse[reorderMask], color=cellsOfInterestColorListNoSparse[reorderMask])
 barPlot.set_ylabel('Number of DEGs', fontweight='bold')
 # barPlot.set_xlabel('Region/cell type')

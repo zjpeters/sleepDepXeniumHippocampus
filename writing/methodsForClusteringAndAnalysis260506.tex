@@ -140,7 +140,7 @@ In order to plot the data, the intensity of the color is a plot of the t-statist
 
 Each of the samples was restricted to only the cells that made up the hippocampal formation. The mean number of cells per slice was 5811.75. 
 
-The clustering of the data showed certain consistent groupings across all samples. Three major subfields of the Cornu ammonis, the CA1, CA2, and CA3 were present in the clustering of each samples, regardless of sleep deprivation status, indicating that the transcriptomic patterns within the cells of these regions are highly specific. The dentate gyrus was broken into two clusters, one that covered the majority of the cells within the region, and another cluster that lay along the inner portion of the DG, surrounding the area that would be the CA4. For this reason, these two clusters were described as DG and DG interneurons respectively, as they consistently showed unique transcriptomic patterns causing them to be separately clustered. The remaining clusters did not have a regionally defined identity, but rather were classified based on association with cell-type specific markers. Astrocytes consistently showed strong within group association, where clusters associated with astrocytes were highly overexpressed for astrocytic markers while showing decreased expression for markers of other cell types, as seen in Supp. Fig. \ref{fig:cellTypeID}. Microglia and endothelial cells additionally showed a strong unique association for all cells within a particular cluster, making them easy to identify as unique groups. Oligodendrocytes tended to form two clusters, likely indicating oligodendrocytes and oligodendrocyte precursor cells, however for the sake of this work these two clusters were combined into one "oligodendrocyte" cluster, but this would be a good source for potential further investigation of the data. Because the list of gene markers for neurons included markers for all types of neurons, including excitatory and inhibitory, as well as various interneurons, gene lists were instead created by the authors that would identify markers for specific interneurons that are expected to be found in the hippocampus. These interneurons are listed in the methods section but also showed association across different types that allowed the combination of multiple clusters into a single "interneuron" cluster. 
+The clustering of the data showed certain consistent groupings across all samples. Three major subfields of the Cornu ammonis, the CA1, CA2, and CA3 were present in the clustering of each sample, regardless of sleep deprivation status, indicating that the transcriptomic patterns within the cells of these regions are highly specific. The dentate gyrus was broken into two clusters, one that covered the majority of the cells within the region, and another cluster that lay along the inner portion of the DG, surrounding the area that would be the CA4. For this reason, these two clusters were described as DG and DG interneurons respectively, as they consistently showed unique transcriptomic patterns causing them to be separately clustered. The remaining clusters did not have a regionally defined identity, but rather were classified based on association with cell-type specific markers. Astrocytes consistently showed strong within group association, where clusters associated with astrocytes were highly overexpressed for astrocytic markers while showing decreased expression for markers of other cell types, as seen in Supp. Fig. \ref{fig:cellTypeID}. Microglia and endothelial cells additionally showed a strong unique association for all cells within a particular cluster, making them easy to identify as unique groups. Oligodendrocytes tended to form two clusters, likely indicating oligodendrocytes and oligodendrocyte precursor cells, however for the sake of this work these two clusters were combined into one "oligodendrocyte" cluster, but this would be a good source for potential further investigation of the data. Because the list of gene markers for neurons included markers for all types of neurons, including excitatory and inhibitory, as well as various interneurons, gene lists were instead created by the authors that would identify markers for specific interneurons that are expected to be found in the hippocampus. These interneurons are listed in the methods section but also showed association across different types that allowed the combination of multiple clusters into a single "interneuron" cluster. 
 
 The largest of the clusters based on number of cells was the dentate gyrus, containing 11,374 cells across all combined samples.The DG is known to be made up of densely packed neurons, which is confirmed by the transcriptomic based clustering \ref{table:degsPerRegion}. Within the DG interneuron cluster there were 1,506 cells. The corpus ammon regions were the next most populated regionally defined clusters, with 4,825 cells in the CA1, 1,506 in the CA2, and 3,566 in the CA3, with 88, 39, and 51 DEGs in each of these regions respectively. 
 
@@ -177,16 +177,16 @@ Bar graph shows the number of DEGs present in each of the cell type based cluste
 \begin{tabular}{|l | l | l|}
     \hline
     \textbf{Cluster name}    &	\textbf{Number of cells}	&	\textbf{Number of DEGs}    \\ \hline
-	CA1	&	4,825	&	88	\\	\hline
-	CA2	&	1,506	&	39	\\	\hline
-	CA3	&	3,566	&	51	\\	\hline
-	DG	&	11,374	&	105	\\	\hline
-	DG interneurons	&	1,091	& 6	\\	\hline
-	astrocytes	&	4,245	&	67	\\	\hline
-	endothelial	&	1,984	&	12	\\	\hline
-	microglia	&	1,068	&	5	\\	\hline
-	neurons		&	1,635	&	4	\\	\hline
-	oligodendrocytes	&	2,592	&	14	\\	\hline
+	CA1	&	4,825	&	89	\\	\hline
+	CA2	&	1,506	&	34	\\	\hline
+	CA3	&	3,566	&	56	\\	\hline
+	DG	&	11,374	&	112	\\	\hline
+	DG hilus	&	1,091	& 5	\\	\hline
+	astrocytes	&	4,245	&	57	\\	\hline
+	endothelial	&	1,984	&	13	\\	\hline
+	microglia	&	1,068	&	3	\\	\hline
+	interneurons		&	1,635	&	4	\\	\hline
+	oligodendrocytes	&	2,592	&	11	\\	\hline
 	unlabeled	&	1,393	&	N/A	\\	\hline
 \end{tabular}
 \caption{Cluster labels along with the number of cells per and differentially expressed genes per cluster}

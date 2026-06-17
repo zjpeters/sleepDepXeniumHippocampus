@@ -48,6 +48,9 @@ plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Arial'
 plt.rcParams['font.weight'] = 'bold'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rcParams['axes.labelsize'] = 7
+plt.rcParams['xtick.labelsize'] = 6
+plt.rcParams['ytick.labelsize'] = 6
 plt.rcParams['text.usetex'] = False
 plt.rcParams['svg.fonttype'] = 'none'
 plt.rcParams['font.size'] = 6
@@ -182,15 +185,15 @@ for interneuron_type in interneuron_information.keys():
         except ValueError:
             print('Gene not in list')
 
-writer = pd.ExcelWriter(os.path.join(derivatives, 'genes_for_cell_type_ID.xlsx'))
+# writer = pd.ExcelWriter(os.path.join(derivatives, 'genes_for_cell_type_ID.xlsx'))
 
-for cellType in cellTypeGeneLists.keys():
-    cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
-    if cellType == 'DG/CA4':
-        cellTypeDF.to_excel(writer, sheet_name='DG-CA4', index=False)
-    else:
-        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
-writer.close()
+# for cellType in cellTypeGeneLists.keys():
+#     cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
+#     if cellType == 'DG/CA4':
+#         cellTypeDF.to_excel(writer, sheet_name='DG-CA4', index=False)
+#     else:
+#         cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+# writer.close()
 #%% generate male samples
 maleSamples = []
 maleSamplesIdx = [0,1,2,3,4,5]
@@ -709,7 +712,7 @@ sigColorList = np.array(sigColorList)
 
 volcanoMarkerSize = 2
 volcanoGeneFontSize = 5
-volcanoTitleFontSize = 7
+volcanoTitleFontSize = 6
 
 plt.close('all')
 
@@ -729,7 +732,7 @@ cellsOfInterestColorListNoSparse = np.array(cellsOfInterestColorList[0:10])
 
 barPlot.bar(cellsOfInterestNoSparse[0:4], degPerRegionNoSparse[0:4], color=cellsOfInterestColorListNoSparse[0:4])
 barPlot.set_ylabel('Number of DEGs', fontweight='bold')
-barPlot.set_xlabel('Region/cell type', fontweight='bold')
+# barPlot.set_xlabel('Region/cell type', fontweight='bold')
 # barPlot.set_xticks(barPlot, rotation=20)
 
 # CA1
@@ -874,7 +877,6 @@ neuPlot = plt.subplot2grid((14,7), (11,4), colspan=3, rowspan=3)
 reorderMask = np.array([5, 9, 7, 6, 4, 8], dtype='int32')
 
 cellsOfInterestNoSparse[4] = 'DG hilus'
-cellsOfInterestNoSparse[8] = 'interneurons'
 cellsOfInterestNoSparse[8] = 'interneurons'
 barPlot.bar(cellsOfInterestNoSparse[reorderMask], degPerRegionNoSparse[reorderMask], color=cellsOfInterestColorListNoSparse[reorderMask])
 barPlot.set_ylabel('Number of DEGs', fontweight='bold')

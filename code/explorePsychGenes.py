@@ -110,6 +110,11 @@ for deg in allDegs:
     if deg.casefold() in np.array(schizGenesCasefold):
         schizDegList.append(deg)
 
+schizGenesInList = []
+for gene in np.array(processedSamples[0]['geneList']):
+    print(gene.casefold())
+    if gene.casefold() in np.array(schizGenesCasefold):
+        schizGenesInList.append(gene)
 #%% import and check bipolar gene list
 bpGeneList = pd.read_excel(os.path.join(geneListLocation, 'NIHMS1687813-supplement-Supplementary_Tables.xlsx'), sheet_name='Table S4', skiprows=1)
 

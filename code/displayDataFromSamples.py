@@ -89,7 +89,72 @@ for sampleIdx in range(len(experiment['sample-id'])):
     # processedSamples[sampleIdx]['cluster_colors'] = np.array([clusterInfo['color_r'], clusterInfo['color_g'], clusterInfo['color_b'], clusterInfo['color_alpha']]).T
     # cluster_regions = pd.read_csv(os.path.join(derivatives, f'{processedSamples[sampleIdx]["sampleID"]}_cluster_associations.csv'), header=None)
     # processedSamples[sampleIdx]['cluster_region'] = np.squeeze(np.array(cluster_regions[1]))
+
+#%% create figure showing genes with regional specificity and regional gradients
+sampleForDisplay = processedSamples[0]
+# CA1
+gene01 = 'Wfs1'
+# CA1 inferior
+gene02 = 'Penk'
+# CA1 superior
+gene03 = 'Ndst4'
+# ca3
+gene04 = 'Npy2r'
+
+# plot Cirbp t-statistics
+plt.close('all')
+
+# fig = plt.figure(figsize=(6,4))
+# for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
+# gene01Plot = plt.subplot2grid((6,4), (0,0), colspan=3, rowspan=2)
+# gene01Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene02Plot = plt.subplot2grid((6,4), (0,3), colspan=3, rowspan=2)
+# gene02Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene03Plot = plt.subplot2grid((6,4), (2,0), colspan=3, rowspan=2)
+# gene03Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene04Plot = plt.subplot2grid((6,4), (2,3), colspan=3, rowspan=2)
+# gene04Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+fig, ax = plt.subplots(2,2)
+
+geneIdx = sampleForDisplay['geneList'].index(gene01)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[0,0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[0,0].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[0,0].set_title(gene01)
+ax[0,0].set_xticks([])
+ax[0,0].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene02)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[0,1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[0,1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[0,1].set_title(gene02)
+ax[0,1].set_xticks([])
+ax[0,1].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene03)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[1,0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[1,0].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[1,0].set_title(gene03)
+ax[1,0].set_xticks([])
+ax[1,0].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene04)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[1,1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[1,1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[1,1].set_title(gene04)
+ax[1,1].set_xticks([])
+ax[1,1].set_yticks([])
     
+plt.show()
+plt.savefig(os.path.join(derivatives, f'expression_{gene01}_{gene02}_{gene03}_{gene04}.png'), bbox_inches='tight', dpi=300)
 #%% calculate average number of cells per slice
 cellNumberArray = []
 for i in range(len(processedSamples)):
@@ -149,7 +214,7 @@ ax.scatter(maskedCoors[:,0], maskedCoors[:,1], s=3, linewidth=0, vmin=-1, vmax=1
 ax.scatter(maskedCoors[ndst4Mask,0], maskedCoors[ndst4Mask,1], s=3, linewidth=0, vmin=-1, vmax=1)
 plt.show()
 #%% display overlay of "Gad1", "Sst", "Pvalb", "Gfap"
-sampleForDisplay = processedSamples[0]
+
 markerGeneList = ['Gad1', 'Sst', 'Pvalb', 'Gfap']
 
 plt.close('all')

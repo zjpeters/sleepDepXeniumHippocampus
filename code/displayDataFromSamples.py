@@ -258,11 +258,11 @@ stanly.viewGeneInProcessedSample(processedSamples[0], 'Pde11a')
 stanly.viewGeneInProcessedSample(processedSamples[0], 'Col6a1')
 
 #%% visualize gradient differences
-# Ndst4 has higher expression in the superior CA1
+# Ndst4 has higher expression in the deep CA1 (outer layer)
 ndst4Idx = sampleForDisplay['geneList'].index('Ndst4')
 ndst4GeneExp = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][ndst4Idx,:].todense()))
 ndst4GeneExp = (ndst4GeneExp - np.nanmin(ndst4GeneExp))/(np.nanmax(ndst4GeneExp) - np.nanmin(ndst4GeneExp))
-# Calb1 has higher expression in the inferior CA1
+# Calb1 has higher expression in the superficial CA1 (inner layer)
 calb1Idx = sampleForDisplay['geneList'].index('Calb1')
 calb1GeneExp = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][calb1Idx,:].todense()))
 calb1GeneExp = (calb1GeneExp - np.nanmin(calb1GeneExp))/(np.nanmax(calb1GeneExp) - np.nanmin(calb1GeneExp))

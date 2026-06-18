@@ -24,20 +24,20 @@ rawdata=os.path.join('/','home','zjpeters','Documents','sleepDepXenium','rawdata
 derivatives=os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus','derivatives')
 
 #%% import data to use for cell type identification
-experiment = stanly.loadParticipantsTsv(os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus', 'participants.tsv'))
+
+locOfTsvFile = os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus', 'participants.tsv')
+participants = pd.read_csv(locOfTsvFile, delimiter='\t')
+
+experiment = {'sample-id': participants['participant_id'].to_numpy(),
+                    'rotation': participants['deg_rot'].to_numpy(),
+                    'experimental-group': participants['sleep_dep'].to_numpy(),
+                    'flip': participants['flip'].to_numpy(),
+                    'sex': participants['sex'].to_numpy()}
+
 processedSamples = {}
-# for actSample in range(len(experiment['sample-id'])):
-#     sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][actSample]))
-#     sampleProcessed = stanly.processXeniumData(sample, experiment['rotation'][actSample], derivatives)
-#     processedSamples[actSample] = sampleProcessed
-for sampleIdx in range(len(experiment['sample-id'] )):
+
+for sampleIdx in range(len(experiment['sample-id'])):
     processedSamples[sampleIdx] = stanly.loadProcessedXeniumSample(os.path.join(derivatives, f"{experiment['sample-id'][sampleIdx]}_hippocampus"))
-    # clusterInfo = pd.read_csv(os.path.join(derivatives, f'{processedSamples[sampleIdx]["sampleID"]}_cluster_information.csv'))
-    # processedSamples[sampleIdx]['cluster_labels'] = clusterInfo['cluster_labels']
-    # processedSamples[sampleIdx]['silhouette_values'] = clusterInfo['silhouette_values']
-    # processedSamples[sampleIdx]['cluster_colors'] = np.array([clusterInfo['color_r'], clusterInfo['color_g'], clusterInfo['color_b'], clusterInfo['color_alpha']]).T
-    # cluster_regions = pd.read_csv(os.path.join(derivatives, f'{processedSamples[sampleIdx]["sampleID"]}_cluster_associations.csv'), header=None)
-    # processedSamples[sampleIdx]['cluster_region'] = np.squeeze(np.array(cluster_regions[1]))
 
 sampleToCluster = processedSamples[0]
 #%% create dictionary with information about different interneuron types, from csv from Junko

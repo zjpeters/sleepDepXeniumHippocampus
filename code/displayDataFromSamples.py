@@ -154,7 +154,7 @@ ax[1,1].set_xticks([])
 ax[1,1].set_yticks([])
     
 plt.show()
-plt.savefig(os.path.join(derivatives, f'expression_{gene01}_{gene02}_{gene03}_{gene04}.png'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(derivatives, f'expression_{gene01}_{gene02}_{gene03}_{gene04}.png'), bbox_inches='tight', dpi=300)
 #%% calculate average number of cells per slice
 cellNumberArray = []
 for i in range(len(processedSamples)):
@@ -361,6 +361,8 @@ stanly.viewGeneInProcessedSample(processedSamples[0], 'Prox1')
 stanly.viewGeneInProcessedSample(processedSamples[0], 'Dkk3')
 stanly.viewGeneInProcessedSample(processedSamples[0], 'Calb2')
 stanly.viewGeneInProcessedSample(processedSamples[0], 'Fibcd1')
+stanly.viewGeneInProcessedSample(processedSamples[0], 'Gsg1l')
+stanly.viewGeneInProcessedSample(processedSamples[0], 'Nr2f2')
 
 #%% display genes that should be specific to different regions of hippocampus
 """

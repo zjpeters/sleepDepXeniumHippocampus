@@ -88,6 +88,8 @@ for interneuron_type in interneuron_information.keys():
     interneuron_information[interneuron_type]['geneIdx'] = np.array(interneuron_gene_idx)
     
 #%% loop over gene list from data and find matching genes in cell type specificity list
+minFoldChange = 4
+
 xeniumCasefoldGeneList = []
 for gene in sampleToCluster['geneList']:
     xeniumCasefoldGeneList.append(gene.casefold())
@@ -104,7 +106,7 @@ cellTypeGeneIdx = [x in sampleCasefoldList for x in cellTypeCasefoldList]
 
 cellTypeGenesInSample = cellTypeGeneExpressionList[cellTypeGeneIdx]
 
-cellTypeGenesInSample4X = cellTypeGenesInSample[cellTypeGenesInSample['grand_mean'] > 4.0]
+cellTypeGenesInSample4X = cellTypeGenesInSample[cellTypeGenesInSample['grand_mean'] > minFoldChange]
 
 # create lists of cell type genes
 cellTypes = np.unique(cellTypeGenesInSample4X['Celltype'])
@@ -126,7 +128,16 @@ for i in cellTypes:
 for i in interneuron_information:
     singleCellTypeGeneList = np.array([interneuron_information[i]['geneList'], interneuron_information[i]['geneIdx']])
     cellTypeGeneLists[i] = singleCellTypeGeneList.T
-    
+
+writer = pd.ExcelWriter(os.path.join(derivatives, f'genes_for_cell_type_ID_{minFoldChange}x_fold_change.xlsx'))
+
+for cellType in cellTypeGeneLists.keys():
+    cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
+    if cellType == 'DG/CA4':
+        cellTypeDF.to_excel(writer, sheet_name='DG hilus', index=False)
+    else:
+        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+writer.close()
 #%% look for whether the sparse clusters correlate with any specific gene set
 # recreate teh figures above, but sorted based on cluster region ID
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
@@ -188,7 +199,7 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.15, 0.01, 0.7])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    plt.savefig(os.path.join(derivatives, f'grand_mean_4x_xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_{sampleForDisplay["sampleID"]}_cluster_labels.pdf'), dpi=300)
+    plt.savefig(os.path.join(derivatives, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_{sampleForDisplay["sampleID"]}_cluster_labels.pdf'), dpi=300)
     plt.close()
 
 #%% use gene lists to identify cell type of each cell

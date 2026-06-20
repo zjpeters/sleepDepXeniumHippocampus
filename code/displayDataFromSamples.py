@@ -228,6 +228,14 @@ for gene in range(len(markerGeneList)):
     #, c=geneExp[geneMask]
     ax.scatter(sampleForDisplay['processedTissuePositionList'][geneMask,0], sampleForDisplay['processedTissuePositionList'][geneMask,1], label=geneName, s=3, linewidth=0)
 plt.legend()
+
+#%% look for genes related to each of the clusters
+# dataSimMatrix = sp_sparse.load_npz(os.path.join(derivatives, 'YW-1_ROI_A1_hippocampus', '')
+geneListForGeneImage = stanly.selectGenePatterns(processedSamples[2])
+
+plt.close('all')
+for gene in geneListForGeneImage:
+    stanly.viewGeneInProcessedSample(processedSamples[2], gene)
 #%% display genes that should be specific to different regions of hippocampus
 """
  identified from the paper:

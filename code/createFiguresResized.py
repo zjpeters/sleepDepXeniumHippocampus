@@ -23,7 +23,6 @@ import pandas as pd
 import scipy.stats as scipy_stats
 import umap
 import matplotlib.patches as mpatches
-import upsetplot
 if os.path.exists(os.path.join('/', 'home', 'zjpeters', 'Documents', 'stanly', 'code')):
     stanlyLoc = os.path.join('/', 'home', 'zjpeters', 'Documents', 'stanly', 'code')
 else:
@@ -88,7 +87,7 @@ neuColorOp = np.squeeze(np.array([89, 84, 214, 40]))/255
 oliColorOp = np.squeeze(np.array([0, 198, 248, 40]))/255
 
 cellsOfInterestColorList = [ca1Color, ca2Color, ca3Color, dgColor, ca4dgColor, astColor, endColor, micColor, neuColor, oliColor, sparseColor]
-
+cellTypeColorListDict = {'astrocytes': astColor, 'endothelial': endColor, 'microglia': micColor, 'oligodendrocytes': oliColor, 'neurons': neuColor, 'sparse': sparseColor}
 #%% load newly processed samples and check selection
 
 locOfTsvFile = os.path.join(externalDrivePath,'sleepDepXeniumHippocampus', 'participants.tsv')
@@ -113,7 +112,7 @@ for sampleIdx in range(len(experiment['sample-id'] )):
     
 
 #%% create dictionary with information about different interneuron types
-interneuron_information = dict.fromkeys(["Pvalb", "Sst", "Vip", "Sncg", "Lamp5"])
+interneuron_information = dict.fromkeys(["Pvalb", "Sst", "Vip", "Sncg", "Lamp5", "interneurons"])
 for i in interneuron_information.keys():
     interneuron_information[i] = dict.fromkeys(['geneList', 'geneIdx'])
 interneuron_information["Pvalb"]["geneList"] = ['Btbd11', 'Cntnap4', 'Eya4', 'Kcnmb2', 'Pvalb', 'Slit2']
@@ -121,7 +120,7 @@ interneuron_information["Sst"]["geneList"] = ['Calb1', 'Lypd6', 'Pdyn', 'Rab3b',
 interneuron_information["Vip"]["geneList"] = ['Chat', 'Crh', 'Igf1', 'Penk', 'Pthlh', 'Sorcs3', 'Thsd7a', 'Vip']
 interneuron_information["Sncg"]["geneList"] = ['Col19a1', 'Kctd12', 'Necab1', 'Slc44a5']
 interneuron_information["Lamp5"]["geneList"] = ['Dner', 'Gad1', 'Gad2', 'Hapln1', 'Lamp5', 'Pde11a', 'Rasgrf2']
-
+interneuron_information["interneurons"]["geneList"] = ['Btbd11', 'Cntnap4', 'Eya4', 'Kcnmb2', 'Pvalb', 'Slit2', 'Col19a1', 'Kctd12', 'Necab1', 'Slc44a5', 'Sncg','Dner', 'Gad1', 'Gad2', 'Hapln1', 'Lamp5', 'Pde11a', 'Rasgrf2']
 # load gene lists from paper
 """
 identify genes present in allen data that are also present in:
@@ -1838,3 +1837,351 @@ plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.pdf'), bbo
 plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.svg'), bbox_inches='tight', dpi=300)
 plt.close('all')
 
+#%% loop over gene list from data and find matching genes in cell type specificity list
+minFoldChange = 3
+
+xeniumCasefoldGeneList = []
+for gene in maleSamples[0]['geneList']:
+    xeniumCasefoldGeneList.append(gene.casefold())
+xeniumCasefoldGeneList = list(xeniumCasefoldGeneList)
+cellTypeCasefoldList = []
+for gene in cellTypeGeneExpressionList['gene']:
+    cellTypeCasefoldList.append(gene.casefold())
+
+sampleCasefoldList = []
+for gene in maleSamples[0]['geneList']:
+    sampleCasefoldList.append(gene.casefold())
+
+cellTypeGeneIdx = [x in sampleCasefoldList for x in cellTypeCasefoldList]
+
+cellTypeGenesInSample = cellTypeGeneExpressionList[cellTypeGeneIdx]
+
+cellTypeGenesInSample4X = cellTypeGenesInSample[cellTypeGenesInSample['grand_mean'] > minFoldChange]
+
+# create lists of cell type genes
+cellTypes = np.unique(cellTypeGenesInSample4X['Celltype'])
+cellTypeGeneLists = {}
+for i in cellTypes:
+    cellTypeDF = cellTypeGenesInSample4X[cellTypeGenesInSample4X['Celltype'] == i]
+    singleCellTypeGeneList = []
+    for j in cellTypeDF['gene']:
+        try:
+            geneIdx = xeniumCasefoldGeneList.index(j.casefold())
+            singleCellTypeGeneList.append([maleSamples[0]['geneList'][geneIdx], geneIdx])
+            cellTypeGeneLists[i] = np.array(singleCellTypeGeneList)
+
+        except ValueError:
+            # code above should work well, though might need to consider if there
+            # are situations where a casefold gene name would lead to duplicates
+            print('Gene not found')
+
+for i in interneuron_information:
+    singleCellTypeGeneList = np.array([interneuron_information[i]['geneList'], interneuron_information[i]['geneIdx']])
+    cellTypeGeneLists[i] = singleCellTypeGeneList.T
+
+writer = pd.ExcelWriter(os.path.join(derivatives, f'genes_for_cell_type_ID_{minFoldChange}x_fold_change.xlsx'))
+
+for cellType in cellTypeGeneLists.keys():
+    cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
+    if cellType == 'DG/CA4':
+        cellTypeDF.to_excel(writer, sheet_name='DG hilus', index=False)
+    else:
+        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+writer.close()
+
+#%% create figure showing the association of each gene list with the cluster
+# relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
+rowHdr = ['ast', 'end', 'mic', 'oli', 'Pvalb', 'Sst', 'Vip', 'Sncg', 'Lamp5', 'combined']
+cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'neurons', 'sparse']
+plt.close('all')
+for sampleIdx in range(len(maleSamples)):
+    sampleForDisplay = maleSamples[sampleIdx]
+    geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
+    geneMatrixZScore = (geneMatrixZScore - np.mean(geneMatrixZScore, axis=0))/np.std(geneMatrixZScore, axis=0)
+    nOfClusters = 0
+    for tempClust in sampleForDisplay['cluster_region']:
+        if tempClust in cellTypeClusters:
+            nOfClusters += 1
+    plt.close('all')
+    fig,ax = plt.subplots(len(cellTypeGeneLists)-1, nOfClusters, figsize=(21, 11))
+    meanZScoreMatrix = np.zeros([len(cellTypeGeneLists)-1, nOfClusters])
+    columnIdx = 0
+    for clusterName in cellTypeClusters:
+        regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]
+        for i in regionIdx:
+            for rowIdx, cellType in enumerate(cellTypeGeneLists):
+                if cellType == 'neu':
+                    continue
+                else:
+                    if rowIdx < 4:
+                        rowIdx = rowIdx
+                    else:
+                        rowIdx = rowIdx - 1
+                    clusterIdx = np.where(sampleForDisplay['cluster_labels'] == i)[0]    
+                    geneMask = np.array(cellTypeGeneLists[cellType][:,1], dtype='int32')
+                    cellTypeMatrix = geneMatrixZScore[:, clusterIdx]
+                    cellTypeMatrix = cellTypeMatrix[geneMask, :]
+                    cellTypeMatrixMeanZScore = np.squeeze(np.array(np.mean(cellTypeMatrix, axis=0)))
+                    meanZScore = np.mean(cellTypeMatrixMeanZScore)
+                    meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
+                    # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
+                    # ax[0, i].set_title(f'Cluster {i}')
+                    if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
+                        ax[0, columnIdx].set_title('DG hilus', rotation=20)
+                    elif sampleForDisplay["cluster_region"][i] == 'neurons':
+                        ax[0, columnIdx].set_title('interneurons', rotation=20)
+                    elif sampleForDisplay["cluster_region"][i] == 'sparse':
+                        ax[0, columnIdx].set_title('unlabeled', rotation=20)
+                    else:
+                        ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}', rotation=20)
+                    ax[rowIdx, 0].set_ylabel(cellType, rotation='horizontal', horizontalalignment='right')
+                    ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
+                    scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='seismic', s=3, vmin=-2, vmax=2, linewidth=0)
+                    ax[rowIdx,columnIdx].tick_params(
+                        axis='both',          # changes apply to the x-axis
+                        which='both',      # both major and minor ticks are affected
+                        bottom=False,      # ticks along the bottom edge are off
+                        top=False,         # ticks along the top edge are off
+                        labelbottom=False,
+                        left=False,
+                        labelleft=False)
+            columnIdx += 1
+    meanZScoreSig = meanZScoreMatrix > 1
+    print(sampleForDisplay["sampleID"])
+    for i in range(meanZScoreSig.shape[1]):
+        print(np.array(rowHdr)[meanZScoreSig[:,i]])
+        
+    plt.suptitle('Mean z-score for cell type marker genes')
+    fig.text(0.5, 0.04, 'Cluster identification', ha='center')
+    fig.text(0.04, 0.5, 'Cell type gene marker', va='center', rotation='vertical')
+    # plt.ylabel('Cell type gene marker')
+    # plt.xlabel('Cluster identification')
+    cbar_ax = fig.add_axes([0.92, 0.15, 0.01, 0.7])
+    fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
+    plt.show()
+    plt.savefig(os.path.join(derivatives, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_cluster_labels.pdf'), dpi=300)
+    plt.close()
+
+#%% look for whether the sparse clusters correlate with any specific gene set
+# recreate teh figures above, but sorted based on cluster region ID
+# relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
+regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
+regionalGenes = ['Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
+plt.close('all')
+for sampleIdx in range(len(maleSamples)):
+    sampleForDisplay = maleSamples[sampleIdx]
+    geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
+    geneMatrixZScore = (geneMatrixZScore - np.mean(geneMatrixZScore, axis=0))/np.std(geneMatrixZScore, axis=0)
+    nOfClusters = 0
+    for tempClust in sampleForDisplay['cluster_region']:
+        if tempClust in regionalClusters:
+            nOfClusters += 1
+    plt.close('all')
+    fig,ax = plt.subplots(len(regionalGenes), nOfClusters, figsize=(21, 11))
+    meanZScoreMatrix = np.zeros([len(regionalGenes), nOfClusters])
+    columnIdx = 0
+    for clusterName in regionalClusters:
+        # if clusterName in ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']:
+        #     continue
+        regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]
+        for i in regionIdx:
+            for rowIdx, gene in enumerate(regionalGenes):
+                
+                
+                clusterIdx = np.where(sampleForDisplay['cluster_labels'] == i)[0]    
+                geneIdx = sampleForDisplay['geneList'].index(gene)
+                cellTypeMatrix = geneMatrixZScore[:, clusterIdx]
+                cellTypeMatrix = cellTypeMatrix[geneIdx, :]
+                cellTypeMatrixMeanZScore = np.squeeze(np.array(np.mean(cellTypeMatrix, axis=0)))
+                meanZScore = np.mean(cellTypeMatrixMeanZScore)
+                meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
+                # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
+                # ax[0, i].set_title(f'Cluster {i}')
+                if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
+                    ax[0, columnIdx].set_title('DG hilus', rotation=20)
+                elif sampleForDisplay["cluster_region"][i] == 'neurons':
+                    ax[0, columnIdx].set_title('interneurons', rotation=20)
+                elif sampleForDisplay["cluster_region"][i] == 'sparse':
+                    ax[0, columnIdx].set_title('unlabeled', rotation=20)
+                else:
+                    ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}', rotation=20)
+                ax[rowIdx, 0].set_ylabel(gene, rotation='horizontal', horizontalalignment='right')
+                ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
+                scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='seismic', s=3, vmin=-2, vmax=2, linewidth=0)
+                ax[rowIdx,columnIdx].tick_params(
+                    axis='both',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    left=False,
+                    labelleft=False)
+            columnIdx += 1
+    plt.suptitle('Mean z-score for cell type marker genes')
+    fig.text(0.5, 0.04, 'Cluster identification', ha='center')
+    fig.text(0.04, 0.5, 'Cell type gene marker', va='center', rotation='vertical')
+    # plt.ylabel('Cell type gene marker')
+    # plt.xlabel('Cluster identification')
+    cbar_ax = fig.add_axes([0.92, 0.15, 0.01, 0.7])
+    fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
+    plt.show()
+    plt.savefig(os.path.join(derivatives, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_cluster_labels.pdf'), dpi=300)
+    plt.close()
+
+#%% create figure showing the association of each gene list with the cluster without neg z-score
+# relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
+rowHdr = ['ast', 'end', 'mic', 'oli', 'Pvalb', 'Sst', 'Vip', 'Sncg', 'Lamp5', 'interneurons']
+cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'neurons', 'sparse']
+plt.close('all')
+for sampleIdx in range(len(maleSamples)):
+    sampleForDisplay = maleSamples[sampleIdx]
+    geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
+    geneMatrixZScore = (geneMatrixZScore - np.mean(geneMatrixZScore, axis=0))/np.std(geneMatrixZScore, axis=0)
+    nOfClusters = 0
+    for tempClust in sampleForDisplay['cluster_region']:
+        if tempClust in cellTypeClusters:
+            nOfClusters += 1
+    plt.close('all')
+    # without cluster row, would need len(cellTypeGeneLists)-1
+    fig,ax = plt.subplots(len(cellTypeGeneLists), nOfClusters, figsize=(21, 11))
+    meanZScoreMatrix = np.zeros([len(cellTypeGeneLists), nOfClusters])
+    columnIdx = 0
+    for clusterName in cellTypeClusters:
+        regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]
+        for i in regionIdx:
+            # if cellType in cellTypeColorListDict:
+            clusterColor = cellTypeColorListDict[clusterName]
+            # elif cellType == 'Pvalb' or cellType == 'Sst' or cellType == 'Vip' or cellType == 'Sncg' or cellType == 'Lamp5' or cellType == 'combined':
+                # clusterColor = cellTypeColorListDict['neurons']
+            
+            for rowIdx, cellType in enumerate(cellTypeGeneLists): 
+                if cellType == 'neu':
+                    continue
+                else:
+                    if rowIdx < 4:
+                        rowIdx = rowIdx + 1
+                    else:
+                        rowIdx = rowIdx
+                    clusterIdx = np.where(sampleForDisplay['cluster_labels'] == i)[0]
+                    clusterColorArray = np.array([clusterColor] * len(clusterIdx))
+                    ax[0,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
+                    scatterAx = ax[0,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=clusterColorArray, s=3, vmin=-2, vmax=2, linewidth=0)
+                    ax[0, 0].set_ylabel('Cluster', rotation='horizontal', horizontalalignment='right')
+                    geneMask = np.array(cellTypeGeneLists[cellType][:,1], dtype='int32')
+                    cellTypeMatrix = geneMatrixZScore[:, clusterIdx]
+                    cellTypeMatrix = cellTypeMatrix[geneMask, :]
+                    cellTypeMatrixMeanZScore = np.squeeze(np.array(np.mean(cellTypeMatrix, axis=0)))
+                    cellTypeMatrixMeanZScore[cellTypeMatrixMeanZScore < 0] = 0
+                    meanZScore = np.mean(cellTypeMatrixMeanZScore)
+                    meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
+                    # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
+                    # ax[0, i].set_title(f'Cluster {i}')
+                    if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
+                        ax[0, columnIdx].set_title('DG hilus', rotation=20)
+                    elif sampleForDisplay["cluster_region"][i] == 'neurons':
+                        ax[0, columnIdx].set_title('interneurons', rotation=20)
+                    elif sampleForDisplay["cluster_region"][i] == 'sparse':
+                        ax[0, columnIdx].set_title('unlabeled', rotation=20)
+                    else:
+                        ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}', rotation=20)
+                    ax[rowIdx, 0].set_ylabel(cellType, rotation='horizontal', horizontalalignment='right')
+                    ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
+                    scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='Reds', s=3, vmin=0, vmax=2, linewidth=0)
+                    ax[rowIdx,columnIdx].tick_params(
+                        axis='both',          # changes apply to the x-axis
+                        which='both',      # both major and minor ticks are affected
+                        bottom=False,      # ticks along the bottom edge are off
+                        top=False,         # ticks along the top edge are off
+                        labelbottom=False,
+                        left=False,
+                        labelleft=False)
+                    ax[0, columnIdx].tick_params(
+                        axis='both',          # changes apply to the x-axis
+                        which='both',      # both major and minor ticks are affected
+                        bottom=False,      # ticks along the bottom edge are off
+                        top=False,         # ticks along the top edge are off
+                        labelbottom=False,
+                        left=False,
+                        labelleft=False)
+            columnIdx += 1
+    meanZScoreSig = meanZScoreMatrix > 1
+    # print(sampleForDisplay["sampleID"])
+    # for i in range(meanZScoreSig.shape[1]):
+    #     print(np.array(rowHdr)[meanZScoreSig[:,i]])
+    
+    plt.suptitle('Mean z-score for cell type marker genes')
+    fig.text(0.5, 0.04, 'Cluster identification', ha='center')
+    fig.text(0.04, 0.5, 'Cell type gene marker', va='center', rotation='vertical')
+    # plt.ylabel('Cell type gene marker')
+    # plt.xlabel('Cluster identification')
+    cbar_ax = fig.add_axes([0.92, 0.15, 0.01, 0.7])
+    fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
+    plt.show()
+    plt.savefig(os.path.join(derivatives, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    plt.close()
+
+#%% look for whether the sparse clusters correlate with any specific gene set
+# recreate teh figures above, but sorted based on cluster region ID
+# relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
+regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
+regionalGenes = ['Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
+plt.close('all')
+for sampleIdx in range(len(maleSamples)):
+    sampleForDisplay = maleSamples[sampleIdx]
+    geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
+    geneMatrixZScore = (geneMatrixZScore - np.mean(geneMatrixZScore, axis=0))/np.std(geneMatrixZScore, axis=0)
+    nOfClusters = 0
+    for tempClust in sampleForDisplay['cluster_region']:
+        if tempClust in regionalClusters:
+            nOfClusters += 1
+    plt.close('all')
+    fig,ax = plt.subplots(len(regionalGenes), nOfClusters, figsize=(21, 11))
+    meanZScoreMatrix = np.zeros([len(regionalGenes), nOfClusters])
+    columnIdx = 0
+    for clusterName in regionalClusters:
+        # if clusterName in ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']:
+        #     continue
+        regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]
+        for i in regionIdx:
+            for rowIdx, gene in enumerate(regionalGenes):
+                
+                
+                clusterIdx = np.where(sampleForDisplay['cluster_labels'] == i)[0]    
+                geneIdx = sampleForDisplay['geneList'].index(gene)
+                cellTypeMatrix = geneMatrixZScore[:, clusterIdx]
+                cellTypeMatrix = cellTypeMatrix[geneIdx, :]
+                cellTypeMatrixMeanZScore = np.squeeze(np.array(np.mean(cellTypeMatrix, axis=0)))
+                meanZScore = np.mean(cellTypeMatrixMeanZScore)
+                meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
+                # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
+                # ax[0, i].set_title(f'Cluster {i}')
+                if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
+                    ax[0, columnIdx].set_title('DG hilus', rotation=20)
+                elif sampleForDisplay["cluster_region"][i] == 'neurons':
+                    ax[0, columnIdx].set_title('interneurons', rotation=20)
+                elif sampleForDisplay["cluster_region"][i] == 'sparse':
+                    ax[0, columnIdx].set_title('unlabeled', rotation=20)
+                else:
+                    ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}', rotation=20)
+                ax[rowIdx, 0].set_ylabel(gene, rotation='horizontal', horizontalalignment='right')
+                ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
+                scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='seismic', s=3, vmin=-2, vmax=2, linewidth=0)
+                ax[rowIdx,columnIdx].tick_params(
+                    axis='both',          # changes apply to the x-axis
+                    which='both',      # both major and minor ticks are affected
+                    bottom=False,      # ticks along the bottom edge are off
+                    top=False,         # ticks along the top edge are off
+                    labelbottom=False,
+                    left=False,
+                    labelleft=False)
+            columnIdx += 1
+    plt.suptitle('Mean z-score for cell type marker genes')
+    fig.text(0.5, 0.04, 'Cluster identification', ha='center')
+    fig.text(0.04, 0.5, 'Cell type gene marker', va='center', rotation='vertical')
+    # plt.ylabel('Cell type gene marker')
+    # plt.xlabel('Cluster identification')
+    cbar_ax = fig.add_axes([0.92, 0.15, 0.01, 0.7])
+    fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
+    plt.show()
+    plt.savefig(os.path.join(derivatives, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_cluster_labels.pdf'), dpi=300)
+    plt.close()

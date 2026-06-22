@@ -86,6 +86,25 @@ for cellType in enumerate(degDict):
 overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=clusterNames)
 overlappingDF = overlappingDF.set_index(clusterNames)
 
+#%% identify cluster specific DEGs
+
+nSigClusters = np.sum(overlappingBool, axis=1)
+
+clusterUniqueMask = np.where(nSigClusters == 1)[0]
+clusterUniqueGenes = np.array(allDegs[clusterUniqueMask])
+
+clusterUniqueClusters = []
+for gene in clusterUniqueGenes:
+    for cellType in degDict.keys():
+        if gene in np.array(degDict[cellType]['Gene_ID']):
+            clusterUniqueClusters.append(cellType)
+clusterUniqueClusters = np.array(clusterUniqueClusters)
+clusterUniqueDF = pd.DataFrame(np.array([clusterUniqueGenes, clusterUniqueClusters]).T, columns=['Gene_ID', 'cluster_name'])
+
+uniqueGeneDict = dict.fromkeys(clusterUniqueDF['cluster_name'])
+for uniqueCluster in np.unique(clusterUniqueDF['cluster_name']):
+    uniqueGeneDict[uniqueCluster] = clusterUniqueDF[clusterUniqueDF['cluster_name'] == uniqueCluster]
+    print(uniqueCluster, len(clusterUniqueDF[clusterUniqueDF['cluster_name'] == uniqueCluster]))
 #%% create dataframe of overlapping degs 
 plt.close('all')
 
@@ -108,7 +127,7 @@ plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'upset_plot_for_editing.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_for_editing.svg'), bbox_inches='tight', dpi=300)
 
 #%% the for loop is doing the exact same as if we ran the following
 plt.close('all')

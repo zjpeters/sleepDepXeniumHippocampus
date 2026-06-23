@@ -1966,7 +1966,7 @@ for sampleIdx in range(len(maleSamples)):
 # recreate teh figures above, but sorted based on cluster region ID
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
-regionalGenes = ['Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
+regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
 plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
@@ -2124,7 +2124,7 @@ for sampleIdx in range(len(maleSamples)):
 # recreate teh figures above, but sorted based on cluster region ID
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
-regionalGenes = ['Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
+regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
 plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]

@@ -90,6 +90,29 @@ for sampleIdx in range(len(experiment['sample-id'])):
     # cluster_regions = pd.read_csv(os.path.join(derivatives, f'{processedSamples[sampleIdx]["sampleID"]}_cluster_associations.csv'), header=None)
     # processedSamples[sampleIdx]['cluster_region'] = np.squeeze(np.array(cluster_regions[1]))
 
+#%% plot marker genes from Jyoti
+markerGeneDict = {
+    "DG": ["Cdh9","Prox1"],                          
+    "Oligo": ["Sox10", "Opalin", "Sgk1"],                       
+    "Astro": ["Aqp4", "Gli3"], 
+    "Endothelial": ["Cldn5", "Sox17"],              
+    "CA1": ["Wfs1", "Fibcd1"],
+    "VLMC": ["Igf2", "Dcn"],     
+    "CA3": ["Neurod6", "Npy2r"],
+    "Microglia": ["Cd53", "Trem2"],
+    "OPC": ["Pdgfra"],
+    "Interneuron": ["Gad2", "Gad1"],       
+    "Spag16": ["Spag16"],
+    "Thalamic Neurons": ["Slc17a6", "Rims3"],
+    "CA2": ["Prdm8", "Igfbp4"],
+    "Syt6": ["Syt6"],
+    "Cortical Neuron": ["Hs3st2","Myl4"],
+    "Cajal Retzius": ["Ebf3", "Cdh4"]
+}
+
+for cellType in markerGeneDict.keys():
+    for gene in markerGeneDict[cellType]:
+        stanly.viewGeneInProcessedSample(processedSamples[0], gene)
 #%% create figure showing genes with regional specificity and regional gradients
 sampleForDisplay = processedSamples[0]
 # CA1

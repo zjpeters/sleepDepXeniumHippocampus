@@ -217,7 +217,7 @@ clusterListMale = np.array(clusterListMale, dtype='str')
 # supplemental figure to show the clustering of all samples
 
 marker_size = 0.1
-plt.close('all')
+# plt.close('all')
 # rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
 fig, ax = plt.subplots(4,3, figsize=(7.2,4.8))
 
@@ -267,12 +267,12 @@ plt.show()
 # output pdf and svg
 plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, f'supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.close('all')
 #%% plot all samples with whole images but only the hippocampal cells
 # alternate form of supplemental figure showing clustering on samples
 
 marker_size = 0.1
-plt.close('all')
+# plt.close('all')
 # rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
 fig, ax = plt.subplots(2,3, figsize=(7.2,3.6))
 nR = 0
@@ -309,7 +309,7 @@ embeddingMale = reducer.fit_transform(np.array(allCellsMale).T)
 
 #%% create a plot of umap for SD, umap for NSD, and UMAP for all cells in male samples
 # supplemental figure showing that there is no obvious difference between sd and nsd in clustering
-plt.close('all')
+# plt.close('all')
 
 fig = plt.figure(figsize=(7.2,4))
 umapAxsNSD = plt.subplot2grid((4,9), (0,0), colspan=3, rowspan=4)
@@ -366,7 +366,7 @@ plt.show()
 ### uncomment below to save new figure pdf and svg
 plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
 marker_size = 0.3
@@ -375,7 +375,7 @@ schematic_img = plt.imread(os.path.join(figureFolder, 'biorender_schematic.png')
 sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0]))
 rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
 
-plt.close('all')
+# plt.close('all')
 fig = plt.figure(figsize=(6.14,6.69))
 schematicImage = plt.subplot2grid((6,7), (0,0), colspan=7, rowspan=2)
 tissueImage = plt.subplot2grid((6,7), (2,0), colspan=3, rowspan=2)
@@ -439,7 +439,7 @@ plt.show()
 
 #%% create figure 1 image for all samples without schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
-plt.close('all')
+# plt.close('all')
 sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][0]))
 rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], 270)
 
@@ -502,7 +502,7 @@ p-values and t-statistics from a file
 """
 desiredPval = 0.05
 alphaFdr = 1 - np.power((1 - desiredPval),(1/(len(maleSamples[0]["geneList"])*len(cellsOfInterest))))
-plt.close('all')
+# plt.close('all')
 sigGenesPerCells = {}
 
 # prepare lists for BH fdr
@@ -636,7 +636,7 @@ volcanoMarkerSize = 2
 volcanoGeneFontSize = 5
 volcanoTitleFontSize = 6
 
-plt.close('all')
+# plt.close('all')
 
 fig = plt.figure(figsize=(6,4.28))
 # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
@@ -776,11 +776,164 @@ plt.show()
 # output pdf and svg
 plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.close('all')
 
+#%% make volcano plot with hippocampus image for display
+hipp_img = plt.imread(os.path.join(figureFolder, 'hippocampusForVolcanoPlot.png'))
+volcanoMarkerSize = 2
+volcanoGeneFontSize = 5
+volcanoTitleFontSize = 6
+
+# plt.close('all')
+
+fig = plt.figure(figsize=(6,4.28))
+# for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
+hippPlot = plt.subplot2grid((11,7), (0,1), colspan=5, rowspan=3)
+ca1Plot = plt.subplot2grid((11,7), (3,0), colspan=3, rowspan=3)
+ca2Plot = plt.subplot2grid((11,7), (3,4), colspan=3, rowspan=3)
+ca3Plot = plt.subplot2grid((11,7), (7,0), colspan=3, rowspan=3)
+dgPlot = plt.subplot2grid((11,7), (7,4), colspan=3, rowspan=3)
+
+# calculate the number of degs per region
+hippPlot.imshow(hipp_img)
+hippPlot.set_xticks([])
+hippPlot.set_yticks([])
+hippPlot.spines['top'].set_visible(False)
+hippPlot.spines['bottom'].set_visible(False)
+hippPlot.spines['left'].set_visible(False)
+hippPlot.spines['right'].set_visible(False)
+hippPlot.annotate('CA1 (89)', [740, 25])
+hippPlot.annotate('CA2 (34)', [20, 200])
+hippPlot.annotate('CA3 (56)', [100, 650])
+hippPlot.annotate('DG (112)', [698, 650])
+hippPlot.set_title('DEGs per region', fontweight='bold')
+# hippPlot.set_ylabel('Number of DEGs', fontweight='bold')
+
+# CA1
+cellTypeIdx = 0
+nOfGenesToPlot = 10
+colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
+greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
+blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
+redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
+colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
+colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
+colorArray[redIdx, :] = np.array([1, 0, 0])
+
+ca1Plot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
+xabs_max = abs(max(ca1Plot.get_xlim(), key=abs))
+ca1Plot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
+sortedPval = np.argsort(pValList[:,cellTypeIdx])
+# plot only the names of the top ten genes
+for j in enumerate(sortedPval[:nOfGenesToPlot]):
+    if bhCorrList[j[1],cellTypeIdx] == 1:
+        a = ca1Plot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])), fontsize=volcanoGeneFontSize)
+        a.draggable()
+# for j in enumerate(sigColorList[:,cellTypeIdx]):
+#     if j[1] != 0:
+#         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
+if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+    ca1Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
+else:
+    ca1Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+# CA2
+cellTypeIdx = 1
+nOfGenesToPlot = 10
+colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
+greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
+blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
+redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
+colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
+colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
+colorArray[redIdx, :] = np.array([1, 0, 0])
+
+ca2Plot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
+xabs_max = abs(max(ca2Plot.get_xlim(), key=abs))
+ca2Plot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
+sortedPval = np.argsort(pValList[:,cellTypeIdx])
+# plot only the names of the top ten genes
+for j in enumerate(sortedPval[:nOfGenesToPlot]):
+    if bhCorrList[j[1],cellTypeIdx] == 1:
+        a = ca2Plot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])), fontsize=volcanoGeneFontSize)
+        a.draggable()
+# for j in enumerate(sigColorList[:,cellTypeIdx]):
+#     if j[1] != 0:
+#         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
+if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+    ca2Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
+else:
+    ca2Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+# CA3
+cellTypeIdx = 2
+nOfGenesToPlot = 10
+colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
+greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
+blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
+redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
+colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
+colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
+colorArray[redIdx, :] = np.array([1, 0, 0])
+
+ca3Plot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
+xabs_max = abs(max(ca3Plot.get_xlim(), key=abs))
+ca3Plot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
+sortedPval = np.argsort(pValList[:,cellTypeIdx])
+# plot only the names of the top ten genes
+for j in enumerate(sortedPval[:nOfGenesToPlot]):
+    if bhCorrList[j[1],cellTypeIdx] == 1:
+        a = ca3Plot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])), fontsize=volcanoGeneFontSize)
+        a.draggable()
+# for j in enumerate(sigColorList[:,cellTypeIdx]):
+#     if j[1] != 0:
+#         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
+if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+    ca3Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
+else:
+    ca3Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+# DG
+cellTypeIdx = 3
+nOfGenesToPlot = 10
+colorArray = np.zeros([sigColorList[:,cellTypeIdx].shape[0], 3])
+greyIdx = np.where(sigColorList[:,cellTypeIdx] == 0)
+blueIdx = np.where(sigColorList[:,cellTypeIdx] == -1)
+redIdx = np.where(sigColorList[:,cellTypeIdx] == 1)
+colorArray[greyIdx, :] = np.array([0.5, 0.5, 0.5])
+colorArray[blueIdx, :] = np.array([31/255, 119/255, 180/255])
+colorArray[redIdx, :] = np.array([1, 0, 0])
+
+dgPlot.scatter(logFCList[:,cellTypeIdx], -np.log10(pValList[:,cellTypeIdx]), c=colorArray, s=volcanoMarkerSize, linewidth=0)
+xabs_max = abs(max(dgPlot.get_xlim(), key=abs))
+dgPlot.set_xlim(xmin=-xabs_max, xmax=xabs_max)
+sortedPval = np.argsort(pValList[:,cellTypeIdx])
+# plot only the names of the top ten genes
+for j in enumerate(sortedPval[:nOfGenesToPlot]):
+    if bhCorrList[j[1],cellTypeIdx] == 1:
+        a = dgPlot.annotate(sampleForDisplay["geneList"][j[1]], (logFCList[j[1],cellTypeIdx], -np.log10(pValList[j[1],cellTypeIdx])), fontsize=volcanoGeneFontSize)
+        a.draggable()
+# for j in enumerate(sigColorList[:,cellTypeIdx]):
+#     if j[1] != 0:
+#         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
+if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+    dgPlot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
+else:
+    dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+fig.text(0.50, 0.04, 'logFC', ha='center', fontsize=volcanoTitleFontSize, fontweight='bold')
+fig.text(0.04, 0.40, '-log10(p-value)', va='center', rotation='vertical', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+plt.show()
+
+### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
+# output pdf and svg
+plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 #%% volcano plot for all cell types in one plot, reorganized
 
-plt.close('all')
+# plt.close('all')
 # uses -log10(pValue) as y axis, logFC as x axis
 
 fig = plt.figure(figsize=(6,6.69))
@@ -975,7 +1128,7 @@ plt.show()
 # output pdf and svg
 plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.close('all')
 
 #%% create t-statistic plots for Cirbp and Rbm3 in one figure
 # broad changes
@@ -990,7 +1143,7 @@ gene05 = 'Jdp2'
 # DG
 gene06 = 'Egr3'
 # plot Cirbp t-statistics
-plt.close('all')
+# plt.close('all')
 
 fig = plt.figure(figsize=(7.2,3.6))
 # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
@@ -1293,7 +1446,7 @@ plt.show()
 # output pdf and svg
 plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.close('all')
 
 #%% look for overlapping genes
 sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
@@ -1325,7 +1478,7 @@ for cellType in enumerate(degDict):
         if deg[1] in np.array(degDict[cellType[1]]['Gene_ID']):
             uniqueDegs[cellType[1]].append(deg[1])
             
-plt.close('all')
+# plt.close('all')
 if not os.path.exists(os.path.join(derivatives, 'uniqueDEGsPerRegion')):
     os.makedirs(os.path.join(derivatives, 'uniqueDEGsPerRegion'))
 for cellType in enumerate(uniqueDegs):
@@ -1372,7 +1525,7 @@ for cellType in enumerate(uniqueDegs):
         plt.suptitle(f'{gene} in {cellType[1]}')
         plt.show()
         plt.savefig(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
-        plt.close('all')
+        plt.close()
         
 #%% look for shared DEGs
 
@@ -1380,7 +1533,7 @@ regionsPerGene = np.sum(overlappingBool, axis=1)
 sharedDEGMask = np.where(regionsPerGene > 5)[0]
 sharedGeneList = allDegs[sharedDEGMask]
             
-plt.close('all')
+# plt.close('all')
 if not os.path.exists(os.path.join(derivatives, 'sharedDEGsPerRegion')):
     os.makedirs(os.path.join(derivatives, 'sharedDEGsPerRegion'))
 
@@ -1420,7 +1573,7 @@ for gene in sharedGeneList:
     plt.suptitle(f'{gene}')
     plt.show()
     plt.savefig(os.path.join(derivatives, 'sharedDEGsPerRegion', f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
-    plt.close('all')
+    plt.close()
 
 #%% create dictionary with information about different interneuron types
 # interneuron_information = dict.fromkeys(["Pvalb", "Sst", "Vip", "Sncg", "Lamp5", "interneurons"])
@@ -1602,7 +1755,7 @@ writer.close()
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
 rowHdr = ['ast', 'end', 'mic', 'oli', 'Pvalb', 'Sst', 'Vip', 'Sncg', 'Lamp5', 'combined']
 cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'neurons', 'sparse']
-plt.close('all')
+# plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
     geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
@@ -1611,7 +1764,7 @@ for sampleIdx in range(len(maleSamples)):
     for tempClust in sampleForDisplay['cluster_region']:
         if tempClust in cellTypeClusters:
             nOfClusters += 1
-    plt.close('all')
+    # plt.close('all')
     fig,ax = plt.subplots(len(cellTypeGeneLists)-1, nOfClusters, figsize=(21, 11))
     meanZScoreMatrix = np.zeros([len(cellTypeGeneLists)-1, nOfClusters])
     columnIdx = 0
@@ -1666,8 +1819,8 @@ for sampleIdx in range(len(maleSamples)):
     # for i in range(meanZScoreSig.shape[1]):
     #     print(np.array(rowHdr)[meanZScoreSig[:,i]])
         
-    plt.suptitle('Mean z-score for cell type marker genes')
-    fig.text(0.5, 0.04, 'Cluster identification', ha='center')
+    plt.suptitle(f'Mean z-score for cell type marker genes {sampleForDisplay["sampleID"]}')
+    fig.text(0.5, 0.04, 'Cluster label', ha='center')
     fig.text(0.04, 0.5, 'Cell type gene marker', va='center', rotation='vertical')
     # plt.ylabel('Cell type gene marker')
     # plt.xlabel('Cluster identification')
@@ -1680,9 +1833,10 @@ for sampleIdx in range(len(maleSamples)):
 #%% look for whether the sparse clusters correlate with any specific gene set
 # recreate teh figures above, but sorted based on cluster region ID
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
+
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
 regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Slit2', 'Calb2']
-plt.close('all')
+# plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
     geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
@@ -1691,7 +1845,7 @@ for sampleIdx in range(len(maleSamples)):
     for tempClust in sampleForDisplay['cluster_region']:
         if tempClust in regionalClusters:
             nOfClusters += 1
-    plt.close('all')
+    # plt.close('all')
     fig,ax = plt.subplots(len(regionalGenes)+1, nOfClusters, figsize=(21, 11))
     meanZScoreMatrix = np.zeros([len(regionalGenes), nOfClusters])
     columnIdx = 0
@@ -1766,7 +1920,7 @@ for sampleIdx in range(len(maleSamples)):
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
 regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Slit2', 'Calb2']
-plt.close('all')
+# plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
     geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
@@ -1775,7 +1929,7 @@ for sampleIdx in range(len(maleSamples)):
     for tempClust in sampleForDisplay['cluster_region']:
         if tempClust in regionalClusters:
             nOfClusters += 1
-    plt.close('all')
+    # plt.close('all')
     fig,ax = plt.subplots(len(regionalGenes)+1, nOfClusters, figsize=(21, 11))
     meanZScoreMatrix = np.zeros([len(regionalGenes), nOfClusters])
     columnIdx = 0
@@ -1850,7 +2004,7 @@ for sampleIdx in range(len(maleSamples)):
 rowHdr = ['ast', 'end', 'mic', 'oli', 'Pvalb', 'Sst', 'Vip', 'Sncg', 'Lamp5', 'interneurons']
 cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'neurons', 'sparse']
 fullCellTypeNames = {'ast': 'astrocytes', 'end': 'endothelial', 'mic': 'microglia', 'oli': 'oligodendrocytes', 'interneurons': 'interneurons'}
-plt.close('all')
+# plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
     geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
@@ -1859,7 +2013,7 @@ for sampleIdx in range(len(maleSamples)):
     for tempClust in sampleForDisplay['cluster_region']:
         if tempClust in cellTypeClusters:
             nOfClusters += 1
-    plt.close('all')
+    # plt.close('all')
     # without cluster row, would need len(cellTypeGeneLists)-1
     fig,ax = plt.subplots(len(cellTypeGeneLists), nOfClusters, figsize=(21, 11))
     meanZScoreMatrix = np.zeros([len(cellTypeGeneLists), nOfClusters])
@@ -1933,7 +2087,7 @@ for sampleIdx in range(len(maleSamples)):
     # for i in range(meanZScoreSig.shape[1]):
     #     print(np.array(rowHdr)[meanZScoreSig[:,i]])
     
-    plt.suptitle('Mean z-score for cell type marker genes')
+    plt.suptitle(f'Mean z-score for cell type marker genes, {sampleForDisplay["sampleID"]}')
     fig.text(0.5, 0.04, 'Assigned label', ha='center')
     fig.text(0.04, 0.5, 'Marker genes for cell type', va='center', rotation='vertical')
     # plt.ylabel('Cell type gene marker')
@@ -1950,7 +2104,7 @@ for sampleIdx in range(len(maleSamples)):
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
 regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Dusp5', 'Slit2', 'Calb2']
 
-plt.close('all')
+# plt.close('all')
 for sampleIdx in range(len(maleSamples)):
     sampleForDisplay = maleSamples[sampleIdx]
     geneMatrixZScore = sampleForDisplay['geneMatrixLog2'].todense()
@@ -1959,7 +2113,7 @@ for sampleIdx in range(len(maleSamples)):
     for tempClust in sampleForDisplay['cluster_region']:
         if tempClust in regionalClusters:
             nOfClusters += 1
-    plt.close('all')
+    # plt.close('all')
     fig,ax = plt.subplots(len(regionalGenes), nOfClusters, figsize=(21, 11))
     meanZScoreMatrix = np.zeros([len(regionalGenes), nOfClusters])
     columnIdx = 0
@@ -2073,7 +2227,7 @@ overlappingDF = pd.DataFrame(overlappingBool, index=allDegs, columns=clusterName
 overlappingDF = overlappingDF.set_index(clusterNames)
 
 #%% generate the complete upset plot with all possible interactions
-plt.close('all')
+# plt.close('all')
 
 minDegs = 3
 upset = upsetplot.UpSet(overlappingDF, show_counts='%d', min_subset_size=minDegs)
@@ -2111,7 +2265,7 @@ for i in clusterMask:
     maskedClusterInfo['backColor'].append(clusterInfo['backColor'][i])
 
 #%% plot figure 5
-plt.close('all')
+# plt.close('all')
 
 minDegs = 3
 upset = upsetplot.UpSet(maskedOverlappingDF, show_counts='%d', min_subset_size=minDegs, sort_by='cardinality')

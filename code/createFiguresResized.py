@@ -364,8 +364,8 @@ umapAxsAllCells.set_yticks([])
 plt.show()
 
 ### uncomment below to save new figure pdf and svg
-# plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, 'supp_figure_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'supp_figure01_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'supp_figure01_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
 # plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
@@ -2289,3 +2289,27 @@ plt.show()
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
 plt.savefig(os.path.join(figureFolder, f'figure05_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
+
+#%% upset plot for all intersections for supplemental
+
+upset = upsetplot.UpSet(overlappingDF, show_counts='%d', sort_by='cardinality')
+
+# set the colors of the bars for the regional association
+# since we created a dictionary with this information, we can use a for loop
+for i in range(len(clusterInfo['clusterName'])):
+    # first option labels the bar graph, bar_facecolor assigns bar graph color, shading_facecolor assigns background color
+    upset.style_categories(clusterInfo['clusterName'][i], 
+                           bar_facecolor=clusterInfo['foreColor'][i], 
+                           shading_facecolor=clusterInfo['backColor'][i])
+### use dark grey for fill to replace with correct color scheme in editing tool
+upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.1,1])), edgecolor='black')
+# change the label above the bar graphs
+fig = upset.plot()
+fig['totals'].set_title('Number of DEGs', fontweight='bold')
+fig['totals'].invert_yaxis()
+fig['intersections'].set_ylabel('Intersecting DEGs', fontweight='bold')
+plt.show()
+
+# output pdf and svg, however since we're editing the colors we don't need to output pdf
+# plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'supp_figure05_upset_plot_all_clusters_all_intersections_sorted.svg'), bbox_inches='tight', dpi=300)

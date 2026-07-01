@@ -298,8 +298,8 @@ for i in range(len(maleSamples)):
         nC = 0
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
 # plt.close('all')
 #%% perform umap plot on combined cells
 
@@ -634,7 +634,7 @@ sigColorList = np.array(sigColorList)
 
 volcanoMarkerSize = 2
 volcanoGeneFontSize = 5
-volcanoTitleFontSize = 6
+volcanoTitleFontSize = 7
 
 # plt.close('all')
 
@@ -782,7 +782,7 @@ plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano
 hipp_img = plt.imread(os.path.join(figureFolder, 'hippocampusForVolcanoPlot.png'))
 volcanoMarkerSize = 2
 volcanoGeneFontSize = 5
-volcanoTitleFontSize = 6
+volcanoTitleFontSize = 7
 
 # plt.close('all')
 
@@ -1135,7 +1135,7 @@ plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcan
 gene01 = 'Cirbp'
 gene02 = 'Rbm3'
 # ast
-gene03 = 'Dcn'
+gene03 = 'Col1a1'
 # ca1
 gene04 = 'Gpr161'
 # ca3
@@ -1801,7 +1801,7 @@ for sampleIdx in range(len(maleSamples)):
                     meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
                     # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
                     # ax[0, i].set_title(f'Cluster {i}')
-                    ax[0, columnIdx].set_title(clusterTitle, rotation=20)
+                    ax[0, columnIdx].set_title(clusterTitle)
                     ax[rowIdx, 0].set_ylabel(cellType, rotation='horizontal', horizontalalignment='right')
                     ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
                     scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='seismic', s=3, vmin=-2, vmax=2, linewidth=0)
@@ -1891,7 +1891,7 @@ for sampleIdx in range(len(maleSamples)):
                 # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
                 # ax[0, i].set_title(f'Cluster {i}')
                 
-                ax[0, columnIdx].set_title(clusterTitle, rotation=20)
+                ax[0, columnIdx].set_title(clusterTitle)
                 ax[rowIdx+1, 0].set_ylabel(gene, rotation='horizontal', horizontalalignment='right')
                 ax[rowIdx+1,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
                 scatterAx = ax[rowIdx+1, columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='Reds', s=3, vmin=0, vmax=2, linewidth=0)
@@ -1975,7 +1975,7 @@ for sampleIdx in range(len(maleSamples)):
                 # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
                 # ax[0, i].set_title(f'Cluster {i}')
                 
-                ax[0, columnIdx].set_title(clusterTitle, rotation=20)
+                ax[0, columnIdx].set_title(clusterTitle)
                 ax[rowIdx+1, 0].set_ylabel(gene, rotation='horizontal', horizontalalignment='right')
                 ax[rowIdx+1,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
                 scatterAx = ax[rowIdx+1, columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='Reds', s=3, vmin=0, vmax=2, linewidth=0)
@@ -2061,7 +2061,7 @@ for sampleIdx in range(len(maleSamples)):
                     meanZScoreMatrix[rowIdx, columnIdx] = meanZScore
                     # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
                     # ax[0, i].set_title(f'Cluster {i}')
-                    ax[0, columnIdx].set_title(clusterTitle, rotation=20)
+                    ax[0, columnIdx].set_title(clusterTitle)
                     ax[rowIdx, 0].set_ylabel(fullCellTypeNames[cellType], rotation='horizontal', horizontalalignment='right')
                     ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
                     scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='Reds', s=3, vmin=0, vmax=2, linewidth=0)
@@ -2135,13 +2135,13 @@ for sampleIdx in range(len(maleSamples)):
                 # print(f"Mean z-score for cell type {j[1]} in cluster {sparseClusters[i]}: {meanZScore}")
                 # ax[0, i].set_title(f'Cluster {i}')
                 if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
-                    ax[0, columnIdx].set_title('DG hilus', rotation=20)
+                    ax[0, columnIdx].set_title('DG hilus')
                 elif sampleForDisplay["cluster_region"][i] == 'neurons':
-                    ax[0, columnIdx].set_title('interneurons', rotation=20)
+                    ax[0, columnIdx].set_title('interneurons')
                 elif sampleForDisplay["cluster_region"][i] == 'sparse':
-                    ax[0, columnIdx].set_title('unlabeled', rotation=20)
+                    ax[0, columnIdx].set_title('unlabeled')
                 else:
-                    ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}', rotation=20)
+                    ax[0, columnIdx].set_title(f'{sampleForDisplay["cluster_region"][i]}')
                 ax[rowIdx, 0].set_ylabel(gene, rotation='horizontal', horizontalalignment='right')
                 ax[rowIdx,columnIdx].imshow(sampleForDisplay['tissueImageProcessed'],cmap='gray_r')
                 scatterAx = ax[rowIdx,columnIdx].scatter(sampleForDisplay['processedTissuePositionList'][clusterIdx,0], sampleForDisplay['processedTissuePositionList'][clusterIdx,1],c=cellTypeMatrixMeanZScore, cmap='seismic', s=3, vmin=-2, vmax=2, linewidth=0)
@@ -2230,25 +2230,25 @@ overlappingDF = overlappingDF.set_index(clusterNames)
 # plt.close('all')
 
 minDegs = 3
-upset = upsetplot.UpSet(overlappingDF, show_counts='%d', min_subset_size=minDegs)
-# set the colors of the bars for the regional association
-# since we created a dictionary with this information, we can use a for loop
-for i in range(len(clusterInfo['clusterName'])):
-    # first option labels the bar graph, bar_facecolor assigns bar graph color, shading_facecolor assigns background color
-    upset.style_categories(clusterInfo['clusterName'][i], 
-                           bar_facecolor=clusterInfo['foreColor'][i], 
-                           shading_facecolor=clusterInfo['backColor'][i])
-### use dark grey for fill to replace with correct color scheme in editing tool
-upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.1,1])), edgecolor='black')
-# change the label above the bar graphs
-fig = upset.plot()
-fig['totals'].set_title('Number of DEGs', fontweight='bold')
-fig['intersections'].set_ylabel('Intersecting DEGs', fontweight='bold')
-plt.show()
+# upset = upsetplot.UpSet(overlappingDF, show_counts='%d', min_subset_size=minDegs)
+# # set the colors of the bars for the regional association
+# # since we created a dictionary with this information, we can use a for loop
+# for i in range(len(clusterInfo['clusterName'])):
+#     # first option labels the bar graph, bar_facecolor assigns bar graph color, shading_facecolor assigns background color
+#     upset.style_categories(clusterInfo['clusterName'][i], 
+#                            bar_facecolor=clusterInfo['foreColor'][i], 
+#                            shading_facecolor=clusterInfo['backColor'][i])
+# ### use dark grey for fill to replace with correct color scheme in editing tool
+# upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.1,1])), edgecolor='black')
+# # change the label above the bar graphs
+# fig = upset.plot()
+# fig['totals'].set_title('Number of DEGs', fontweight='bold')
+# fig['intersections'].set_ylabel('Unique DEGs', fontweight='bold')
+# plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'upset_plot_for_editing_min_degs_{minDegs}.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure05_upset_plot_for_editing_min_degs_{minDegs}.svg'), bbox_inches='tight', dpi=300)
 
 #%% reduce list to only CA1, CA2, CA3, DG, and astrocytes and min intersection to 3
 clusterMask = np.array([0, 1, 2, 3, 5])
@@ -2283,7 +2283,7 @@ upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.
 fig = upset.plot()
 fig['totals'].set_title('Number of DEGs', fontweight='bold')
 fig['totals'].invert_yaxis()
-fig['intersections'].set_ylabel('Intersecting DEGs', fontweight='bold')
+fig['intersections'].set_ylabel('Unique DEGs', fontweight='bold')
 plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
@@ -2307,7 +2307,7 @@ upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.
 fig = upset.plot()
 fig['totals'].set_title('Number of DEGs', fontweight='bold')
 fig['totals'].invert_yaxis()
-fig['intersections'].set_ylabel('Intersecting DEGs', fontweight='bold')
+fig['intersections'].set_ylabel('Unique DEGs', fontweight='bold')
 plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf

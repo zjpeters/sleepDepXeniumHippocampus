@@ -305,8 +305,8 @@ for i in sampleOrder:
         nC = 0
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
 # plt.close('all')
 #%% perform umap plot on combined cells
 
@@ -397,14 +397,18 @@ schematicImage.spines['top'].set_visible(False)
 schematicImage.spines['bottom'].set_visible(False)
 schematicImage.spines['left'].set_visible(False)
 schematicImage.spines['right'].set_visible(False)
+schematicImage.text(-30, -30, 'A', fontweight='bold', size=9)
 # plot the tissue image from sample
 tissueImage.imshow(rotationInfo[1], cmap='gray_r')
 tissueImage.set_xticks([])
 tissueImage.set_yticks([])
+tissueImage.text(-30, -30, 'B', fontweight='bold', size=9)
+tissueImage.text(5425, -30, 'D', fontweight='bold', size=9)
 
 # plot the clustering results on top of the image
 clusterImage.imshow(rotationInfo[1], cmap='gray_r')
 clusterImage.scatter(rotationInfo[0][maleSamples[0]['hippMask'],0], rotationInfo[0][maleSamples[0]['hippMask'],1], c=maleSamples[0]['cluster_colors'], alpha=1, s=marker_size, linewidth=0)
+clusterImage.text(-30, -30, 'C', fontweight='bold', size=9)
 clusterImage.set_xticks([])
 clusterImage.set_yticks([])
 
@@ -412,7 +416,6 @@ clusterImage.set_yticks([])
 umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=marker_size, linewidth=0)
 umapAxsAllCells.set_xticks([])
 umapAxsAllCells.set_yticks([])
-
 # plot the legend
 # create handles and patches to generate labeled legend
 handles, labels = umapAxsAllCells.get_legend_handles_labels()
@@ -438,11 +441,10 @@ patch = mpatches.Patch(color=oliColor, label='oligodendrocytes')
 handles.append(patch) 
 
 umapAxsAllCells.legend(handles=handles, ncols=2)
-
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.svg'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.svg'), bbox_inches='tight', dpi=300)
 
 #%% create figure 1 image for all samples without schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
@@ -795,11 +797,11 @@ volcanoTitleFontSize = 7
 
 fig = plt.figure(figsize=(6,4.28))
 # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
-hippPlot = plt.subplot2grid((11,7), (0,1), colspan=5, rowspan=3)
-ca1Plot = plt.subplot2grid((11,7), (3,0), colspan=3, rowspan=3)
-ca2Plot = plt.subplot2grid((11,7), (3,4), colspan=3, rowspan=3)
-ca3Plot = plt.subplot2grid((11,7), (7,0), colspan=3, rowspan=3)
-dgPlot = plt.subplot2grid((11,7), (7,4), colspan=3, rowspan=3)
+hippPlot = plt.subplot2grid((12,7), (0,1), colspan=5, rowspan=3)
+ca1Plot = plt.subplot2grid((12,7), (4,0), colspan=3, rowspan=3)
+ca2Plot = plt.subplot2grid((12,7), (4,4), colspan=3, rowspan=3)
+ca3Plot = plt.subplot2grid((12,7), (8,0), colspan=3, rowspan=3)
+dgPlot = plt.subplot2grid((12,7), (8,4), colspan=3, rowspan=3)
 
 # calculate the number of degs per region
 hippPlot.imshow(hipp_img)
@@ -814,6 +816,7 @@ hippPlot.annotate('CA2 (34)', [20, 200])
 hippPlot.annotate('CA3 (56)', [100, 650])
 hippPlot.annotate('DG (112)', [698, 650])
 hippPlot.set_title('DEGs per region', fontweight='bold')
+
 # hippPlot.set_ylabel('Number of DEGs', fontweight='bold')
 
 # CA1
@@ -928,8 +931,16 @@ if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
 else:
     dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
 
+# add axis labels
 fig.text(0.50, 0.04, 'logFC', ha='center', fontsize=volcanoTitleFontSize, fontweight='bold')
 fig.text(0.04, 0.40, '-log10(p-value)', va='center', rotation='vertical', fontsize=volcanoTitleFontSize, fontweight='bold')
+
+# add subplot labels
+fig.text(0.33, 0.9, 'A', fontweight='bold', size=9)
+fig.text(0.08, 0.63, 'B', fontweight='bold', size=9)
+fig.text(0.53, 0.63, 'C', fontweight='bold', size=9)
+fig.text(0.08, 0.37, 'D', fontweight='bold', size=9)
+fig.text(0.53, 0.37, 'E', fontweight='bold', size=9)
 
 plt.show()
 
@@ -945,13 +956,13 @@ plt.show()
 
 fig = plt.figure(figsize=(6,6.69))
 # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
-barPlot = plt.subplot2grid((14,7), (0,1), colspan=5, rowspan=2)
-astPlot = plt.subplot2grid((14,7), (3,0), colspan=3, rowspan=3)
-oliPlot = plt.subplot2grid((14,7), (3,4), colspan=3, rowspan=3)
-micPlot = plt.subplot2grid((14,7), (7,0), colspan=3, rowspan=3)
-endPlot = plt.subplot2grid((14,7), (7,4), colspan=3, rowspan=3)
-dgIntPlot = plt.subplot2grid((14,7), (11,0), colspan=3, rowspan=3)
-neuPlot = plt.subplot2grid((14,7), (11,4), colspan=3, rowspan=3)
+barPlot = plt.subplot2grid((15,7), (0,1), colspan=5, rowspan=2)
+astPlot = plt.subplot2grid((15,7), (4,0), colspan=3, rowspan=3)
+oliPlot = plt.subplot2grid((15,7), (4,4), colspan=3, rowspan=3)
+micPlot = plt.subplot2grid((15,7), (8,0), colspan=3, rowspan=3)
+endPlot = plt.subplot2grid((15,7), (8,4), colspan=3, rowspan=3)
+dgIntPlot = plt.subplot2grid((15,7), (12,0), colspan=3, rowspan=3)
+neuPlot = plt.subplot2grid((15,7), (12,4), colspan=3, rowspan=3)
 
 # mask in order to reorder the bar plots based on desired order
 reorderMask = np.array([5, 9, 7, 6, 4, 8], dtype='int32')
@@ -1126,15 +1137,25 @@ if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
 else:
     endPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
 
+# add axis labels
 fig.text(0.5, 0.04, 'logFC', ha='center')
 fig.text(0.04, 0.42, '-log10(p-value)', va='center', rotation='vertical')
+
+# add subplot labels
+fig.text(0.15, 0.9, 'A', fontweight='bold', size=9)
+fig.text(0.08, 0.69, 'B', fontweight='bold', size=9)
+fig.text(0.53, 0.69, 'C', fontweight='bold', size=9)
+fig.text(0.08, 0.48, 'D', fontweight='bold', size=9)
+fig.text(0.53, 0.48, 'E', fontweight='bold', size=9)
+fig.text(0.08, 0.27, 'F', fontweight='bold', size=9)
+fig.text(0.53, 0.27, 'G', fontweight='bold', size=9)
 
 plt.show()
 
 ### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure03_cell_type_volcano_plots_volcano_marker_{volcanoMarkerSize}.svg'), bbox_inches='tight', dpi=300)
 # plt.close('all')
 
 #%% create t-statistic plots for Cirbp and Rbm3 in one figure
@@ -1617,8 +1638,8 @@ plotGeneAndTStatToSubplots(sampleForDisplay, gene06NSDMean, gene06SDMean, gene06
 gene06NSDMean.text(-30, -30, 'F', fontweight='bold', size=9)
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
 
 #%% look for overlapping genes
 sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
@@ -1669,7 +1690,7 @@ for cellType in enumerate(uniqueDegs):
         SDMean = plt.subplot2grid((6,9), (0,3), colspan=3, rowspan=2)
         Tstat = plt.subplot2grid((6,9), (0,6), colspan=3, rowspan=2)
         plotGeneAndTStatToSubplots(sampleForDisplay, NSDMean, SDMean, Tstat, gene, cellTypePriority=cellType[1])
-        plt.savefig(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
+        # plt.savefig(os.path.join(derivatives, 'uniqueDEGsPerRegion', cellType[1], f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
         plt.close()
 
 #%% look for shared DEGs
@@ -1717,7 +1738,7 @@ for gene in sharedGeneList:
     plt.colorbar(tstatScatter,fraction=0.02, pad=0.04)
     plt.suptitle(f'{gene}')
     plt.show()
-    plt.savefig(os.path.join(derivatives, 'sharedDEGsPerRegion', f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
+    # plt.savefig(os.path.join(derivatives, 'sharedDEGsPerRegion', f'{gene}_mean_and_t-stat.png'), bbox_inches='tight', dpi=300)
     plt.close()
 
 #%% loop over gene list from data and find matching genes in cell type specificity list
@@ -1890,7 +1911,7 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.13, 0.01, 0.6])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    plt.savefig(os.path.join(figureFolder, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    # plt.savefig(os.path.join(figureFolder, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
     plt.close()
 
 #%% create figure showing the association of each gene list with the cluster without neg z-score
@@ -1995,8 +2016,8 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.13, 0.01, 0.6])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
-    plt.close()
+    # plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    # plt.close()
 
 #%% preparing data for UpSet plot
 # create dictionary containing cluster and color info
@@ -2099,7 +2120,7 @@ plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'figure05_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure05_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
 
 #%% upset plot for all intersections for supplemental
 
@@ -2123,4 +2144,4 @@ plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'supp_figure05_upset_plot_all_clusters_all_intersections_sorted.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'supp_figure05_upset_plot_all_clusters_all_intersections_sorted.svg'), bbox_inches='tight', dpi=300)

@@ -1259,18 +1259,25 @@ for i in range(len(maskedClusterInfo['clusterName'])):
 ### use dark grey for fill to replace with correct color scheme in editing tool
 upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.1,1])), edgecolor='black')
 # change the label above the bar graphs
+plt.rcParams['axes.labelsize'] = 9
+plt.rcParams['xtick.labelsize'] = 9
+plt.rcParams['ytick.labelsize'] = 9
 fig = upset.plot()
-fig['totals'].set_title('Number of DEGs', fontweight='bold')
+fig['totals'].set_title('Number of DEGs', fontweight='bold', fontsize=9)
 fig['totals'].invert_yaxis()
-fig['intersections'].set_ylabel('Unique DEGs', fontweight='bold')
+fig['intersections'].set_ylabel('Unique DEGs', fontweight='bold', fontsize=9)
+
 plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, f'figure05_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, f'figure04a_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
 
 #%% upset plot for all intersections for supplemental
-
+# set rcParams back after changing for upset plot
+plt.rcParams['axes.labelsize'] = 7
+plt.rcParams['xtick.labelsize'] = 6
+plt.rcParams['ytick.labelsize'] = 6
 upset = upsetplot.UpSet(overlappingDF, show_counts='%d', sort_by='cardinality')
 
 # set the colors of the bars for the regional association
@@ -1283,6 +1290,7 @@ for i in range(len(clusterInfo['clusterName'])):
 ### use dark grey for fill to replace with correct color scheme in editing tool
 upset.style_subsets(min_subset_size=1, facecolor=np.squeeze(np.array([0.1,0.1,0.1,1])), edgecolor='black')
 # change the label above the bar graphs
+
 fig = upset.plot()
 fig['totals'].set_title('Number of DEGs', fontweight='bold')
 fig['totals'].invert_yaxis()
@@ -1299,31 +1307,45 @@ use in figure 4
 """
 #%% create t-statistic plots for six genes of interest
 
-fig = plt.figure(figsize=(7.2,3.6))
+upsetImg = plt.imread(os.path.join(figureFolder, 'figure04a_upset_plot_clusters_of_interest_min_degs_3_sorted_colored.png'))
+fig = plt.figure(figsize=(7.2,6.69))
+tStatFigSize = (19,22)
+upsetPlotHeight = 11
+tStatStartCol = 2
+# calculate the number of degs per region
+upsetFig = plt.subplot2grid(tStatFigSize, (0,0), colspan=22, rowspan=upsetPlotHeight)
+upsetFig.imshow(upsetImg)
+upsetFig.set_xticks([])
+upsetFig.set_yticks([])
+upsetFig.spines['top'].set_visible(False)
+upsetFig.spines['bottom'].set_visible(False)
+upsetFig.spines['left'].set_visible(False)
+upsetFig.spines['right'].set_visible(False)
+upsetFig.text(90,30, 'A', fontweight='bold', size=9)
 # for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
-gene01NSDMean = plt.subplot2grid((10,19), (0,0), colspan=3, rowspan=2)
-gene01SDMean = plt.subplot2grid((10,19), (0,3), colspan=3, rowspan=2)
-gene01Tstat = plt.subplot2grid((10,19), (0,6), colspan=3, rowspan=2)
+gene01NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 0), colspan=3, rowspan=2)
+gene01SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 3), colspan=3, rowspan=2)
+gene01Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 6), colspan=3, rowspan=2)
 
-gene02NSDMean = plt.subplot2grid((10,19), (0,10), colspan=3, rowspan=2)
-gene02SDMean = plt.subplot2grid((10,19), (0,13), colspan=3, rowspan=2)
-gene02Tstat = plt.subplot2grid((10,19), (0,16), colspan=3, rowspan=2)
+gene02NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 10), colspan=3, rowspan=2)
+gene02SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 13), colspan=3, rowspan=2)
+gene02Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 16), colspan=3, rowspan=2)
 
-gene03NSDMean = plt.subplot2grid((10,19), (3,0), colspan=3, rowspan=2)
-gene03SDMean = plt.subplot2grid((10,19), (3,3), colspan=3, rowspan=2)
-gene03Tstat = plt.subplot2grid((10,19), (3,6), colspan=3, rowspan=2)
+gene03NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 0), colspan=3, rowspan=2)
+gene03SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 3), colspan=3, rowspan=2)
+gene03Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 6), colspan=3, rowspan=2)
 
-gene04NSDMean = plt.subplot2grid((10,19), (3,10), colspan=3, rowspan=2)
-gene04SDMean = plt.subplot2grid((10,19), (3,13), colspan=3, rowspan=2)
-gene04Tstat = plt.subplot2grid((10,19), (3,16), colspan=3, rowspan=2)
+gene04NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 10), colspan=3, rowspan=2)
+gene04SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 13), colspan=3, rowspan=2)
+gene04Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 16), colspan=3, rowspan=2)
 
-gene05NSDMean = plt.subplot2grid((10,19), (6,0), colspan=3, rowspan=2)
-gene05SDMean = plt.subplot2grid((10,19), (6,3), colspan=3, rowspan=2)
-gene05Tstat = plt.subplot2grid((10,19), (6,6), colspan=3, rowspan=2)
+gene05NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 0), colspan=3, rowspan=2)
+gene05SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 3), colspan=3, rowspan=2)
+gene05Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 6), colspan=3, rowspan=2)
 
-gene06NSDMean = plt.subplot2grid((10,19), (6,10), colspan=3, rowspan=2)
-gene06SDMean = plt.subplot2grid((10,19), (6,13), colspan=3, rowspan=2)
-gene06Tstat = plt.subplot2grid((10,19), (6,16), colspan=3, rowspan=2)
+gene06NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 10), colspan=3, rowspan=2)
+gene06SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 13), colspan=3, rowspan=2)
+gene06Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 16), colspan=3, rowspan=2)
 
 
 def plotGeneAndTStatToSubplots(processedSample, nsdMeanFig, sdMeanFig, tStatFig, 
@@ -1456,8 +1478,8 @@ plotGeneAndTStatToSubplots(sampleForDisplay, gene06NSDMean, gene06SDMean, gene06
 gene06NSDMean.text(-30, -30, 'G', fontweight='bold', size=9)
 plt.show()
 # output pdf and svg
-# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
 
 #%% look for overlapping genes
 # sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))

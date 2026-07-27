@@ -325,14 +325,14 @@ umapAxsAllCells = plt.subplot2grid((4,9), (0,6), colspan=3, rowspan=4)
 # plot the NSD samples
 nsdIdx = np.where(sdNSDIdxMale == 0)[0]
 umapAxsNSD.scatter(embeddingMale[nsdIdx,0], embeddingMale[nsdIdx,1], c=colorsAllCellsMale[nsdIdx,:], s=marker_size, linewidth=0)
-umapAxsNSD.set_title("UMAP of male NSD samples")
+umapAxsNSD.set_title("UMAP of NSD samples")
 umapAxsNSD.set_xticks([])
 umapAxsNSD.set_yticks([])
 
 # plot the SD samples
 sdIdx = np.where(sdNSDIdxMale == 1)[0]
 umapAxsSD.scatter(embeddingMale[sdIdx,0], embeddingMale[sdIdx,1], c=colorsAllCellsMale[sdIdx,:], s=marker_size, linewidth=0)
-umapAxsSD.set_title("UMAP of male SD samples")
+umapAxsSD.set_title("UMAP of SD samples")
 umapAxsSD.set_xticks([])
 umapAxsSD.set_yticks([])
 
@@ -364,16 +364,16 @@ umapAxsSD.legend(handles=handles, ncols=2, fontsize=5)
 
 # plot all cells
 umapAxsAllCells.scatter(embeddingMale[:,0], embeddingMale[:,1], c=colorsAllCellsMale, s=marker_size, linewidth=0)
-umapAxsAllCells.set_title("UMAP of all male samples")
+umapAxsAllCells.set_title("UMAP of all samples")
 umapAxsAllCells.set_xticks([])
 umapAxsAllCells.set_yticks([])
 
 plt.show()
 
 ### uncomment below to save new figure pdf and svg
-# plt.savefig(os.path.join(figureFolder, 'supp_figure01_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
-# plt.savefig(os.path.join(figureFolder, 'supp_figure01_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
-# plt.close('all')
+plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
+plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
 marker_size = 0.3
@@ -1752,7 +1752,7 @@ for sampleIdx in range(len(maleSamples)):
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
     # plt.savefig(os.path.join(figureFolder, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
-    plt.close()
+    # plt.close()
 
 #%% create figure showing the association of each gene list with the cluster without neg z-score
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
@@ -1856,5 +1856,5 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.13, 0.01, 0.6])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    # plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
-    # plt.close()
+    plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    plt.close()

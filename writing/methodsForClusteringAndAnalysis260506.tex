@@ -7,6 +7,8 @@
 \usepackage[acronym,nonumberlist]{glossaries}
 \usepackage[export]{adjustbox}
 \usepackage{helvet}
+% make figure labels bold
+\usepackage[labelfont=bf]{caption}
 \renewcommand{\familydefault}{\sfdefault}
 \graphicspath{ {./figures/} }
 
@@ -17,11 +19,12 @@
 \author{Zeru Peterson}
 
 % the nonumberlist in the \usepackage and printglossary calls prevents printing page number of usage
+\makenoidxglossaries
 \newacronym{ca1}{CA1}{Cornu ammonis subfield 1}
 \newacronym{ca2}{CA2}{Cornu ammonis subfield 2}
 \newacronym{ca3}{CA3}{Cornu ammonis subfield 3}
 \newacronym{dg}{DG}{Dentage gyrus}
-\makenoidxglossaries
+\newacronym{st}{ST}{Spatial transcriptomics}
 
 \begin{document}
 \begin{titlepage}
@@ -64,16 +67,31 @@ It has long been known that sleep deprivation has many effects on the brain, esp
 
 The hippocampus is often considered to be the memory center of the brain. This broad definition often overlooks the intricate interactions that occur within the structure of the hippocampus that allow it to encode and recall memories across various species. 
 
-Spatial transcriptomics is a relatively new field of study in the past decade which aims to integrate transcriptomic analyses like those performed using RNAscope or single-cell RNASeq with the spatial localization of each cell in a sample. Various methods of spatial transcriptomic analysis have been released since its creation, with the experimental design generally being divided into two categories, either imaging-based technologies such as Xenium or Merscope, or sequencing-based technologies including Visium or GeoMx \cite{choosingST}. The major difference between the two types of technology lie in how the transcriptic counts are generated. For imaging-based technologies, Single-Molecule Fluorescence In Situ Hybridization (smFISH) is used to quantify the number of transcripts present in each cell, typically using between hundreds and thousands of unique genes. While the imaging-based method has a limited number of detectable transcripts, it is able to quantify transcripts from all across the experimental slide, providing a cellular or subcellular resolution. Sequencing-based technologies instead use barcoded probes that are attached to the experimental slide in small clusters or spots, allowing for the detection of a much higher number of unique transcripts, but typically at the loss of spatial resolution allowed by imaging-based technologies. Each of these technologies have their advantages and disadvantages and the selection will be dependent on the experimental question being posed. For example, if a group is looking to generate a hypothesis about which genes across the entire transcriptome might be differentially expressed under a given condition, it might make more sense to use a sequencing-based method such as Visium. If, on the other hand, a group has an a priori hypothesis about changes that can occur under a given condition and are interested in finding out the cellular changes that are happening within a region, an imaging-based method would make more sense. 
+\subsection{Spatial transcriptomics}
 
-This work uses Xenium to investigate the transcriptomic architecture of the hippocampal subregions in the mouse brain. Previous work had examined the effects of sleep deprivation in mice using Visium technology to identify genes of interest that would be expected to change, specifically those related to the hippocampus and memory \cite{visiumSD}. Using the information learned from that previous study, a list of ***X*** genes was generated and used to perform a Xenium experiment in order to have a higher resolution examination of the hippocampal formation. With this list of genes combined with the stock genes provided by the company, a total of 297 genes were available for analysis in this project.  
+Spatial transcriptomics is a relatively new field of study in the past decade which aims to integrate transcriptomic analyses like those performed using RNAscope or single-cell RNASeq with the spatial localization of each cell in a sample. Various methods of spatial transcriptomic analysis have been released since its creation, with the experimental design generally being divided into two categories, either imaging-based technologies such as Xenium or Merscope, or sequencing-based technologies including Visium or GeoMx \cite{choosingST}. The major difference between the two types of technology lie in how the transcriptomic counts are generated. For imaging-based technologies, Single-Molecule Fluorescence In Situ Hybridization (smFISH) is used to quantify the number of transcripts present in each cell, typically using between hundreds and thousands of unique genes. While the imaging-based method has a limited number of detectable transcripts, it is able to quantify transcripts from all across the experimental slide, providing a cellular or subcellular resolution. Sequencing-based technologies instead use barcoded probes that are attached to the experimental slide in small clusters or spots, allowing for the detection of a much higher number of unique transcripts, but typically at the loss of spatial resolution allowed by imaging-based technologies. Each of these technologies have their advantages and disadvantages and the selection will be dependent on the experimental question being posed. For example, if a group is looking to generate a hypothesis about which genes across the entire transcriptome might be differentially expressed under a given condition, it might make more sense to use a sequencing-based method such as Visium. If, on the other hand, a group has an a priori hypothesis about changes that can occur under a given condition and are interested in finding out the cellular changes that are happening within a region, an imaging-based method would make more sense. 
+
+\subsection{Xenium}
+
+Xenium is an imaging-based spatial transcriptomics method from 10x Genomics that provides information about samples at a single-cell resolution within a slice of tissue. Each slice can be analyzed for hundreds of genes across tens to hundreds of thousands of cells in a slice of tissue. The cells within the image are segmented and identified using specialized cell detection algorithms such as Cellpose \cite{Cellpose}. The single-cell resolution of imaging-based platforms brings many advantages over sequencing-based modalities which are limited by the spatial resolution of the sequencing spots/probes. For instance, for experiments using the Visium platform, each spot is $50\mu m$ in diameter and the spots are approximately $100\mu m$ from each other on center in a honeycomb pattern. When compared to the size of a neuronal soma, which usually range between $10-25\mu m$ \cite{dendrites}, a spatial resolution of $100\mu m$ means that each spot has the potential to contain multiple cells, and many cells may be missed in the space between each of the probe sets. The disadvantage of imaging-based platforms such as Xenium is in the transcriptomic resolution. While Visium and other sequencing-based methods can capture gene expression for the entire transcriptome, imaging based modalities are limited to a selected set  of genes, typically between 250-500 genes, though some companies are now releasing gene sets with close to 1,000 genes. Additionally, many of the genes included in these gene sets are specified by the manufacturer in order to allow for proper cell segmentation, highly reducing the transcriptomic information compared to the more than 20,000 genes available in the sequencing-based platforms. Since this project focused on elucidating specific effects on the hippocampus of the mouse brain, it was ideal to use an imaging-based platform that allowed for the single-cell analysis. 
+
+This work uses Xenium to investigate the transcriptomic architecture of the hippocampal subregions in the mouse brain. Previous work had examined the effects of sleep deprivation in mice using Visium technology to identify genes of interest that would be expected to change, specifically those related to the hippocampus and memory \cite{visiumSD}. Using the information learned from that previous study, a list of 50 genes was generated and used in addition to 247 predefined gene probes to perform a Xenium experiment in order to have a higher resolution examination of the hippocampal formation. With this list of genes combined with the stock genes provided by the company, a total of 297 genes were available for analysis in this project. 
+
+\subsection{STANLY}
+
+Spatial Transcriptomic ANaLYsis (STANLY) is a tool that was created by the author for a previous work \cite{visiumSD} in order to analyze data from the sequencing-based technology Visium. The program is built in Python mainly using the following libraries: scikit-image \cite{scikit-image}, scikit-learn \cite{scikit-learn} Matplotlib \cite{matplotlib}, NumPy \cite{NumPy}, Advanced Normalization Tools (ANTs) \cite{ANTs}, SciPy \cite{SciPy}, and BrainGlobe \cite{BrainGlobe}. 
+
+STANLY steamlines the analysis of spatial transcriptomics data by normalizing datasets from different spatial transcriptomic platforms in such a way that common methods can be applied across different experimental conditions. These methods include the alignment and registration of samples into a common space so that spatial analysis can be performed within a reference space, much like is done within other neuroimaging modalities such as magnetic resonance imaging (MRI) or other spatially resolve analyses. In addition to image and data registration, STANLY incorporates statistical analysis using either clusters of cells or "digital spots", i.e. a group of spots that are combined together based on their spatial proximity to each other. As part of this work, STANLY has been expanded to include importing and processing functions to work with Xenium data. A lasso tool was created to allow users to select cells or regions of interest from within a larger dataset so that regional analysis can be performed. A major analysis addition is that of calculating the transcriptomic similarity of cells through cosine similarity and using this information to perform spectral clustering of the cells that make up samples.
+
+Across all of the platforms, both sequencing- and imaging-based, there are certain commonalities that allow for potential overlap in methodology of analysis. It was these similarities between modalities that formed the basis for the creation of STANLY. Each sample will include a list of cells in the case of imaging-based samples, or spots/probes in the case of sequencing-based experiments. For simplicity, this work will refer to these cells/spots as cells, since the main focus of the analysis is Xenium which has a single-cell resolution. The number of cells can range from hundreds to hundreds of thousands, depending on the tissue and platform being used, each with a unique identifier that can be used to label cells specifically. For every cell there is a spatially resolved coordinate that gives the location within the original tissue where that cell was found, along with information about how to convert that coordinate from a sub-micron space into pixel space. There is additionally a list of all of the genes included in the dataset, whether it is in the entire transcriptome in a sequencing-based experiment or a subset of a few hundred genes for imaging-based. A gene matrix contains all of the transcriptomic gene counts for each gene within each cell, giving a 2-dimensional matrix of size $N_g \times N_c$, where $N_g$ is the number of genes and $N_c$ is the number of cells in a sample. Whether using sequencing- or imaging-based modalities, this gene matrix is often a very large dataset, typically containing millions of datapoints which are most easily stored in some form of sparse matrix in order to maximize the computational availability. Lastly, these samples typically contain a histological image of the tissue being analyzed. These images are typically very high resolution and can be between 10-20 GB in size for a single image, so it is often  easier to work with downsampled versions when doing simple display, but this resolution can also allow for image segmentation with high levels of accuracy. There are times when these images are not available, usually from public datasets where minimizing data size is important. In those cases, it is possible to generate "gene images" from the transcriptomic data that can allow for the structural analysis of the samples as well as image registration even when no image is provided.
 
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{figure01_xenium_slice_clustering_and_umap_marker_size_2_with_schematic.pdf}
+\includegraphics[width=1\textwidth]{figure01.pdf}
 \caption{Spectral clustering of a single NSD sample along with UMAP of cells.}
 
 Each sample was clustered using the spectral clustering algorithm and manually labeled for the respective region or cell type. Each of the samples showed consistent clustering into the given cluster identities. 
+
 \label{fig:clusterUmap}
 \end{figure}
 
@@ -82,8 +100,6 @@ Each sample was clustered using the spectral clustering algorithm and manually l
 \subsection{Animals}
 
 \subsection{Xenium}
-
-Xenium is a spatial transcriptomics method that has single cell resolution for hundreds of genes in a single experiment. 
 
 \subsection{Clustering of and analysis of Xenium data}
 
@@ -103,7 +119,7 @@ Following the clustering, samples were labeled using clusters based on either an
 
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{supp_figure01_opt2_xenium_slice_clustering_all_samples_marker_size_2_resized.pdf}
+\includegraphics[width=1\textwidth]{supp_figure01.pdf}
 \caption{Spectral clustering of all samples along with visualization of original tissue images.}
 
 Each sample was clustered using the spectral clustering algorithm and manually labeled for the respective region or cell type. Each of the samples showed consistent clustering into the given cluster identities. 
@@ -118,9 +134,9 @@ With the mean z-score calculated for each set of cell-type genes, the values wer
 
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{xenium_mean_z-score_for_cell_type_marker_genes_with_interneurons_YW-1_ROI_A1_hippocampus_cluster_labels.pdf}
-\caption{Mean z-score per cell for cell-type gene markers}
-Shows the mean z-score for each of the sets of cell-type specific marker genes within the cells of the clusters that were not assigned to specific regional clusters, where red color indicates a positive mean z-score and blue indicates a negative mean z-score. The darker the color, the greater the z-score value in each direction. The colorbar is capped to a z-score of [-2,2].
+\includegraphics[width=1\textwidth]{clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf}
+\caption{Mean z-score above 0 per cell for cell-type gene markers}
+Mean z-score of cell type gene markers within cell type-defined clusters. The rows relate to a particular gene list, while the columns relate to a particular cluster. Each cell shows the mean z-score from all genes included in the gene marker list defined in Supplemental Table X. A high z-score (colored in red) in a cell means that the cell has higher expression of all genes in a particular gene list than other cells in the hippocampal formation. A z-score close to 0 (colored in white) means that a cell has a similar level of expression of all genes in a particular gene list to the rest of the cells in the entire hippocampal formation. Any cells with a low z-score have been set to 0, since a z-score below 0 is not more informative than 0. Selection of cluster label was based on whether the average of the mean z-score across all cells was greater than 1 (meaning that all cells in a cluster on average had a z-score > 1). The color bar is scaled from 0 (white) to 2 (dark red). 
 \label{fig:cellTypeID}
 \end{figure}
 
@@ -146,20 +162,12 @@ The largest of the clusters based on number of cells was the dentate gyrus, cont
 
 All four of the regionally defined clusters contained multiple DEGs that were specific to to the clusters, with the DG having the most unique DEGs at 34, the CA1 having 15, the CA3 having 8, and the CA2 4. For the cell type defined clusters, only two of the cell types contained unique DEGs, the astrocyte population with 29 DEGs, and the microglia with a single unique gene. 
 
-\begin{figure}
-\centering
-\includegraphics[width=1\textwidth]{upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf}
-\caption{UpSet plot of DEGs based on clusters and intersection}
-The overlap of differentially expressed genes shared across different clusters in the analysis. The DG shows both the largest number of total DEGs as well as the largest number of unique DEGs. Astrocytes show over half of the DEGs present are unique to the astrocyte cluster, while the CA1 shows a large amount of overlap with the DEGs found in other clusters.  
-\label{fig:degUpsetPlot}
-\end{figure}
-
 
 There were a total of six genes that were differentially expressed in at least five regions. Of those six genes, multiple prove confirmation of previous works showing differential expression. Cirbp, Rbm3, and Ttr all show broad decreased expression in the hippocampal formation. This is in line for what is known about Cirbp and Rbm3 (***Gaine, et al 2021*** for Cirbp, Visium paper for Rbm3). Ttr generally shows lower expression throughout the hippocampus, but it is more highly expressed in astrocytes, where is shows a strong decrease in expression. Previous work looking at transthyretin (Ttr) in the hippocampus showed the gene to be upregulated in stress-induced depression (Takatsuki, 2023, need to read more closely to see if actually relevant). On the other hand, Dusp5, Hspa5, and Sdf2l1 all showed increased expression following sleep deprivation.
 
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{figure02_regional_volcano_plots_volcano_marker_2_text_fixed.pdf}
+\includegraphics[width=1\textwidth]{figure02.pdf}
 \caption{Differentially expressed genes within regionally defined clusters.}
 Bar graph shows the number of DEGs present in each of the regionally defined clusters. The volcano plots show the fold change and significance within each region, with the $-log_{10}(p-value)$ on the y-axis and the $logFC$ on the x-axis. The top 10 genes based on sorted p-values are listed. If less than 10 genes were significant, only the significant genes are shown. Significantly upregulated genes are displayed in red, while significantly downregulated genes are displayed in blue. 
 \label{fig:volcanoPlotRegional}
@@ -167,7 +175,7 @@ Bar graph shows the number of DEGs present in each of the regionally defined clu
 
 \begin{figure}
 \centering
-\includegraphics[width=1\textwidth]{figure03_cell_type_volcano_plots_volcano_marker_2_text_fixed.pdf}
+\includegraphics[width=1\textwidth]{figure03.pdf}
 \caption{Differentially expressed genes within cell type defined clusters.}
 Bar graph shows the number of DEGs present in each of the cell type based clusters. The volcano plots show the fold change and significance within each region, with the $-log_{10}(p-value)$ on the y-axis and the $logFC$ on the x-axis. The top 10 genes based on sorted p-values are listed. If less than 10 genes were significant, only the significant genes are shown. Significantly upregulated genes are displayed in red, while significantly downregulated genes are displayed in blue. 
 \label{fig:volcanoPlotCellType}
@@ -193,6 +201,14 @@ Bar graph shows the number of DEGs present in each of the cell type based cluste
 \label{table:degsPerRegion}
 \end{table}
 
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth]{figure04_sig_gene_t-statistic_update.pdf}
+\caption{Differentially expressed genes following acute sleep deprivation.}
+\textbf{A} UpSet plot showing unique and intersecting DEGs following analysis using STANLY. The bar graph along the top of the plot shows the number of DEGs unique to either a specific cluster (displayed using the cluster specific color) or the intersection between multiple clusters (displayed in black). The bar graph on the left of the figure shows the total number of DEGs within each cluster. The UpSet matrix in the center shows intersections between different sets of clusters, with a black line indicating that certain DEGs are shared between the regions indicated by filled in circles. Only intersections with 3 or more DEGs following Benjamini-Hochberg correction at $p < 0.05$ were included. Each of the figures \textbf{B}-\textbf{G} show the mean log2 normalized gene expression counts for NSD and SD in the first two images of each figure, with the color bar scaled according to the maximum log2 gene count for each gene. The third image in each figure shows the regional t-statistic for each of the 10 clusters in one image, where the color of each cluster is defined by the t-statistic for NSD compared to SD across all cells within a given cluster, with the color bar scaled to a minimum t-statistic of -4 and a maximum t-statistic of +4. Clusters that did not reach significance are shown with lower opacity to better identify significant clusters. \textbf{B} \textit{Cirbp} showed a decrease in expression in the clusters: CA1, CA2, CA3, DG, DG hilus, astrocytes, endothelial cells, microglia, and oligodendrocytes ($p < 0.05$ BH FDR). \textbf{C} \textit{Rbm3} showed a decrease in expression in the clusters: CA1, CA3, DG, DG hilus, endothelial cells, microglia, and oligodendrocytes ($p < 0.05$ BH FDR). \textbf{D} \textit{Gpr161} showed an increase in expression in the CA1 ($p < 0.05$ BH FDR). \textbf{E} \textit{Jdp2} showed a decrease in expression in the CA3 ($p < 0.05$ BH FDR). \textbf{F} \textit{Egr3} showed a decrease in expression in the DG ($p < 0.05$ BH FDR). \textbf{G} \textit{Dcn} showed an increase in expression in astrocytes ($p < 0.05$ BH FDR).  
+\label{fig:tStatResults}
+\end{figure}
+
 \section{Discussion}
 
 \subsection{Differential expression between Corpus ammon regions and dentate gyrus}
@@ -205,7 +221,25 @@ It is worth noting that the dentate gyrus often generates multiple clusters in e
 Further future directions that would be possible to investigate using spatial transcriptomic technologies would be the correlation between different subregions of the CA1 and CA3, which have been defined in relationship to spatial and non-spatial memory, but have yet to be properly defined a spatial transcriptomic analysis. 
 
 \bibliographystyle{plain}
-\bibliography{references.bib}
+\bibliography{references}
+
+\subsection{Supplementary figures}
+
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth]{upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf}
+\caption{UpSet plot of DEGs based on clusters and intersection}
+The overlap of differentially expressed genes shared across different clusters in the analysis. The DG shows both the largest number of total DEGs as well as the largest number of unique DEGs. Astrocytes show over half of the DEGs present are unique to the astrocyte cluster, while the CA1 shows a large amount of overlap with the DEGs found in other clusters.  
+\label{fig:degUpsetPlot}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=1\textwidth]{clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf}
+\caption{Mean z-score above 0 for regional marker genes in sample NSD-1.}
+Regionally specific gene expression within regionally defined clusters. The first row shows the individual clusters for each sample labeled with the cluster specific colors used in previous figures. The remaining rows show the mean z-score above 0 of gene expression from a single gene used to identify specific regions. Each of the columns shows only the spots of a single cluster. Each cell shows the mean z-score of the log2 gene expression of the given gene in that cell, with the color bar set from 0 in white, indicating no association with the cell, to 2 in dark red indicating a high association with the cell. The confirmation of assignment of a specific cluster label CA1, CA2, CA3, DG, or DG hilus to each cluster is dependent on the expression of specific genes. Slc17a7 is a marker for glutamatergic neurons and is expected to be highly expressed in each of the subregions. Wfs1 expression is linked to dorsal CA1. Dusp5 expression is linked to CA2, but also forms a gradient of expression that leaks into the CA1 and CA3. Slit2 expression is linked to CA3 expression, forming a gradient that is higher in distal CA3 and becoming lower as it nears the DG. Prox1 expression is linked to DG pyramidal cells. Calb2 expression is linked to mossy cells within the DG hilus. The color bar for all images are from white, meaning no expression, to dark red, meaning high expression. Each cell shows the log2 gene expression of the given gene in that cell. 
+\label{fig:regionalIDNSD1}
+\end{figure}
 
 \end{document}
 

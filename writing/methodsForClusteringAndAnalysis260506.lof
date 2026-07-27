@@ -1,6 +1,8 @@
-\contentsline {figure}{\numberline {1}{\ignorespaces Spectral clustering of a single NSD sample along with UMAP of cells.}}{3}{}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Spectral clustering of all samples along with visualization of original tissue images.}}{5}{}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Mean z-score per cell for cell-type gene markers}}{6}{}%
-\contentsline {figure}{\numberline {4}{\ignorespaces UpSet plot of DEGs based on clusters and intersection}}{8}{}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Differentially expressed genes within regionally defined clusters.}}{9}{}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Differentially expressed genes within cell type defined clusters.}}{10}{}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Spectral clustering of a single NSD sample along with UMAP of cells.\relax }}{5}{}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Spectral clustering of all samples along with visualization of original tissue images.\relax }}{6}{}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Mean z-score above 0 per cell for cell-type gene markers\relax }}{7}{}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Differentially expressed genes within regionally defined clusters.\relax }}{9}{}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Differentially expressed genes within cell type defined clusters.\relax }}{10}{}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Differentially expressed genes following acute sleep deprivation.\relax }}{11}{}%
+\contentsline {figure}{\numberline {7}{\ignorespaces UpSet plot of DEGs based on clusters and intersection\relax }}{14}{}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Mean z-score above 0 for regional marker genes in sample NSD-1.\relax }}{14}{}%

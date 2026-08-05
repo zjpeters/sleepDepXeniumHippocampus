@@ -306,9 +306,9 @@ for i in sampleOrder:
 fig.align_titles()
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'supp_figure01_xenium_slice_clustering_all_samples_marker_size_{marker_size}_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 #%% perform umap plot on combined cells
 
 reducer = umap.UMAP(random_state=42)
@@ -369,12 +369,16 @@ umapAxsAllCells.set_title("UMAP of all samples")
 umapAxsAllCells.set_xticks([])
 umapAxsAllCells.set_yticks([])
 
+fig.text(0.13, 0.9, 'A', fontweight='bold', size=9)
+fig.text(0.39, 0.9, 'B', fontweight='bold', size=9)
+fig.text(0.66, 0.9, 'C', fontweight='bold', size=9)
+
 plt.show()
 
 ### uncomment below to save new figure pdf and svg
-plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'supp_figure02_k15cluster_umap_with_sd_nsd_split_males_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 #%% create figure 1 image for all samples with schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
 marker_size = 0.3
@@ -444,8 +448,8 @@ handles.append(patch)
 umapAxsAllCells.legend(handles=handles, ncols=2)
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure01_xenium_slice_clustering_and_umap_marker_size_{marker_size}_with_schematic_resized.svg'), bbox_inches='tight', dpi=300)
 
 #%% create figure 1 image for all samples without schematic image
 # figure 01, showing clustering and tissue image of a single slice along with umap of all samples
@@ -959,9 +963,9 @@ plt.show()
 
 ### edited locations of gene annotations to prevent overlap in inkscape, so only generate new if necessary
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.svg'), bbox_inches='tight', dpi=300)
-plt.close('all')
+# plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure02_regional_volcano_plots_volcano_marker_{volcanoMarkerSize}_with_hipp.svg'), bbox_inches='tight', dpi=300)
+# plt.close('all')
 #%% volcano plot for all cell types in one plot, reorganized
 
 # plt.close('all')
@@ -1272,7 +1276,7 @@ plt.show()
 
 # output pdf and svg, however since we're editing the colors we don't need to output pdf
 # plt.savefig(os.path.join(figureFolder, 'upset_plot_of_DEGS_color_underlay_black_lines.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, f'figure04a_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, f'figure04a_upset_plot_clusters_of_interest_min_degs_{minDegs}_sorted.svg'), bbox_inches='tight', dpi=300)
 
 #%% upset plot for all intersections for supplemental
 # set rcParams back after changing for upset plot
@@ -1479,8 +1483,8 @@ plotGeneAndTStatToSubplots(sampleForDisplay, gene06NSDMean, gene06SDMean, gene06
 gene06NSDMean.text(-30, -30, 'G', fontweight='bold', size=9)
 plt.show()
 # output pdf and svg
-plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
-plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
+# plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
 
 #%% look for overlapping genes
 # sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
@@ -1656,20 +1660,20 @@ for gene in interneuron_information['interneurons']['geneList']:
     except ValueError:
         print('Gene not in list')
 
-writer = pd.ExcelWriter(os.path.join(derivatives, f'genes_for_cell_type_ID_{minFoldChange}x_fold_change.xlsx'))
+# writer = pd.ExcelWriter(os.path.join(derivatives, f'genes_for_cell_type_ID_{minFoldChange}x_fold_change.xlsx'))
 
-for cellType in cellTypeGeneLists.keys():
-    cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
-    if cellType == 'DG/CA4':
-        cellTypeDF.to_excel(writer, sheet_name='DG hilus', index=False)
-    else:
-        cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
-writer.close()
+# for cellType in cellTypeGeneLists.keys():
+#     cellTypeDF = pd.DataFrame(cellTypeGeneLists[cellType])
+#     if cellType == 'DG/CA4':
+#         cellTypeDF.to_excel(writer, sheet_name='DG hilus', index=False)
+#     else:
+#         cellTypeDF.to_excel(writer, sheet_name=cellType, index=False)
+# writer.close()
 
 #%%  recreate the figures above, but sorted based on cluster region ID
 
 regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
-regionalGenes = ['Slc17a7', 'Prox1', 'Wfs1', 'Slit2', 'Calb2']
+regionalGenes = ['Slc17a7', 'Wfs1', 'Slit2', 'Prox1', 'Calb2']
 # plt.close('all')
 nsdN = 1
 sdN = 1
@@ -1752,8 +1756,8 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.13, 0.01, 0.6])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    # plt.savefig(os.path.join(figureFolder, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
-    # plt.close()
+    plt.savefig(os.path.join(figureFolder, f'regional_cluster_xenium_mean_z-score_for_region_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    plt.close()
 
 #%% create figure showing the association of each gene list with the cluster without neg z-score
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
@@ -1857,5 +1861,5 @@ for sampleIdx in range(len(maleSamples)):
     cbar_ax = fig.add_axes([0.92, 0.13, 0.01, 0.6])
     fig.colorbar(scatterAx, cax=cbar_ax, fraction=0.01, pad=0.04)
     plt.show()
-    plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
-    plt.close()
+    # plt.savefig(os.path.join(figureFolder, f'grand_mean_{minFoldChange}x_xenium_mean_z-score_for_cell_type_marker_genes_{sampleForDisplay["sampleID"]}_no_neg_cluster_labels.pdf'), dpi=300)
+    # plt.close()

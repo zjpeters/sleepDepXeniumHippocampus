@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  26 JUL 2026 17:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.19)  28 JUL 2026 10:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/media/zjpeters/Expansion/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506
-(/media/zjpeters/Expansion/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex
+**/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506
+(/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -327,7 +327,8 @@ File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count306
 \l__pdf_internal_box=\box60
-) (./methodsForClusteringAndAnalysis260506.aux)
+)
+No file methodsForClusteringAndAnalysis260506.aux.
 \openout1 = `methodsForClusteringAndAnalysis260506.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
@@ -344,7 +345,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
 LaTeX Font Info:    ... okay on input line 29.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
 LaTeX Font Info:    ... okay on input line 29.
-
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -422,11 +422,12 @@ LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <14.4> not available
 (Font)              Font shape `OT1/phv/m/sl' tried instead on input line 39.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures//Signet_FNW_2.png>] (./methodsForClusteringAndAnalysis260506.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures//Signet_FNW_2.png>]
+No file methodsForClusteringAndAnalysis260506.toc.
 \tf@toc=\write3
 \openout3 = `methodsForClusteringAndAnalysis260506.toc'.
 
- (./methodsForClusteringAndAnalysis260506.lof)
+(./methodsForClusteringAndAnalysis260506.lof)
 \tf@lof=\write4
 \openout4 = `methodsForClusteringAndAnalysis260506.lof'.
 
@@ -434,69 +435,210 @@ LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <14.4> not available
 
 Package glossaries Warning: Empty glossary for \printnoidxglossary[type={main}]. Rerun may be required (or you may have forgotten to use commands like \gls) on input line 59.
 
-Using TeX to sort glossary entries---this may take a while
+
+Package glossaries Warning: Empty glossary for \printnoidxglossary[type={acronym}]. Rerun may be required (or you may have forgotten to use commands like \gls) on input line 59.
+
 No file methodsForClusteringAndAnalysis260506.acr.
-[1] [2] [3]
-<./figures//figure01.pdf, id=24, 362.5551pt x 390.8944pt>
-File: ./figures//figure01.pdf Graphic file (type pdf)
-<use ./figures//figure01.pdf>
-Package pdftex.def Info: ./figures//figure01.pdf  used on input line 90.
-(pdftex.def)             Requested size: 452.9679pt x 488.40205pt.
- [4] [5 <./figures//figure01.pdf>]
-<./figures//supp_figure01.pdf, id=71, 417.7206pt x 216.05484pt>
-File: ./figures//supp_figure01.pdf Graphic file (type pdf)
-<use ./figures//supp_figure01.pdf>
-Package pdftex.def Info: ./figures//supp_figure01.pdf  used on input line 122.
-(pdftex.def)             Requested size: 452.9679pt x 234.2852pt.
- [6 <./figures//supp_figure01.pdf>]
-<./figures//clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf, id=107, 520.34402pt x 260.17201pt>
-File: ./figures//clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf Graphic file (type pdf)
-<use ./figures//clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf>
-Package pdftex.def Info: ./figures//clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf  used on input line 137.
-(pdftex.def)             Requested size: 452.9679pt x 226.49469pt.
- [7 <./figures//clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf>] [8]
-<./figures//figure02.pdf, id=356, 387.36722pt x 288.52103pt>
-File: ./figures//figure02.pdf Graphic file (type pdf)
-<use ./figures//figure02.pdf>
-Package pdftex.def Info: ./figures//figure02.pdf  used on input line 170.
-(pdftex.def)             Requested size: 452.9679pt x 337.40092pt.
-<./figures//figure03.pdf, id=357, 387.36722pt x 438.09659pt>
-File: ./figures//figure03.pdf Graphic file (type pdf)
-<use ./figures//figure03.pdf>
-Package pdftex.def Info: ./figures//figure03.pdf  used on input line 178.
-(pdftex.def)             Requested size: 452.9679pt x 512.31693pt.
-<./figures//figure04_sig_gene_t-statistic_update.pdf, id=358, 417.7206pt x 395.60071pt>
-File: ./figures//figure04_sig_gene_t-statistic_update.pdf Graphic file (type pdf)
-<use ./figures//figure04_sig_gene_t-statistic_update.pdf>
-Package pdftex.def Info: ./figures//figure04_sig_gene_t-statistic_update.pdf  used on input line 206.
-(pdftex.def)             Requested size: 452.9679pt x 428.98087pt.
+[1]
+
+LaTeX Warning: Citation `choosingST' on page 2 undefined on input line 72.
+
+
+LaTeX Warning: Citation `Cellpose' on page 2 undefined on input line 76.
+
+
+LaTeX Warning: Citation `dendrites' on page 2 undefined on input line 76.
+
+[2]
+
+LaTeX Warning: Citation `visiumSD' on page 3 undefined on input line 78.
+
+
+LaTeX Warning: Citation `visiumSD' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `scikit-image' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `scikit-learn' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `matplotlib' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `NumPy' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `ANTs' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `SciPy' on page 3 undefined on input line 82.
+
+
+LaTeX Warning: Citation `BrainGlobe' on page 3 undefined on input line 82.
+
+[3]
+
+LaTeX Warning: File `figure01.pdf' not found on input line 90.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:90: Package pdftex.def Error: File `figure01.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.90 ...egraphics[width=1\textwidth]{figure01.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: Reference `fig:clusterUmap' on page 4 undefined on input line 108.
+
+
+LaTeX Warning: Reference `fig:clusterUmap' on page 4 undefined on input line 116.
+
+[4] [5]
+
+LaTeX Warning: File `supp_figure01.pdf' not found on input line 122.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:122: Package pdftex.def Error: File `supp_figure01.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.122 ...ics[width=1\textwidth]{supp_figure01.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: Citation `cellTypeGenetics' on page 6 undefined on input line 131.
+
+
+LaTeX Warning: Reference `fig:cellTypeID' on page 6 undefined on input line 131.
+
+
+LaTeX Warning: File `clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf' not found on input line 137.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:137: Package pdftex.def Error: File `clusterIDFigures/grand_mean_3x_xenium_mean_z-score_for_cell_type_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.137 ...A1_hippocampus_no_neg_cluster_labels.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[6] [7] [8]
+
+LaTeX Warning: Reference `fig:cellTypeID' on page 9 undefined on input line 159.
+
+
+LaTeX Warning: Reference `table:degsPerRegion' on page 9 undefined on input line 161.
+
+[9]
+
+LaTeX Warning: File `figure02.pdf' not found on input line 170.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:170: Package pdftex.def Error: File `figure02.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.170 ...graphics[width=1\textwidth]{figure02.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `figure03.pdf' not found on input line 178.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:178: Package pdftex.def Error: File `figure03.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.178 ...graphics[width=1\textwidth]{figure03.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: File `figure04_sig_gene_t-statistic_update.pdf' not found on input line 206.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:206: Package pdftex.def Error: File `figure04_sig_gene_t-statistic_update.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.206 ...figure04_sig_gene_t-statistic_update.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
 (Font)              Font shape `OT1/phv/m/sl' tried instead on input line 208.
- [9 <./figures//figure02.pdf>] [10 <./figures//figure03.pdf>] [11 <./figures//figure04_sig_gene_t-statistic_update.pdf>] (./methodsForClusteringAndAnalysis260506.bbl [12])
-<./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf, id=9728, 1259.08797pt x 430.15105pt>
+
+LaTeX Warning: Float too large for page by 13.12532pt on input line 210.
+
+
+LaTeX Warning: Citation `diffOfCAandDG' on page 10 undefined on input line 215.
+
+No file methodsForClusteringAndAnalysis260506.bbl.
+<./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf, id=46, 1259.08797pt x 430.15105pt>
 File: ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf Graphic file (type pdf)
 <use ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>
 Package pdftex.def Info: ./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf  used on input line 230.
 (pdftex.def)             Requested size: 452.9679pt x 154.74924pt.
-<./figures//clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf, id=9729, 520.34402pt x 260.17201pt>
-File: ./figures//clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf Graphic file (type pdf)
-<use ./figures//clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf>
-Package pdftex.def Info: ./figures//clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf  used on input line 238.
-(pdftex.def)             Requested size: 452.9679pt x 226.49469pt.
- [13] [14 <./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf> <./figures//clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf>] (./methodsForClusteringAndAnalysis260506.aux) ) 
+
+LaTeX Warning: File `clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf' not found on input line 238.
+
+
+/home/zjpeters/Documents/sleepDepXeniumHippocampus/writing/methodsForClusteringAndAnalysis260506.tex:238: Package pdftex.def Error: File `clusterIDFigures/regional_cluster_xenium_mean_z-score_for_region_marker_genes_YW-1_ROI_A1_hippocampus_no_neg_cluster_labels.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.238 ...A1_hippocampus_no_neg_cluster_labels.pdf}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[10] [11] [12] [13] [14 <./figures//upset_plot_of_DEGS_color_underlay_black_lines_color_spots.pdf>] [15] (./methodsForClusteringAndAnalysis260506.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 9819 strings out of 478287
- 172165 string characters out of 5849289
- 513393 words of memory out of 5000000
- 27838 multiletter control sequences out of 15000+600000
- 491951 words of font info for 56 fonts, out of 8000000 for 9000
+ 9973 strings out of 478287
+ 181185 string characters out of 5849289
+ 518100 words of memory out of 5000000
+ 27981 multiletter control sequences out of 15000+600000
+ 492119 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 91i,8n,117p,2481b,355s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on methodsForClusteringAndAnalysis260506.pdf (15 pages, 7670528 bytes).
+ 91i,8n,117p,2480b,355s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
+Output written on methodsForClusteringAndAnalysis260506.pdf (16 pages, 938796 bytes).
 PDF statistics:
- 9980 PDF objects out of 10688 (max. 8388607)
- 6223 compressed objects within 63 object streams
+ 115 PDF objects out of 1000 (max. 8388607)
+ 72 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

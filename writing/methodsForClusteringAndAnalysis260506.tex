@@ -16,14 +16,14 @@
 \onehalfspacing
 \thispagestyle{fancy}
 \title{Transcriptomic investigation of sleep deprivation in the hippocampus of the mouse}
-\author{Zeru Peterson}
+\author{Zerubbabel Peterson}
 
 % the nonumberlist in the \usepackage and printglossary calls prevents printing page number of usage
 \makenoidxglossaries
 \newacronym{ca1}{CA1}{Cornu ammonis subfield 1}
 \newacronym{ca2}{CA2}{Cornu ammonis subfield 2}
 \newacronym{ca3}{CA3}{Cornu ammonis subfield 3}
-\newacronym{dg}{DG}{Dentage gyrus}
+\newacronym{dg}{DG}{Dentate gyrus}
 \newacronym{st}{ST}{Spatial transcriptomics}
 
 \begin{document}
@@ -84,6 +84,10 @@ Spatial Transcriptomic ANaLYsis (STANLY) is a tool that was created by the autho
 STANLY steamlines the analysis of spatial transcriptomics data by normalizing datasets from different spatial transcriptomic platforms in such a way that common methods can be applied across different experimental conditions. These methods include the alignment and registration of samples into a common space so that spatial analysis can be performed within a reference space, much like is done within other neuroimaging modalities such as magnetic resonance imaging (MRI) or other spatially resolve analyses. In addition to image and data registration, STANLY incorporates statistical analysis using either clusters of cells or "digital spots", i.e. a group of spots that are combined together based on their spatial proximity to each other. As part of this work, STANLY has been expanded to include importing and processing functions to work with Xenium data. A lasso tool was created to allow users to select cells or regions of interest from within a larger dataset so that regional analysis can be performed. A major analysis addition is that of calculating the transcriptomic similarity of cells through cosine similarity and using this information to perform spectral clustering of the cells that make up samples.
 
 Across all of the platforms, both sequencing- and imaging-based, there are certain commonalities that allow for potential overlap in methodology of analysis. It was these similarities between modalities that formed the basis for the creation of STANLY. Each sample will include a list of cells in the case of imaging-based samples, or spots/probes in the case of sequencing-based experiments. For simplicity, this work will refer to these cells/spots as cells, since the main focus of the analysis is Xenium which has a single-cell resolution. The number of cells can range from hundreds to hundreds of thousands, depending on the tissue and platform being used, each with a unique identifier that can be used to label cells specifically. For every cell there is a spatially resolved coordinate that gives the location within the original tissue where that cell was found, along with information about how to convert that coordinate from a sub-micron space into pixel space. There is additionally a list of all of the genes included in the dataset, whether it is in the entire transcriptome in a sequencing-based experiment or a subset of a few hundred genes for imaging-based. A gene matrix contains all of the transcriptomic gene counts for each gene within each cell, giving a 2-dimensional matrix of size $N_g \times N_c$, where $N_g$ is the number of genes and $N_c$ is the number of cells in a sample. Whether using sequencing- or imaging-based modalities, this gene matrix is often a very large dataset, typically containing millions of datapoints which are most easily stored in some form of sparse matrix in order to maximize the computational availability. Lastly, these samples typically contain a histological image of the tissue being analyzed. These images are typically very high resolution and can be between 10-20 GB in size for a single image, so it is often  easier to work with downsampled versions when doing simple display, but this resolution can also allow for image segmentation with high levels of accuracy. There are times when these images are not available, usually from public datasets where minimizing data size is important. In those cases, it is possible to generate "gene images" from the transcriptomic data that can allow for the structural analysis of the samples as well as image registration even when no image is provided.
+
+\subsection{Sleep deprivation}
+
+\section{Transcriptional mapping of hippocampal subfields}
 
 \begin{figure}
 \centering

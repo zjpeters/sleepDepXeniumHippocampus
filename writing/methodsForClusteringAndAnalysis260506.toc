@@ -7,10 +7,10 @@
 \contentsline {subsection}{\numberline {2.2}Xenium}{4}{}%
 \contentsline {subsection}{\numberline {2.3}Clustering of and analysis of Xenium data}{4}{}%
 \contentsline {subsection}{\numberline {2.4}Cell type identification}{6}{}%
-\contentsline {subsection}{\numberline {2.5}Differentially expressed gene analysis}{7}{}%
-\contentsline {section}{\numberline {3}Results}{8}{}%
-\contentsline {subsection}{\numberline {3.1}Clustering of Xenium data}{8}{}%
-\contentsline {section}{\numberline {4}Discussion}{9}{}%
-\contentsline {subsection}{\numberline {4.1}Differential expression between Corpus ammon regions and dentate gyrus}{9}{}%
-\contentsline {subsection}{\numberline {4.2}Future directions}{12}{}%
-\contentsline {subsection}{\numberline {4.3}Supplementary figures}{13}{}%
+\contentsline {subsection}{\numberline {2.5}Differentially expressed gene analysis}{6}{}%
+\contentsline {section}{\numberline {3}Results}{9}{}%
+\contentsline {subsection}{\numberline {3.1}Clustering of Xenium data}{9}{}%
+\contentsline {section}{\numberline {4}Discussion}{10}{}%
+\contentsline {subsection}{\numberline {4.1}Differential expression between Corpus ammon regions and dentate gyrus}{10}{}%
+\contentsline {subsection}{\numberline {4.2}Future directions}{10}{}%
+\contentsline {subsection}{\numberline {4.3}Supplementary figures}{10}{}%

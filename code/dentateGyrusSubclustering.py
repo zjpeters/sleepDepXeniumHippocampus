@@ -59,7 +59,7 @@ plt.rcParams['text.usetex'] = False
 plt.rcParams['svg.fonttype'] = 'none'
 plt.rcParams['font.size'] = 6
 
-# rawdata = os.path.join('/','home','zjpeters','Documents','sleepDepXenium','rawdata')
+rawdata = os.path.join(externalDrivePath,'sleepDepXenium','rawdata')
 derivatives = os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus','derivatives')
 locOfTsvFile = os.path.join('/','home','zjpeters','Documents','sleepDepXeniumHippocampus', 'participants.tsv')
 #%% put together color list
@@ -192,7 +192,7 @@ dgSdNSDIdx = sdNSDIdxMale[dgMask]
 dgCoordinates = allCoordinatesMale[dgMask, :]
 dgSampleList = sampleListMale[dgMask]
 dgColorList = sampleColorsMale[dgMask, :]
-
+dgBarcodes = allBarcodesMale[dgMask]
 #%% perform umap of DG cells
 reducer = umap.UMAP(random_state=42)
 
@@ -200,32 +200,55 @@ embedding = reducer.fit_transform(np.array(dgCells).T)
 
 #%% spectral clustering of all data, first calculate similarity matrix
 
-similarityMatrix = stanly.measureTranscriptomicSimilarity(dgCells, savePath=os.path.join(derivatives, 'dgAnalysis', 'all_sample_dg_sim_matrix.npz'), axis=1, denseMatrix=True)
-#%% perform clustering
+k = 8
+if os.path.exists(os.path.join(derivatives, f'clusteringAndSilhouette_K{k}_DG_cluster_information.csv')):
+    clusterDF = pd.read_csv(os.path.join(derivatives, f'clusteringAndSilhouette_K{k}_DG_cluster_information.csv'))
+else:
+    similarityMatrix = stanly.measureTranscriptomicSimilarity(dgCells, savePath=os.path.join(derivatives, 'dgAnalysis', 'all_sample_dg_sim_matrix.npz'), axis=1, denseMatrix=True)
+    # perform clustering
+    
+    Wcontrol = similarityMatrix.todense()
+    
+    #% create laplacian for control
+    Wcontrol = (Wcontrol - np.nanmin(Wcontrol))/(np.nanmax(Wcontrol) - np.nanmin(Wcontrol))
+    Wcontrol[Wcontrol==1] = 0
+    # Wcontrol[np.isnan(Wcontrol)] = 0
+    Dcontrol = np.diag(sum(Wcontrol))
+    Lcontrol = Dcontrol - Wcontrol
+    eigvalControl,eigvecControl = scipy.sparse.linalg.eigs(Lcontrol, k=500)
+    eigvalControlSort = np.sort(np.real(eigvalControl))[::-1]
+    eigvalControlSortIdx = np.argsort(np.real(eigvalControl))[::-1]
+    eigvecControlSort = np.real(eigvecControl[:,eigvalControlSortIdx])
+    
+    clusters = KMeans(n_clusters=k, init='random', n_init=500, tol=1e-8,)
+    cluster_labels = clusters.fit_predict(np.real(np.array(eigvecControlSort)[:,0:k+1]))
+    
+    silhouette_avg = silhouette_score(np.real(np.array(eigvecControlSort)[:,0:k]), cluster_labels)
+    sample_silhouette_values = silhouette_samples(np.real(np.array(eigvecControlSort)[:,0:k]), cluster_labels)
+    # plot spectral clusters on UMAP
+    
+    colors = cm.tab20b(cluster_labels.astype(float) / k)
+    plt.close('all')
+    plt.figure()
+    plt.scatter(embedding[:,0], embedding[:,1], c=colors, s=5)
+    plt.show()
+    
+    sampleBasedColors = cm.tab20b(dgSampleList.astype(float) / k)
+    plt.figure()
+    plt.scatter(embedding[:,0], embedding[:,1], c=sampleBasedColors, s=5)
+    plt.show()
+    
+    # save data
+    clusterDF = {'barcodes': dgBarcodes, 'cluster_labels': cluster_labels, 'silhouette_values': sample_silhouette_values, 'color_r': colors[:,0], 'color_g': colors[:,1], 'color_b': colors[:,2], 'color_alpha': colors[:,3]}
+    clusterDF = pd.DataFrame(clusterDF)
+    clusterDF.to_csv(os.path.join(derivatives, f'clusteringAndSilhouette_K{k}_DG_cluster_information.csv'), index=False)
+    
+#%% plot loaded data
 
-Wcontrol = similarityMatrix.todense()
-
-#% create laplacian for control
-Wcontrol = (Wcontrol - np.nanmin(Wcontrol))/(np.nanmax(Wcontrol) - np.nanmin(Wcontrol))
-Wcontrol[Wcontrol==1] = 0
-# Wcontrol[np.isnan(Wcontrol)] = 0
-Dcontrol = np.diag(sum(Wcontrol))
-Lcontrol = Dcontrol - Wcontrol
-eigvalControl,eigvecControl = scipy.sparse.linalg.eigs(Lcontrol, k=500)
-eigvalControlSort = np.sort(np.real(eigvalControl))[::-1]
-eigvalControlSortIdx = np.argsort(np.real(eigvalControl))[::-1]
-eigvecControlSort = np.real(eigvecControl[:,eigvalControlSortIdx])
-
-k = 5
-clusters = KMeans(n_clusters=k, init='random', n_init=500, tol=1e-8,)
-cluster_labels = clusters.fit_predict(np.real(np.array(eigvecControlSort)[:,0:k+1]))
-
-#%% plot spectral clusters on UMAP
-
-colors = cm.tab20b(cluster_labels.astype(float) / k)
+clusterColors = np.array([clusterDF['color_r'], clusterDF['color_g'], clusterDF['color_b']]).T
 plt.close('all')
 plt.figure()
-plt.scatter(embedding[:,0], embedding[:,1], c=colors, s=5)
+plt.scatter(embedding[:,0], embedding[:,1], c=clusterColors, s=5)
 plt.show()
 
 sampleBasedColors = cm.tab20b(dgSampleList.astype(float) / k)
@@ -233,6 +256,49 @@ plt.figure()
 plt.scatter(embedding[:,0], embedding[:,1], c=sampleBasedColors, s=5)
 plt.show()
 
+#%% display clusters on individual samples
+
+marker_size = 0.1
+plt.close('all')
+
+clusterColors = np.array([clusterDF['color_r'], clusterDF['color_g'], clusterDF['color_b']]).T
+
+fig, ax = plt.subplots(2,3, figsize=(7.2,3.6))
+nR = 0
+nC = 0
+sampleOrder = [0,2,4,1,3,5]
+for i in sampleOrder:
+    sampleForDisplay = processedSamples[i]
+    sample = stanly.importXeniumData(os.path.join(rawdata, experiment['sample-id'][i]))
+    if experiment['experimental-group'][i] == 0:
+        sdStatus = 'NSD'
+    elif experiment['experimental-group'][i] == 1:
+        sdStatus = 'SD'
+    barcodeIdx = []
+    for barcode in sampleForDisplay['barcodeList']:
+        barcodeIdx.append(sample['barcodeList'].index(barcode))
+    sample['hippMask'] = np.array(barcodeIdx, dtype='int32')
+    sampleIdx = np.where(dgSampleList == i)[0]
+    barcodeIdx = []
+    for barcode in dgBarcodes[sampleIdx]:
+        barcodeIdx.append(sample['barcodeList'].index(barcode))
+    sample['dgMask'] = np.array(barcodeIdx, dtype='int32')
+    maleSamples[i]['hippMask'] = sample['hippMask']
+    rotationInfo = stanly.rotateTissuePoints(sample['tissuePositionList'], sample['imageData'], experiment['rotation'][i])
+    ax[nR, nC].imshow(rotationInfo[1], cmap='gray_r')
+    ax[nR, nC].scatter(rotationInfo[0][sample['hippMask'],0], rotationInfo[0][sample['hippMask'],1], c='tab:gray', alpha=0.4, s=marker_size, linewidth=0)
+    ax[nR, nC].scatter(rotationInfo[0][sample['dgMask'],0], rotationInfo[0][sample['dgMask'],1], c=clusterColors[sampleIdx,:], alpha=1, s=1, linewidth=0)
+    ax[nR, nC].axis('off')
+    # ax[nR, nC].set_title(f"{sdStatus}-{sample['sampleID']}")
+    # use SD-1, NSD-1 as labels, rather than original sample names
+    ax[nR, nC].set_title(f"{sdStatus}-{nC + 1}")
+    if nC < 2:
+        nC += 1
+    else:
+        nR += 1
+        nC = 0
+fig.align_titles()
+plt.show()
 #%% extract genes most associated with clusters
 clusterHeatmap = []
 for actCluster in range(k):

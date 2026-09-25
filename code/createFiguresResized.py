@@ -61,7 +61,7 @@ derivatives = os.path.join(externalDrivePath,'sleepDepXeniumHippocampus','deriva
 figureFolder = os.path.join(externalDrivePath,'sleepDepXeniumHippocampus','writing','figures')
 #%% put together color list
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
-cellsOfInterest = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4', 'astrocytes', 'endothelial', 'microglia', 'neurons', 'oligodendrocytes', 'sparse']
+cellsOfInterest = ['CA1', 'CA2', 'CA3', 'DG', 'DG hilus', 'astrocytes', 'endothelial', 'microglia', 'interneurons', 'oligodendrocytes', 'unlabeled']
 ### uses "Normal, 12 colors" from: https://tsitsul.in/blog/coloropt/
 dgColor = np.squeeze(np.array([235, 172, 35, 255]))/255
 ca2Color = np.squeeze(np.array([184, 0, 88, 255]))/255
@@ -75,7 +75,7 @@ neuColor = np.squeeze(np.array([89, 84, 214, 255]))/255
 oliColor = np.squeeze(np.array([0, 198, 248, 255]))/255
 extraColor1 = np.squeeze(np.array([135, 133, 0, 255]))/255
 extraColor2 = np.squeeze(np.array([0, 167, 108, 255]))/255
-sparseColor = np.squeeze(np.array([189, 189, 189, 255]))/255
+unlabeledColor = np.squeeze(np.array([189, 189, 189, 255]))/255
 
 ca1ColorOp = np.squeeze(np.array([0, 187, 173, 40]))/255
 ca2ColorOp = np.squeeze(np.array([184, 0, 88, 40]))/255
@@ -88,9 +88,9 @@ micColorOp = np.squeeze(np.array([255, 146, 135, 40]))/255
 neuColorOp = np.squeeze(np.array([89, 84, 214, 40]))/255
 oliColorOp = np.squeeze(np.array([0, 198, 248, 40]))/255
 
-cellsOfInterestColorList = [ca1Color, ca2Color, ca3Color, dgColor, ca4dgColor, astColor, endColor, micColor, neuColor, oliColor, sparseColor]
-cellTypeColorListDict = {'astrocytes': astColor, 'endothelial': endColor, 'microglia': micColor, 'oligodendrocytes': oliColor, 'neurons': neuColor, 'sparse': sparseColor}
-regionalColorListDict = {'CA1': ca1Color, 'CA2': ca2Color, 'CA3': ca3Color, 'DG': dgColor, 'DG/CA4': ca4dgColor}
+cellsOfInterestColorList = [ca1Color, ca2Color, ca3Color, dgColor, ca4dgColor, astColor, endColor, micColor, neuColor, oliColor, unlabeledColor]
+cellTypeColorListDict = {'astrocytes': astColor, 'endothelial': endColor, 'microglia': micColor, 'oligodendrocytes': oliColor, 'interneurons': neuColor, 'unlabeled': unlabeledColor}
+regionalColorListDict = {'CA1': ca1Color, 'CA2': ca2Color, 'CA3': ca3Color, 'DG': dgColor, 'DG hilus': ca4dgColor}
 #%% load newly processed samples and check selection
 
 locOfTsvFile = os.path.join(externalDrivePath,'sleepDepXeniumHippocampus', 'participants.tsv')
@@ -110,7 +110,7 @@ for sampleIdx in range(len(experiment['sample-id'] )):
     processedSamples[sampleIdx]['cluster_labels'] = clusterInfo['cluster_labels']
     processedSamples[sampleIdx]['silhouette_values'] = clusterInfo['silhouette_values']
     processedSamples[sampleIdx]['cluster_colors'] = np.array([clusterInfo['color_r'], clusterInfo['color_g'], clusterInfo['color_b'], clusterInfo['color_alpha']]).T
-    cluster_regions = pd.read_csv(os.path.join(derivatives, f'{processedSamples[sampleIdx]["sampleID"]}_cluster_associations.csv'), header=None)
+    cluster_regions = pd.read_csv(os.path.join(derivatives, 'clusterAssociationCsvs', f'{processedSamples[sampleIdx]["sampleID"]}_cluster_associations_cell_types.csv'), header=None)
     processedSamples[sampleIdx]['cluster_region'] = np.squeeze(np.array(cluster_regions[1]))
     
 
@@ -125,8 +125,6 @@ designMatrix = [0,1,0,1,0,1]
 #%% add cell types to the umap plotting
 colorsAllCellsMale = np.empty([0,4])
 for sampleIdx in range(len(maleSamples)):
-    cluster_regions = pd.read_csv(os.path.join(derivatives, 'clusterAssociationCsvs', f'{maleSamples[sampleIdx]["sampleID"]}_cluster_associations_cell_types.csv'), header=None)
-    maleSamples[sampleIdx]['cluster_region'] = np.squeeze(np.array(cluster_regions[1]))
     sampleColors = processedSamples[sampleIdx]['cluster_colors']
     ca1Idx = findRelevantClusters(processedSamples[sampleIdx], 'CA1')
     sampleColors[ca1Idx,:] = ca1Color
@@ -134,7 +132,7 @@ for sampleIdx in range(len(maleSamples)):
     sampleColors[ca2Idx,:] = ca2Color
     ca3Idx = findRelevantClusters(processedSamples[sampleIdx], 'CA3')
     sampleColors[ca3Idx,:] = ca3Color
-    ca4dgIdx = findRelevantClusters(processedSamples[sampleIdx], 'DG/CA4')
+    ca4dgIdx = findRelevantClusters(processedSamples[sampleIdx], 'DG hilus')
     sampleColors[ca4dgIdx,:] = ca4dgColor
     dgIdx = findRelevantClusters(processedSamples[sampleIdx], 'DG')
     sampleColors[dgIdx,:] = dgColor
@@ -144,13 +142,13 @@ for sampleIdx in range(len(maleSamples)):
     sampleColors[endIdx,:] = endColor
     micIdx = findRelevantClusters(processedSamples[sampleIdx], 'microglia')
     sampleColors[micIdx,:] = micColor
-    neuIdx = findRelevantClusters(processedSamples[sampleIdx], 'neurons')
+    neuIdx = findRelevantClusters(processedSamples[sampleIdx], 'interneurons')
     sampleColors[neuIdx,:] = neuColor
     # sampleColors[neuIdx,:] = neuColor
     oliIdx = findRelevantClusters(processedSamples[sampleIdx], 'oligodendrocytes')
     sampleColors[oliIdx,:] = oliColor
-    sparseIdx = findRelevantClusters(processedSamples[sampleIdx], 'sparse')
-    sampleColors[sparseIdx,:] = sparseColor
+    unlabeledIdx = findRelevantClusters(processedSamples[sampleIdx], 'unlabeled')
+    sampleColors[unlabeledIdx,:] = unlabeledColor
     intIdx = np.where(processedSamples[sampleIdx]['cluster_labels'] == 15)[0]
     sampleColors[intIdx, :] = neuColor
     processedSamples[sampleIdx]['normalizedColors'] = sampleColors
@@ -567,12 +565,12 @@ for regionN, region in enumerate(cellsOfInterest):
             ax[2].scatter(sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,0], sampleForDisplay['processedTissuePositionList'][regionCellsToPlot,1], c=tStatColor, cmap='seismic', s=2, vmin=-4, vmax=4)
             ax[2].set_title(f'T-statistic\n p-value={pVal}')
             ax[2].axis('off')
-            if region == "DG/CA4":
+            if region == "DG hilus":
                 plt.suptitle(f'T-statistic for gene: {sampleForDisplay["geneList"][gene]} \n in DG hilus \n fold-change={foldChange}')
             else:
                 plt.suptitle(f'T-statistic for gene: {sampleForDisplay["geneList"][gene]} \n in {region} \n fold-change={foldChange}')
             plt.show()
-            if region == "DG/CA4":
+            if region == "DG hilus":
                 plt.savefig(os.path.join(derivatives, 'clusterDEGsMales', f'ttest_nsd_sd_males_{sampleForDisplay["geneList"][gene]}_in_DG-hilus.png'), bbox_inches='tight', dpi=300)
             else:
                 plt.savefig(os.path.join(derivatives, 'clusterDEGsMales', f'ttest_nsd_sd_males_{sampleForDisplay["geneList"][gene]}_in_{region}.png'), bbox_inches='tight', dpi=300)
@@ -649,7 +647,7 @@ degDict = {}
 for cellType in sheetNames.sheet_names:
     degDict[cellType] = pd.read_excel(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'), sheet_name=cellType)
 # remove unlabeled cells from data
-del degDict['sparse']
+del degDict['unlabeled']
 #%% create volcano plot of regions with bar plot of degs per region at top
 
 volcanoMarkerSize = 2
@@ -669,16 +667,15 @@ dgPlot = plt.subplot2grid((10,7), (7,4), colspan=3, rowspan=3)
 # calculate the number of degs per region
 degPerRegion = []
 for i in cellsOfInterest[0:10]:
-    if i == 'DG/CA4':
-        degPerRegion.append(len(degDict['DG-CA4']))
+    if i == 'DG hilus':
+        degPerRegion.append(len(degDict['DG-hilus']))
     else:
         degPerRegion.append(len(degDict[i]))
-degPerRegionNoSparse = np.array(degPerRegion)
-cellsOfInterestNoSparse = np.array(cellsOfInterest[0:10])
-# degPerRegionNoSparse = np.array(degPerRegion[0:10])
-cellsOfInterestColorListNoSparse = np.array(cellsOfInterestColorList[0:10])
+degPerRegionNoUnlabeled = np.array(degPerRegion)
+cellsOfInterestNoUnlabeled = np.array(cellsOfInterest[0:10])
+cellsOfInterestColorListNoUnlabeled = np.array(cellsOfInterestColorList[0:10])
 
-barPlot.bar(cellsOfInterestNoSparse[0:4], degPerRegionNoSparse[0:4], color=cellsOfInterestColorListNoSparse[0:4])
+barPlot.bar(cellsOfInterestNoUnlabeled[0:4], degPerRegionNoUnlabeled[0:4], color=cellsOfInterestColorListNoUnlabeled[0:4])
 barPlot.set_ylabel('Number of DEGs', fontweight='bold')
 
 # CA1
@@ -704,7 +701,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca1Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca1Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -732,7 +729,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca2Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca2Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -760,7 +757,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca3Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca3Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -788,7 +785,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     dgPlot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -859,7 +856,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca1Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca1Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -887,7 +884,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca2Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca2Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -915,7 +912,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     ca3Plot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     ca3Plot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -943,7 +940,7 @@ for j in enumerate(sortedPval[:nOfGenesToPlot]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     dgPlot.set_title('DG hilus', fontsize=volcanoTitleFontSize, fontweight='bold')
 else:
     dgPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontsize=volcanoTitleFontSize, fontweight='bold')
@@ -985,15 +982,15 @@ neuPlot = plt.subplot2grid((15,7), (12,4), colspan=3, rowspan=3)
 reorderMask = np.array([5, 9, 7, 6, 4, 8], dtype='int32')
 
 barMax = 80
-cellsOfInterestNoSparse[4] = 'DG hilus'
-cellsOfInterestNoSparse[8] = 'interneurons'
+cellsOfInterestNoUnlabeled[4] = 'DG hilus'
+cellsOfInterestNoUnlabeled[8] = 'interneurons'
 barPlot.grid(zorder=0, axis='y')
-barPlot.bar(cellsOfInterestNoSparse[reorderMask], degPerRegionNoSparse[reorderMask], color=cellsOfInterestColorListNoSparse[reorderMask], zorder=3)
+barPlot.bar(cellsOfInterestNoUnlabeled[reorderMask], degPerRegionNoUnlabeled[reorderMask], color=cellsOfInterestColorListNoUnlabeled[reorderMask], zorder=3)
 barPlot.set_ylim(top=barMax)
 barPlot.set_ylabel('Number of DEGs', fontweight='bold')
 barPlot.set_yticks(np.arange(0,barMax+0.1, barMax/4))
 # barPlot.set_xlabel('Region/cell type')
-barPlot.set_xticks(np.arange(0,6), cellsOfInterestNoSparse[reorderMask], rotation=15)
+barPlot.set_xticks(np.arange(0,6), cellsOfInterestNoUnlabeled[reorderMask], rotation=15)
 # neurons
 cellTypeIdx = 8
 
@@ -1017,7 +1014,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     neuPlot.set_title('DG hilus', fontweight='bold')
 else:
     neuPlot.set_title('interneurons', fontweight='bold')
@@ -1045,7 +1042,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[0,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     dgIntPlot.set_title('DG hilus', fontweight='bold')
 else:
     dgIntPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
@@ -1072,7 +1069,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     astPlot.set_title('DG hilus', fontweight='bold')
 else:
     astPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
@@ -1099,7 +1096,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[1,0].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     micPlot.set_title('DG hilus', fontweight='bold')
 else:
     micPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
@@ -1126,7 +1123,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     oliPlot.set_title('DG hilus', fontweight='bold')
 else:
     oliPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
@@ -1153,7 +1150,7 @@ for j in enumerate(sortedPval[:10]):
 # for j in enumerate(sigColorList[:,cellTypeIdx]):
 #     if j[1] != 0:
 #         ax[1,1].annotate(sampleForDisplay["geneList"][j[0]], (logFCList[j[0],cellTypeIdx], -np.log10(pValList[j[0],cellTypeIdx])))
-if cellsOfInterest[cellTypeIdx] == 'DG/CA4':
+if cellsOfInterest[cellTypeIdx] == 'DG hilus':
     endPlot.set_title('DG hilus', fontweight='bold')
 else:
     endPlot.set_title(f'{cellsOfInterest[cellTypeIdx]}', fontweight='bold')
@@ -1358,7 +1355,7 @@ def plotGeneAndTStatToSubplots(processedSample, nsdMeanFig, sdMeanFig, tStatFig,
                                displayMax=None):
     geneIdx = processedSample['geneList'].index(geneName)
     cellTypeList = cellsOfInterest[0:10]
-    labeledCellsIdx = np.where(allClustersMale != 'sparse')[0]
+    labeledCellsIdx = np.where(allClustersMale != 'unlabeled')[0]
     # if cellTypePriority == None:
     maxExp = np.max(allCellsMale[geneIdx, labeledCellsIdx])
     # else:
@@ -1486,6 +1483,168 @@ plt.show()
 # plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.pdf'), bbox_inches='tight', dpi=300)
 # plt.savefig(os.path.join(figureFolder, 'figure04_sig_gene_t-statistic_update.svg'), bbox_inches='tight', dpi=300)
 
+#%% supplemental t-stat image
+sampleForDisplay = maleSamples[0]
+plt.close('all')
+fig = plt.figure(figsize=(7.2,6.69))
+tStatFigSize = (19,19)
+upsetPlotHeight = 0
+tStatStartCol = 0
+gene01NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 0), colspan=3, rowspan=2)
+gene01SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 3), colspan=3, rowspan=2)
+gene01Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene02NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 10), colspan=3, rowspan=2)
+gene02SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 13), colspan=3, rowspan=2)
+gene02Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene03NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 0), colspan=3, rowspan=2)
+gene03SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 3), colspan=3, rowspan=2)
+gene03Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene04NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 10), colspan=3, rowspan=2)
+gene04SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 13), colspan=3, rowspan=2)
+gene04Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene05NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 0), colspan=3, rowspan=2)
+gene05SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 3), colspan=3, rowspan=2)
+gene05Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene06NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 10), colspan=3, rowspan=2)
+gene06SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 13), colspan=3, rowspan=2)
+gene06Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene07NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 0), colspan=3, rowspan=2)
+gene07SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 3), colspan=3, rowspan=2)
+gene07Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene08NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 10), colspan=3, rowspan=2)
+gene08SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 13), colspan=3, rowspan=2)
+gene08Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene09NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 0), colspan=3, rowspan=2)
+gene09SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 3), colspan=3, rowspan=2)
+gene09Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene10NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 10), colspan=3, rowspan=2)
+gene10SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 13), colspan=3, rowspan=2)
+gene10Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 16), colspan=3, rowspan=2)
+
+plotGeneAndTStatToSubplots(sampleForDisplay, gene01NSDMean, gene01SDMean, gene01Tstat, 'Dusp5')
+gene01NSDMean.text(-30, -30, 'A', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene02NSDMean, gene02SDMean, gene02Tstat, 'Dusp6')
+gene02NSDMean.text(-30, -30, 'B', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene03NSDMean, gene03SDMean, gene03Tstat, 'Nr4a1')
+gene03NSDMean.text(-30, -30, 'C', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene04NSDMean, gene04SDMean, gene04Tstat, 'Upf2')
+gene04NSDMean.text(-30, -30, 'D', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene05NSDMean, gene05SDMean, gene05Tstat, 'Arc')
+gene05NSDMean.text(-30, -30, 'E', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene06NSDMean, gene06SDMean, gene06Tstat, 'Nr4a2')
+gene06NSDMean.text(-30, -30, 'F', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene07NSDMean, gene07SDMean, gene07Tstat, 'Homer1')
+gene07NSDMean.text(-30, -30, 'G', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene08NSDMean, gene08SDMean, gene08Tstat, 'Tanc1')
+gene08NSDMean.text(-30, -30, 'H', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene09NSDMean, gene09SDMean, gene09Tstat, 'Npy2r')
+gene09NSDMean.text(-30, -30, 'I', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene10NSDMean, gene10SDMean, gene10Tstat, 'Per1')
+gene10NSDMean.text(-30, -30, 'J', fontweight='bold', size=9)
+plt.show()
+plt.savefig(os.path.join(figureFolder, 'supp_fig_gene_t-statistic_selected_genes.pdf'), bbox_inches='tight', dpi=300)
+#%% supplemental t-stat image
+sampleForDisplay = maleSamples[0]
+plt.close('all')
+fig = plt.figure(figsize=(7,6.69))
+tStatFigSize = (20,19)
+upsetPlotHeight = 0
+tStatStartCol = 0
+gene01NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 0), colspan=3, rowspan=2)
+gene01SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 3), colspan=3, rowspan=2)
+gene01Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene02NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 10), colspan=3, rowspan=2)
+gene02SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 13), colspan=3, rowspan=2)
+gene02Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene03NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 0), colspan=3, rowspan=2)
+gene03SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 3), colspan=3, rowspan=2)
+gene03Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene04NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 10), colspan=3, rowspan=2)
+gene04SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 13), colspan=3, rowspan=2)
+gene04Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 3,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene05NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 0), colspan=3, rowspan=2)
+gene05SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 3), colspan=3, rowspan=2)
+gene05Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene06NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 10), colspan=3, rowspan=2)
+gene06SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 13), colspan=3, rowspan=2)
+gene06Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 6,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene07NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 0), colspan=3, rowspan=2)
+gene07SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 3), colspan=3, rowspan=2)
+gene07Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene08NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 10), colspan=3, rowspan=2)
+gene08SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 13), colspan=3, rowspan=2)
+gene08Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 9,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene09NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 0), colspan=3, rowspan=2)
+gene09SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 3), colspan=3, rowspan=2)
+gene09Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene10NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 10), colspan=3, rowspan=2)
+gene10SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 13), colspan=3, rowspan=2)
+gene10Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 12,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene11NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 0), colspan=3, rowspan=2)
+gene11SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 3), colspan=3, rowspan=2)
+gene11Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene12NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 10), colspan=3, rowspan=2)
+gene12SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 13), colspan=3, rowspan=2)
+gene12Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 15,tStatStartCol + 16), colspan=3, rowspan=2)
+
+gene13NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 0), colspan=3, rowspan=2)
+gene13SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 3), colspan=3, rowspan=2)
+gene13Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 6), colspan=3, rowspan=2)
+
+gene14NSDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 10), colspan=3, rowspan=2)
+gene14SDMean = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 13), colspan=3, rowspan=2)
+gene14Tstat = plt.subplot2grid(tStatFigSize, (upsetPlotHeight + 18,tStatStartCol + 16), colspan=3, rowspan=2)
+
+plotGeneAndTStatToSubplots(sampleForDisplay, gene01NSDMean, gene01SDMean, gene01Tstat, 'Arc')
+gene01NSDMean.text(-30, -30, 'A', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene02NSDMean, gene02SDMean, gene02Tstat, 'Homer1')
+gene02NSDMean.text(-30, -30, 'B', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene03NSDMean, gene03SDMean, gene03Tstat, 'Kctd12')
+gene03NSDMean.text(-30, -30, 'C', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene04NSDMean, gene04SDMean, gene04Tstat, 'Tanc1')
+gene04NSDMean.text(-30, -30, 'D', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene05NSDMean, gene05SDMean, gene05Tstat, 'Fosb')
+gene05NSDMean.text(-30, -30, 'E', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene06NSDMean, gene06SDMean, gene06Tstat, 'Fosl2')
+gene06NSDMean.text(-30, -30, 'F', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene07NSDMean, gene07SDMean, gene07Tstat, 'Car4')
+gene07NSDMean.text(-30, -30, 'G', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene08NSDMean, gene08SDMean, gene08Tstat, 'Ier5')
+gene08NSDMean.text(-30, -30, 'H', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene09NSDMean, gene09SDMean, gene09Tstat, 'Cdh9')
+gene09NSDMean.text(-30, -30, 'I', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene10NSDMean, gene10SDMean, gene10Tstat, 'Npy2r')
+gene10NSDMean.text(-30, -30, 'J', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene11NSDMean, gene11SDMean, gene11Tstat, 'Nr4a2')
+gene11NSDMean.text(-30, -30, 'K', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene12NSDMean, gene12SDMean, gene12Tstat, 'Slit2')
+gene12NSDMean.text(-30, -30, 'L', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene13NSDMean, gene13SDMean, gene13Tstat, 'Fos')
+gene13NSDMean.text(-30, -30, 'M', fontweight='bold', size=9)
+plotGeneAndTStatToSubplots(sampleForDisplay, gene14NSDMean, gene14SDMean, gene14Tstat, 'Zfpm2')
+gene14NSDMean.text(-30, -30, 'N', fontweight='bold', size=9)
+plt.show()
+plt.savefig(os.path.join(figureFolder, 'supp_fig_gene_t-statistic_CA1_up_DG_down.pdf'), bbox_inches='tight', dpi=300)
 #%% look for overlapping genes
 # sheetNames = pd.ExcelFile(os.path.join(derivatives, 'degs_per_cell-type_and_regions_male_SD_BH.xlsx'))
 # degDict = {}
@@ -1672,7 +1831,7 @@ for gene in interneuron_information['interneurons']['geneList']:
 
 #%%  recreate the figures above, but sorted based on cluster region ID
 
-regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG/CA4']
+regionalClusters = ['CA1', 'CA2', 'CA3', 'DG', 'DG hilus']
 regionalGenes = ['Slc17a7', 'Wfs1', 'Slit2', 'Prox1', 'Calb2']
 # plt.close('all')
 nsdN = 1
@@ -1701,14 +1860,14 @@ for sampleIdx in range(len(maleSamples)):
         regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]            
         clusterColor = regionalColorListDict[clusterName]
         for i in regionIdx:
-            if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
-                clusterTitle = 'DG hilus'
-            elif sampleForDisplay["cluster_region"][i] == 'neurons':
-                clusterTitle = 'interneurons'
-            elif sampleForDisplay["cluster_region"][i] == 'sparse':
-                clusterTitle = 'unlabeled'
-            else:
-                clusterTitle =  sampleForDisplay["cluster_region"][i]
+            # if sampleForDisplay["cluster_region"][i] == 'DG hilus':
+            #     clusterTitle = 'DG hilus'
+            # elif sampleForDisplay["cluster_region"][i] == 'neurons':
+            #     clusterTitle = 'interneurons'
+            # elif sampleForDisplay["cluster_region"][i] == 'sparse':
+            #     clusterTitle = 'unlabeled'
+            # else:
+            clusterTitle =  sampleForDisplay["cluster_region"][i]
             
             if len(regionIdx) > 1 and np.where(regionIdx == i)[0] == 0:
                 clusterTitle = clusterTitle + ' a'
@@ -1762,7 +1921,7 @@ for sampleIdx in range(len(maleSamples)):
 #%% create figure showing the association of each gene list with the cluster without neg z-score
 # relabel "neurons" as "interneurons", "DG/CA4" as "DG hilus", "sparse" as "unlabeled"
 rowHdr = ['ast', 'end', 'mic', 'oli', 'Pvalb', 'Sst', 'Vip', 'Sncg', 'Lamp5', 'interneurons']
-cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'neurons', 'sparse']
+cellTypeClusters = ['astrocytes', 'endothelial', 'microglia', 'oligodendrocytes', 'interneurons', 'unlabeled']
 fullCellTypeNames = {'ast': 'astrocytes', 'end': 'endothelial', 'mic': 'microglia', 'oli': 'oligodendrocytes', 'interneurons': 'interneurons'}
 # plt.close('all')
 nsdN = 1
@@ -1789,14 +1948,14 @@ for sampleIdx in range(len(maleSamples)):
     for clusterName in cellTypeClusters:
         regionIdx = np.where(sampleForDisplay['cluster_region'] == clusterName)[0]
         for i in regionIdx:
-            if sampleForDisplay["cluster_region"][i] == 'DG/CA4':
-                clusterTitle = 'DG hilus'
-            elif sampleForDisplay["cluster_region"][i] == 'neurons':
-                clusterTitle = 'interneurons'
-            elif sampleForDisplay["cluster_region"][i] == 'sparse':
-                clusterTitle = 'unlabeled'
-            else:
-                clusterTitle =  sampleForDisplay["cluster_region"][i]
+            # if sampleForDisplay["cluster_region"][i] == 'DG hilus':
+            #     clusterTitle = 'DG hilus'
+            # elif sampleForDisplay["cluster_region"][i] == 'neurons':
+            #     clusterTitle = 'interneurons'
+            # elif sampleForDisplay["cluster_region"][i] == 'sparse':
+            #     clusterTitle = 'unlabeled'
+            # else:
+            clusterTitle = sampleForDisplay["cluster_region"][i]
             
             if len(regionIdx) > 1 and np.where(regionIdx == i)[0] == 0:
                 clusterTitle = clusterTitle + ' a'

@@ -415,7 +415,103 @@ fig.text(0.10, 0.45, 'C', fontweight='bold', size=9)
 fig.text(0.53, 0.45, 'D', fontweight='bold', size=9)
 
 plt.show()
-plt.savefig(os.path.join(figureFolder, 'comparison_of_specific_and_gradient_expression.pdf'), bbox_inches='tight', dpi=300)
+plt.savefig(os.path.join(figureFolder, 'comparison_of_specific_and_gradient_expression_4_genes.pdf'), bbox_inches='tight', dpi=300)
+
+#%% create figure showing genes with regional specificity and regional gradients
+# to be used in report for time in Sauvage lab
+sampleForDisplay = processedSamples[0]
+# CA1
+gene01 = 'Wfs1'
+# CA1 inferior
+gene02 = 'Npy2r'
+# CA1 superior
+gene03 = 'Ndst4'
+# ca3
+gene04 = 'Penk'
+# gradient expression
+gene05 = 'Cpne8'
+#
+gene06 = 'Prox1'
+# plot Cirbp t-statistics
+plt.close('all')
+
+# fig = plt.figure(figsize=(6,4))
+# for subplot2grid: size of plot (rows, columns) plot location (rows, columns) 
+# gene01Plot = plt.subplot2grid((6,4), (0,0), colspan=3, rowspan=2)
+# gene01Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene02Plot = plt.subplot2grid((6,4), (0,3), colspan=3, rowspan=2)
+# gene02Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene03Plot = plt.subplot2grid((6,4), (2,0), colspan=3, rowspan=2)
+# gene03Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+# gene04Plot = plt.subplot2grid((6,4), (2,3), colspan=3, rowspan=2)
+# gene04Plot.imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+
+fig, ax = plt.subplots(3,2, figsize=(4.8,4.5))
+
+geneIdx = sampleForDisplay['geneList'].index(gene01)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[0,0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[0,0].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[0,0].set_title(gene01, style='italic')
+ax[0,0].set_xticks([])
+ax[0,0].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene02)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[0,1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[0,1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[0,1].set_title(gene02, style='italic')
+ax[0,1].set_xticks([])
+ax[0,1].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene03)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[1,0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[1,0].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[1,0].set_title(gene03, style='italic')
+ax[1,0].set_xticks([])
+ax[1,0].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene04)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[1,1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[1,1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[1,1].set_title(gene04, style='italic')
+ax[1,1].set_xticks([])
+ax[1,1].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene05)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[2,0].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[2,0].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[2,0].set_title(gene05, style='italic')
+ax[2,0].set_xticks([])
+ax[2,0].set_yticks([])
+
+geneIdx = sampleForDisplay['geneList'].index(gene06)
+
+geneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][geneIdx,:].todense()))
+ax[2,1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[2,1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=geneArray, cmap='Reds', s=2, linewidth=0)
+ax[2,1].set_title(gene06, style='italic')
+ax[2,1].set_xticks([])
+ax[2,1].set_yticks([])
+
+
+fig.text(0.10, 0.88, 'A', fontweight='bold', size=9)
+fig.text(0.53, 0.88, 'B', fontweight='bold', size=9)
+fig.text(0.10, 0.61, 'C', fontweight='bold', size=9)
+fig.text(0.53, 0.61, 'D', fontweight='bold', size=9)
+fig.text(0.10, 0.34, 'E', fontweight='bold', size=9)
+fig.text(0.53, 0.34, 'F', fontweight='bold', size=9)
+
+plt.show()
+plt.savefig(os.path.join(figureFolder, 'comparison_of_specific_and_gradient_expression_6_genes.pdf'), bbox_inches='tight', dpi=300)
 #%% identify gradient of gene expression
 plt.close('all')
 # Cpne8 shows gradient from CA1 to CA2 to CA3
@@ -531,3 +627,39 @@ fig, ax = plt.subplots(1,2)
 ax[0].imshow(geneArrayGradient[0], cmap='seismic', vmin=-1, vmax=1)
 ax[1].imshow(geneArrayGradient[1], cmap='seismic', vmin=-1, vmax=1)
 plt.show()
+
+#%% load visium sample to count number of spots per hippocampus
+template = stanly.chooseTemplateSlice(70)
+visiumLocation = os.path.join('/','home','zjpeters','Documents','stanly','rawdata','sample-05')
+visiumSample = stanly.importVisiumData(visiumLocation)
+visiumProcessed = stanly.processVisiumData(visiumSample, template, 90, os.path.join('/','home','zjpeters','Documents','ovguMasters','sauvageRotationReport'))
+stanly.viewGeneInProcessedSample(visiumProcessed, 'Arc')
+
+#%% 
+lasso = stanly.SelectUsingLasso(visiumProcessed, "sample-05_hippocampus", os.path.join('/','home','zjpeters','Documents','ovguMasters','sauvageRotationReport'))
+lasso.applyLasso()
+lassoSample = lasso.outputMaskedSample(visiumProcessed)
+
+#%% 
+visiumCoorFlipped, visiumImageFlipped, _ = stanly.rotateTissuePoints(lassoSample['processedTissuePositionList'], lassoSample['tissueImageProcessed'], 0, flip=True)
+plt.close('all')
+fig, ax = plt.subplots(1,2, figsize=(6.8,2.6))
+visiumArcIdx = lassoSample['geneList'].index('Arc')
+visiumGeneArray = np.squeeze(np.array(lassoSample['geneMatrixLog2'][visiumArcIdx,:].todense()))
+ax[0].imshow(visiumImageFlipped, cmap='gray_r')
+ax[0].scatter(visiumCoorFlipped[:,0], visiumCoorFlipped[:,1], c=visiumGeneArray, cmap='Reds', s=6)
+ax[0].set_xticks([])
+ax[0].set_yticks([])
+ax[0].set_title(f"Visium, {visiumCoorFlipped.shape[0]} spots")
+
+xeniumArcIdx = sampleForDisplay['geneList'].index('Arc')
+xeniumGeneArray = np.squeeze(np.array(sampleForDisplay['geneMatrixLog2'][xeniumArcIdx,:].todense()))
+ax[1].imshow(sampleForDisplay['tissueImageProcessed'], cmap='gray_r')
+ax[1].scatter(sampleForDisplay['processedTissuePositionList'][:,0], sampleForDisplay['processedTissuePositionList'][:,1], c=xeniumGeneArray, cmap='Reds', s=0.5)
+ax[1].set_xticks([])
+ax[1].set_yticks([])
+ax[1].set_title(f"Xenium, {sampleForDisplay['processedTissuePositionList'].shape[0]} cells")
+
+plt.suptitle("Expression of Arc")
+plt.show()
+plt.savefig(os.path.join(figureFolder, 'comparison_of_xenium_and_visium.pdf'), bbox_inches='tight', dpi=300)
